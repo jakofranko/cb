@@ -1,0 +1,19 @@
+extends layout
+
+block content
+	a(href="/dashboard/" + username) Cancel
+	form(id="characterAdd", method="post", action="/characters/submitCharacter")
+		h2 Basic Information
+		.row
+			.col-sm-6.col-sm-offset-3
+				.form-group
+					label(for='name').control-label
+					input(name='name', type='text', placeholder='Real Name, i.e., "Bruce Wayne"').form-control#name
+				.form-group
+					label(for='alias').control-label
+					input(name='alias', type='text', placeholder='Alias, i.e., "Batman"').form-control#alias
+				.form-group
+					label(for='description').control-label
+					textarea(name='description', placeholder='A short description of your character').form-control#description
+				.text-center
+					button(type='submit').btn.btn-lg.btn-primary Create

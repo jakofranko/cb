@@ -1,0 +1,71 @@
+extends layout
+
+block content
+	if messages
+		each message, i in messages
+			.alert.alert-danger.alert-dismissible(role='alert')
+				= message
+				button(type='button', data-dismiss='alert').close
+					span(aria-hidden='true')  &times;
+	.jumbotron.clearfix
+		.row.text-center
+			.col-sm-12
+				h1  Node Character Builder
+				p
+					|	This is a small  
+					a(href="http://nodejs.org") node.js
+					|	 app that I built to learn the technology.
+
+		
+				p
+					|	The first module that I am building is for the 
+					a(href="http://www.herogames.com/index.html") HERO System
+
+		.row
+			.col-xs-4.col-sm-offset-2
+				a(href="#signup", data-toggle="modal").btn.btn-cta.pull-left Sign Up
+			.col-xs-4
+				a(href="#login", data-toggle="modal").btn.btn-cta.pull-right Log In
+
+	.modal.fade#signup
+		.modal-dialog
+			.modal-content
+				.modal-header.clearfix
+					button(type="button", class="close", data-dismiss="modal")
+						span(aria-hidden="true") &times;
+						span.sr-only Close
+					h4 Sign Up
+				.modal-body
+					form(method='post', action='/users/signup')#signup-form
+						.form-group
+							label(for="signup-username").control-label Username:
+								span.control-label
+							input(placeholder="username", name="username").form-control#signup-username
+						.form-group
+							label(for="password").control-label Password:
+								span.control-label
+							input(placeholder="password", name="password", type="password").form-control#signup-password
+						.form-group
+							label(for="password").control-label Re-type Password:
+								span.control-label
+							input(placeholder="re-type password", type="password").form-control#signup-password2
+						button(type='submit', disabled).btn.btn-primary.disabled#signup-submit  Sign Up
+	.modal.fade#login
+		.modal-dialog
+			.modal-content
+				.modal-header
+					button(type="button", class="close", data-dismiss="modal")
+						span(aria-hidden="true") &times;
+						span.sr-only Close
+					h4  Log In
+				.modal-body
+					form(method='post', action='/users/login')#login-form
+						.form-group
+							label(for="username").control-label Username:
+								span.control-label
+							input(placeholder="username", name="username").form-control
+						.form-group
+							label(for="password").control-label Password:
+								span.control-label
+							input(placeholder="password", name="password", type="password").form-control
+						button.btn.btn-primary(type='submit')#login-submit  Log In

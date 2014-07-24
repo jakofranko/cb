@@ -1,0 +1,73 @@
+extends layout
+
+block content
+	h1 
+		|	Hello, 
+		= user.username
+		|.
+
+	a(href='/dashboard/logout').btn.btn-link.pull-right#logout Log Out
+
+	ul.nav.nav-tabs
+		li.active
+			a(href="#characters", role="tab", data-toggle="tab") Characters
+		li
+			a(href="#info", role="tab", data-toggle="tab") User Info
+	div.tab-content
+		div.tab-pane.active#characters
+			h2 Your Characters
+			a(href="/characters/add").btn.btn-primary
+				span.glyphicon.glyphicon-plus
+				| &nbsp;New Character
+			br
+			br
+			each character, i in characters
+				.row
+					.col-sm-6
+						a(href='/characters/#{character._id}')
+							| #{character.alias}
+							if character.name
+								|	(#{character.name})
+						hr
+		div.tab-pane#info
+			h2 Update your info
+			.row
+				.col-sm-5
+					dl.dl-horizontal
+						dt
+							| Email
+							br
+							if user.email
+								a(href='#').pull-right#update Update Email
+						if user.email
+							dd#user-email= user.email 
+						else
+							dd#user-email
+								div.input-group#update-group
+									input(type='email', name='email', placeholder='Email Address').form-control#new-email
+									div.input-group-btn
+										button(type='button').btn.btn-primary#update-email Update
+								br
+						dt Change Password
+						dd
+							input(type='password', name='new-password', placeholder='New Password').form-control#new-password
+							br
+						dt Re-type Password
+						dd
+							input(type='password', placeholder='Re-type Password').form-control#new-password2
+							br
+						dt Current Password
+						dd
+							input(type='password', name='current-password', placeholder='Current Password').form-control#current-password
+							br
+						dt#password-status
+						dd 
+							button(disabled).btn.btn-primary#update-password Update Password
+							br
+				if user.email
+					.col-sm-5
+						div(style='display: none').input-group#update-group
+							input(type='email', name='email', placeholder='Email Address').form-control#new-email
+							div.input-group-btn
+								button(type='button').btn.btn-primary#update-email Update
+	script(rel='text/javascript', src='/js/dashboard.js')

@@ -1,0 +1,172 @@
+extends layout
+
+block content
+	a(href="/characters/" + character._id) View Character
+	h1 Editing #{character.alias} &nbsp;
+	.form-group
+		label.control-label Alias
+		input(name="alias", type="text",value="#{character.alias}").form-control
+	.form-group
+		label.control-label Real Name
+		input(name='name', type="text", value="#{character.name}").form-control
+
+	.form-group
+		label.control-label Description
+		textarea.form-control(name='description', cols='0', rows='10') #{character.description}
+	form(id="editCharacter", method="post", action="/characters/updateCharacter").form-horizontal
+		h2 Primary Characteristics
+		.row
+			.col-sm-3
+				strong.pull-right Characteristic
+			.col-sm-3
+				strong Total Score
+			.col-sm-3
+				strong Base Score
+			.col-sm-3
+				strong Roll
+		hr
+		div.form-group
+			label.control-label.col-sm-3 STR
+			.col-sm-3
+				input(name='STRmod', type='number', value='#{character.STR + character.STRmod}').form-control#STRmod
+			.col-sm-3
+				p #{character.STR}
+			.col-sm-3
+				p#STRroll
+
+		div.form-group
+			label.control-label.col-sm-3 DEX
+			.col-sm-3
+				input(name='DEXmod', type='number', value='#{character.DEX + character.DEXmod}').form-control#DEXmod
+			.col-sm-3
+				p #{character.DEX}
+			.col-sm-3
+				p#DEXroll
+
+		div.form-group
+			label.control-label.col-sm-3 CON
+			.col-sm-3
+				input(name='CONmod', type='number', value='#{character.CON + character.CONmod}').form-control#CONmod
+			.col-sm-3
+				p #{character.CON}
+			.col-sm-3
+				p#CONroll
+
+		div.form-group
+			label.control-label.col-sm-3 BODY
+			.col-sm-3
+				input(name='BODYmod', type='number', value='#{character.BODY + character.BODYmod}').form-control#BODYmod
+			.col-sm-3
+				p #{character.BODY}
+			.col-sm-3
+				p#BODYroll
+				//- Body doesn't really have a roll, so...I don't think I'll do anything with this p tag
+
+		div.form-group
+			label.control-label.col-sm-3 INT
+			.col-sm-3
+				input(name='INTmod', type='number', value='#{character.INT + character.INTmod}').form-control#INTmod
+			.col-sm-3
+				p #{character.INT}
+			.col-sm-3
+				p#INTroll
+
+		div.form-group
+			label.control-label.col-sm-3 EGO
+			.col-sm-3
+				input(name='EGOmod', type='number', value='#{character.EGO + character.EGOmod}').form-control#PREmod
+			.col-sm-3
+				p #{character.EGO}
+			.col-sm-3
+				p#EGOroll
+
+		div.form-group
+			label.control-label.col-sm-3 PRE
+			.col-sm-3
+				input(name='PREmod', type='number', value='#{character.PRE + character.PREmod}').form-control#PREmod
+			.col-sm-3
+				p #{character.PRE}
+			.col-sm-3
+				p#PREroll
+
+		div.form-group
+			label.control-label.col-sm-3 COM
+			.col-sm-3
+				input(name='COMmod', type='number', value='#{character.COM + character.COMmod}').form-control#COMmod
+			.col-sm-3
+				p #{character.COM}
+			.col-sm-3
+				p#COMroll
+
+
+		h2 Figured Characteristics
+		.row
+			.col-sm-3
+				strong.pull-right Characteristic
+			.col-sm-3
+				strong Total Score
+			.col-sm-3
+				strong Base Score
+			.col-sm-3
+				strong Roll
+		hr
+		div.form-group
+			label.control-label.col-sm-3 PD
+			.col-sm-3
+				input(name='PDmod', type='number', value='#{character.PD + character.PDmod}').form-control#PDmod
+			.col-sm-3
+				p #{character.PD}
+			.col-sm-3
+
+		div.form-group
+			label.control-label.col-sm-3 ED
+			.col-sm-3
+				input(name='EDmod', type='number', value='#{character.ED + character.EDmod}').form-control#EDmod
+			.col-sm-3
+				p #{character.ED}
+			.col-sm-3
+
+		div.form-group
+			label.control-label.col-sm-3 SPD
+			.col-sm-3
+				input(name='SPDmod', type='number', value='#{character.SPD + character.SPDmod}').form-control#SPDmod
+			.col-sm-3
+				p #{character.SPD}
+			.col-sm-3
+
+		div.form-group 
+			label.control-label.col-sm-3 END
+			.col-sm-3
+				input(name='ENDmod', type='number', value='#{character.END + character.ENDmod}').form-control#ENDmod
+			.col-sm-3
+				p #{character.END}
+			.col-sm-3
+
+		div.form-group
+			label.control-label.col-sm-3 STUN
+			.col-sm-3
+				input(name='STUNmod', type='number', value='#{character.STUN + character.STUNmod}').form-control#STUNmod
+			.col-sm-3
+				p #{character.STUN}
+			.col-sm-3
+
+
+		.row
+			.col-sm-12
+				button(type='button', data-target='#deleteModal', data-toggle='modal').btn.btn-link.pull-right.text-danger
+					span.glyphicon.glyphicon-trash
+					| &nbsp;Delete #{character.alias}?
+
+		.modal.fade#deleteModal
+			.modal-dialog
+				.modal-content
+					.modal-header
+						button(type='button', data-dismiss='modal').close &times;
+						h4 Are you sure?
+					.modal-body
+						p Are you sure you want to delete #{character.alias}? This will be permanant.
+						.text-center
+							a(href="/characters/remove/#{character._id}").btn.btn-danger Yes
+							&nbsp;
+							button(data-dismiss='modal').btn.btn-default No
+	script(src='/js/charactersEdit.js', rel='text/javascript')

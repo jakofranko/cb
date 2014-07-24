@@ -1,0 +1,47 @@
+extends layout
+
+block content	
+	a(href="/dashboard/" + username)
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;back to Dashboard
+	h1 #{character.alias} &nbsp;
+		br
+		if character.name
+			small aka, #{character.name}
+	a(href='/characters/edit/' + character._id)
+			span.glyphicon.glyphicon-edit
+			| &nbsp;Edit
+	h2 Description
+	p #{character.description}
+
+	h2 Primary Characteristics
+	dl.dl-horizontal
+		dt STR
+		dd #{character.STR}
+		dt DEX
+		dd #{character.DEX}
+		dt CON
+		dd #{character.CON}
+		dt BODY
+		dd #{character.BODY}
+		dt INT
+		dd #{character.INT}
+		dt EGO
+		dd #{character.EGO}
+		dt PRE
+		dd #{character.PRE}
+		dt COM
+		dd #{character.COM}
+	
+	h2 Figured Characteristics
+	dl.dl-horizontal
+		dt PD
+		dd #{character.PD}
+		dt ED
+		dd #{character.ED}
+		dt SPD
+		dd #{character.SPD}
+		dt END
+		dd #{character.END}
+		dt STUN
+		dd #{character.STUN}
