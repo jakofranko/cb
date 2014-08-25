@@ -17,6 +17,7 @@ router.post('/login', function(req, res) {
 		if(authenticated) {
 			req.session._id = authenticated._id;
 			req.session.username = authenticated.username;
+			req.session.role = authenticated.role;
 			res.redirect('/dashboard/' + req.body.username);	
 		} 
 		else res.render('index', {messages: ['Wrong username or password']});

@@ -11,6 +11,7 @@ var userSchema = mongoose.Schema({
     username: String,
     password: String,
     email: String,
+    role: String,
     characters: Array	// This will be populated with the ID's of associated characters
 });
 
@@ -35,7 +36,7 @@ module.exports = {
 	},
   
 	createUser: function(username, password, callback) {
-		var user = new User({ username: username, password: encryptPassword(password) });
+		var user = new User({ username: username, password: encryptPassword(password), role: 'user' });
 		user.save(function(err, user) {
 			if (err) callback(err);
 			else {

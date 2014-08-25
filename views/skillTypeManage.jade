@@ -1,0 +1,48 @@
+extends layout
+
+block content
+	h1 #{title}
+		a(href="/skills/create").btn.btn-link
+			span.glyphicon.glyphicon-plus
+			| &nbsp;Add New
+	table.table
+		thead
+			tr
+				th Skill
+				th Type
+				th Roll
+				th Base Cost
+				th Base +1
+				th Categories
+		tbody
+			each type, i in types
+				tr
+					td= type.skill
+						a(href="/skills/edit/" + type._id).pull-right
+							span.glyphicon.glyphicon-edit
+					td= type.type
+					td= type.associatedCharacteristic
+					td= type.baseCost
+					td= type.basePlusOne
+					td
+						if type.categories.length > 0
+							a(href="#categories-#{type._id}", data-toggle='modal') View Categories
+
+	each type, i in types
+		div(id='categories-#{type._id}').modal.fade
+			.modal-dialog
+				.modal-content
+					.modal-header
+						h3 #{type.skill} Categories
+					.modal-body
+						dl.dl-horizontal
+							dt Category
+							dd Sub-Category
+							hr
+							each category, i in type.categories
+								dt= category.name
+								if category.subcategories.length > 0
+									each subcategory, i in category.subcategories
+										dd= subcategory
+								else
+									dd &nbsp;

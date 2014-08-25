@@ -13,6 +13,9 @@ block content
 			a(href="#characters", role="tab", data-toggle="tab") Characters
 		li
 			a(href="#info", role="tab", data-toggle="tab") User Info
+		if user.role == 'admin'
+			li
+				a(href="#admin", role='tab', data-toggle='tab') Admin Panel
 	div.tab-content
 		div.tab-pane.active#characters
 			h2 Your Characters
@@ -28,6 +31,7 @@ block content
 							| #{character.alias}
 							if character.name
 								|	(#{character.name})
+						a(href='/characters/skills/#{character._id}').btn.btn-link.pull-right Skills
 						hr
 		div.tab-pane#info
 			h2 Update your info
@@ -70,4 +74,10 @@ block content
 							input(type='email', name='email', placeholder='Email Address').form-control#new-email
 							div.input-group-btn
 								button(type='button').btn.btn-primary#update-email Update
+		if user.role == 'admin'
+			div.tab-pane#admin
+				h2 Admin Panel
+				.row
+					.col-sm-12
+						a(href="/skills/manage") Manage Skills
 	script(rel='text/javascript', src='/js/dashboard.js')

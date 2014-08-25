@@ -4,6 +4,16 @@
 var mongoose = require('mongoose'),
 	users = require('./users');
 
+var skillSchema = mongoose.Schema({
+	skill: String,
+	categories: Array,
+	subcategories: Array,
+	characteristicBased: Boolean,
+	baseRoll: Number,
+	rollMod: Number,
+	skillOptions: Array
+});
+
 // Notes
 //---------------------------
 // The normal value of the base characteristics should almost always only be 10. Users will only edit the modifiers.
@@ -52,22 +62,46 @@ var	characterSchema = mongoose.Schema({
 	HTH: Number,
 	Lift: Number,
 	PreAtt: Number,
-	OCV: Number,
-	DCV: Number,
-	ECV: Number
+	CV: Number,
+	ECV: Number,
+	Running: Number,
+	Swimming: Number,
+	Leap: Number,
+	Skills: [skillSchema],
+	basePool: Number,
+	pointsSpent: Number
 });
 
 var Character = mongoose.model('Character', characterSchema);
 
 module.exports = {
+
+	addSkill: function(characterID, skill, categories, subcategories, characteristicBased, baseRoll, rollMod, skillOptions, callback) {
+		Character.findOne({ _id: characterID }, function(err, character) {
+			if(err) callback(err);
+			else {
+				character.Skills.push({
+					skill: skill,
+					categories: categories,
+					subcategories: subcategories,
+					characteristicBased: characteristicBased,
+					baseRoll: baseRoll,
+					rollMod: rollMod,
+					skillOptions: skillOptions
+				});
+				character.save(callback);
+			}
+		});
+	},
 	
 	// This will just supply the base values of the base characteristics, and will take name, alias, description and associated userID as arguments.
 	// It will not at this point take any of the stat modifiers.
-	createCharacter: function(name, alias, description, userID, baseChar, callback) {
+	createCharacter: function(name, alias, description, basePool, userID, baseChar, callback) {
 		var character = new Character({ 
 			name: name, 
 			alias: alias, 
-			description: description, 
+			description: description,
+			basePool: basePool,
 			userID: userID,
 			STR: baseChar,
 			DEX: baseChar,
@@ -96,7 +130,15 @@ module.exports = {
 			END: 2 * baseChar,								// 2 * CON
 			ENDmod: 0,
 			STUN: baseChar + (baseChar/2) + (baseChar/2),	// BODY + (STR/2) + (CON/2)
-			STUNmod: 0
+			STUNmod: 0,
+			HTH: baseChar/5,
+			Lift: Math.round((25)*Math.pow(2, (baseChar/5))),
+			PreAtt: baseChar/5,
+			CV: Math.round(baseChar/3),
+			ECV: Math.round(baseChar/3),
+			Running: 6,
+			Swimming: 2,
+			Leap: 2
 		});
 
 		character.save(function(err, results) {
@@ -129,5 +171,12 @@ module.exports = {
 
 	removeCharacter: function(condition, callback) {
 		Character.remove(condition, callback);
+	},
+
+	updateCharacter: function(query, updates, callback) {
+		Character.findOneAndUpdate(query, updates, function(err, result) {
+			if(err) callback(err);
+			else callback(err, result);
+		});
 	}
 }

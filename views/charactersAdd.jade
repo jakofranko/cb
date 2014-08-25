@@ -2,18 +2,22 @@ extends layout
 
 block content
 	a(href="/dashboard/" + username) Cancel
-	form(id="characterAdd", method="post", action="/characters/submitCharacter")
+	form(id="characterAdd", method="post", action="/characters/addCharacter")
 		h2 Basic Information
 		.row
 			.col-sm-6.col-sm-offset-3
+				
 				.form-group
-					label(for='name').control-label
-					input(name='name', type='text', placeholder='Real Name, i.e., "Bruce Wayne"').form-control#name
-				.form-group
-					label(for='alias').control-label
+					label(for='alias').control-label Alias
 					input(name='alias', type='text', placeholder='Alias, i.e., "Batman"').form-control#alias
 				.form-group
-					label(for='description').control-label
+					label(for='name').control-label Real Name
+					input(name='name', type='text', placeholder='Real Name, i.e., "Bruce Wayne"').form-control#name
+				.form-group
+					label(for='basePool').control-label Base Point Pool
+					input(name='basePool', type='number', placeholder='Base Character Point Pool').form-control#basePool
+				.form-group
+					label(for='description').control-label Character Description
 					textarea(name='description', placeholder='A short description of your character').form-control#description
 				.text-center
 					button(type='submit').btn.btn-lg.btn-primary Create

@@ -1,0 +1,100 @@
+extends layout
+
+block content
+	a(href="/skills/manage") 
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;Back to Manage Skills
+	h1 Create a new skill
+	.row
+		ul.nav.nav-tabs
+			li.active
+				a(href='#charSkill', role='tab', data-toggle='tab') Characteristic-based
+			li
+				a(href="#categorySkill", role='tab', data-toggle='tab') Category Skill
+		.tab-content
+			.tab-pane.active#charSkill
+				form(method="post", action="/skills/addType")
+					.col-sm-4.col-sm-offset-4
+						.form-group
+							label(for="skill").control-label Skill Name
+							input(type="text", placeholder="Skill Name", name="skill", autofocus).form-control#skill
+						.form-group
+							label(for="type").control-label Skill Type
+							input(type="text", placeholder="Skill Type", name="type").form-control#type
+						.form-group
+							label(for="associatedCharacteristic").control-label Associated Characteristic
+							select(name="associatedCharacteristic").form-control#associatedCharacteristic
+								option(value="") Associated Characteristic
+								option(value="STR") STR
+								option(value="DEX") DEX
+								option(value="CON") CON
+								option(value="BODY") BODY
+								option(value="INT") INT
+								option(value="PRE") PRE
+								option(value="EGO") EGO
+								option(value="COM") COM
+								option(value="none") None
+						.form-group
+							label(for="baseCost").control-label Base Cost
+							input(type="text", placeholder="Base Cost", name="baseCost").form-control#baseCost
+						.form-group
+							label(for="basePlusOne").control-label Base Cost +1
+							input(type="text", placeholder="Cost +1", name="basePlusOne").form-control#basePlusOne
+						button(type="submit").btn.btn-primary
+							span.glyphicon.glyphicon-plus
+							|  Add Skill
+			.tab-pane#categorySkill
+				.col-sm-4.col-sm-offset-4
+					form(method="post", action="/skills/addType")
+						.form-group
+							label(for="skill").control-label Skill Name
+							input(type="text", placeholder="Skill Name", name="skill", autofocus).form-control#skill
+						.form-group
+							label(for="type").control-label Skill Type
+							input(type="text", placeholder="Skill Type", name="type").form-control#type
+						.form-group
+							label(for="associatedCharacteristic").control-label Associated Characteristic
+							select(name="associatedCharacteristic").form-control#associatedCharacteristic
+								option(value="") Associated Characteristic
+								option(value="STR") STR
+								option(value="DEX") DEX
+								option(value="CON") CON
+								option(value="BODY") BODY
+								option(value="INT") INT
+								option(value="PRE") PRE
+								option(value="EGO") EGO
+								option(value="COM") COM
+								option(value="none") None
+						.form-group
+							label(for="baseCost").control-label Base Cost Per Category
+							input(type="text", placeholder="Base Cost Per Category", name="baseCost").form-control#baseCost
+						.form-group
+							label(for="basePlusOne").control-label Cost per +1 for All Categories
+							input(type="text", placeholder="Cost +1 for All Categories", name="basePlusOne").form-control#basePlusOne
+						.form-group.clearfix
+							label(for='category1').control-label Category 1
+							input(type="text", placeholder="Category Name", name='category1').form-control.category#category1
+							button(type='button').btn.btn-default.pull-right.add-sub Add Sub-Category
+						button(type='button').btn.btn-default.add-category Add Category
+						button(type="submit").btn.btn-primary.pull-right
+							span.glyphicon.glyphicon-plus
+							|  Add Skill
+		if types
+			.row
+				.col-sm-12
+					table.table
+						thead
+							th Skill
+							th Type
+							th Roll
+							th Base Cost
+							th Base +1
+						tbody
+							each type, i in types
+								tr
+									td= type.skill
+									td= type.type
+									td= type.associatedCharacteristic
+									td= type.baseCost
+									td= type.basePlusOne
+	script(rel='text/javascript', src='/js/skillTypeAdd.js')

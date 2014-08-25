@@ -12,17 +12,6 @@ describe('Users Suite:', function() {
   // Before test suite
   before(function() {
 
-    users.findUserByName('heck', function(err, user) {
-      if (err) throw new Error(err);
-      else if(user == null) console.log("user doesn't exist")
-      else {
-        user.remove(function(err, results) {
-          should.not.exist(err);
-          should.exist(results);
-        });
-      }
-    });
-
     users.createUser('heck', 'heckWord', function(err, user) {
       if(err) throw new Error(err);
       else testUser = user;

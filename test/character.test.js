@@ -1,5 +1,5 @@
 // This is piggybacking of of db.test.js's mongoose connection. 
-'use strict';
+// 'use strict';
 var assert = require('assert'),
     characters = require('../models/characters'),
     users = require('../models/users'),
@@ -17,8 +17,7 @@ describe('Character Suite:', function() {
 
     users.findUserByName('heck', function(err, user) {
       if (err) throw new Error(err);
-      else if(user == null) console.log("user doesn't exist")
-      else {
+      else if(user != null) {
         user.remove(function(err, results) {
           should.not.exist(err);
           should.exist(results);
@@ -31,9 +30,13 @@ describe('Character Suite:', function() {
       else testUser = user;
     });
 
+    characters.createCharacter('Clark Kent', 'Superman', 'the man of steel', 500, 'testingcharacter', 10, function(err, results) {
+      should.not.exist(err);
+      should.exist(results); 
+      testCharacter = results; 
+    });
 
   });
-
   
   // Begin Test suite
   // describe('characters.create()', function() {
@@ -54,18 +57,13 @@ describe('characters.createCharacter()', function() {
         should.not.exist(err);
         should.exist(user);
 
-        characters.createCharacter('J\'onn J\'onzz', 'Martian Manhunter', 'founding member of the justice league', userId, 10, function(err, results) {
+        characters.createCharacter('J\'onn J\'onzz', 'Martian Manhunter', 'founding member of the justice league', 500, userId, 10, function(err, results) {
           should.not.exist(err);
           should.exist(results);
           results.should.have.property('name', 'J\'onn J\'onzz');  
         });
 
-        characters.createCharacter('Clark Kent', 'Superman', 'the man of steel', userId, 10, function(err, results) {
-          should.not.exist(err);
-          should.exist(results);  
-        });
-
-        characters.createCharacter('Bruce Wayne', 'Batman', 'dark knight of gotham city', userId, 10, function(err, results) {
+        characters.createCharacter('Bruce Wayne', 'Batman', 'dark knight of gotham city', 500, userId, 10, function(err, results) {
           should.not.exist(err);
           should.exist(results);  
         });
@@ -76,8 +74,28 @@ describe('characters.createCharacter()', function() {
 
   describe('characters.findCharacterByAlias', function() {
     it("should return an array of characters from the alias passed to it", function() {
-      characters.findCharacterByAlias('Martian Manhunter', function(err, results) {
+      characters.findCharacterByAlias('Superman', function(err, results) {
         should.exist(results);
+        should.not.exist(err);
+      });
+    });
+  });
+
+  describe('characters.updateCharacter', function() {
+    it('should update the character that matches the query passed to it', function(done) {
+      characters.updateCharacter({ alias: 'Green Lantern' }, { description: 'a complete doofus' }, function(err, result) {
+        should.exist(result);
+        (result === null).should.not.be.true;
+        should.not.exist(err);
+        done();
+      });
+    });
+  });
+
+  
+  describe('characters.addSkill', function() {
+    it('should add a skill to the selected character', function() {
+      characters.addSkill(testCharacter._id, 'testSkill', ['testCategory'], ['subcat1', 'subcat2'], true, 11, 2, ['options1', 'options2'], function(err, results) {
         should.not.exist(err);
       });
     });
@@ -141,11 +159,7 @@ describe('characters.createCharacter()', function() {
 
   // After test suite
   after(function() {
-    users.findUserByName('heck', function(err, user) {
-      if (err) throw new Error(err);
-      else user.remove();
-    });
-
+    
     characters.removeCharacter({ alias: 'Martian Manhunter' }, function(err, results) {
       should.not.exist(err);
       should.exist(results);
@@ -155,11 +169,7 @@ describe('characters.createCharacter()', function() {
       should.not.exist(err);
       should.exist(results);
     });
-
-    characters.removeCharacter({ alias: 'Superman' }, function(err, results) {
-      should.not.exist(err);
-      should.exist(results);
-    });
+    
   });
 
 });

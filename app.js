@@ -10,11 +10,13 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/cb');
 var db = mongoose.connection;
 
-var index       = require('./routes/index');
-var users       = require('./routes/users');
+var api         = require('./routes/api');
 var characters  = require('./routes/characters');
 var dashboard   = require('./routes/dashboard');
-var api         = require('./routes/api');
+var index       = require('./routes/index');
+var skills      = require('./routes/skills');
+var users       = require('./routes/users');
+
 
 var app = express();
 
@@ -33,10 +35,12 @@ app.use(express.static(path.join(__dirname, 'bower_components')));
 app.use(express.static(path.join(__dirname, 'bower_components/bootstrap/dist'))); // Use Bootstrap stuff. This way, can compile to dist from bower_compoenents/bootstrap
 
 app.use('/', index);
+app.use('/api', api);
 app.use('/users', users);
 app.use('/characters', characters);
 app.use('/dashboard', dashboard);
-app.use('/api', api);
+app.use('/skills', skills);
+
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

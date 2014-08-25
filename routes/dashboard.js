@@ -16,8 +16,11 @@ router.get('/:username', function(req, res) {
 	// Will find the user whose name matches /dashboard/:username
 	users.findUserByName(req.params.username, function(err, user) {
 
+		if(req.params.username == 'undefined') {
+			res.redirect('/');
+		}
 		// If a user is found, it passes that user to the dashboard view, where all their info can be displayed
-		if(user._id == req.session._id) {
+		else if(user._id == req.session._id) {
 			var userChars = [];
 			characters.findCharacterByUserId(req.session._id, function(err, results) {
 				if(!err) {
@@ -27,8 +30,7 @@ router.get('/:username', function(req, res) {
 					throw new Error(err);
 				}
 			});
-		}
-		else {
+		} else {
 			var err = new Error('Not Authorized');
     		err.status = 401;
 			res.status(err.status)

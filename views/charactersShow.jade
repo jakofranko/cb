@@ -1,47 +1,161 @@
 extends layout
 
-block content	
+block content
+
+	- function calculateRoll(characteristic) {
+	- 	if(characteristic >= 0) {
+	- 		return Math.round(9 + (characteristic / 5));
+	- 	} else {
+			return Math.round(9 - (characteristic / 5));
+	- 	}
+	- }
+
 	a(href="/dashboard/" + username)
 		span.glyphicon.glyphicon-arrow-left
 		| &nbsp;back to Dashboard
-	h1 #{character.alias} &nbsp;
-		br
-		if character.name
-			small aka, #{character.name}
-	a(href='/characters/edit/' + character._id)
-			span.glyphicon.glyphicon-edit
-			| &nbsp;Edit
+	.row
+		.col-sm-6
+			h1 #{character.alias} &nbsp;
+				br
+				if character.name
+					small aka, #{character.name}
+			if character.basePool
+				p Base Character Point Pool: #{character.basePool}
+				p Character Points Spent: #{character.pointsSpent}
+			a(href='/characters/edit/' + character._id)
+					span.glyphicon.glyphicon-edit
+					| &nbsp;Edit
+		.col-sm-6
+			h2 Combat
+			.row
+				.col-xs-2: abbr(title='Hand-to-Hand') HTH
+				.col-xs-6 #{character.HTH}d6
+			.row
+				.col-xs-2: abbr(title='What the character can just lift, carry a couple paces, then drop') Lift
+				.col-xs-6 #{character.Lift}kg
+			.row
+				.col-xs-2: abbr(title='Offensive Combat Value')  OCV
+				.col-xs-6 #{character.CV}
+			.row
+				.col-xs-2: abbr(title='Defensive Combat Value')  DCV
+				.col-xs-6 #{character.CV}
+			.row
+				.col-xs-2: abbr(title='Offensive Ego Combat Value')  OECV
+				.col-xs-6 #{character.ECV}
+			.row
+				.col-xs-2: abbr(title='Defensive Ego Combat Value')  DECV
+				.col-xs-6 #{character.ECV}
+	
+	.row
+		.col-sm-6
+			h2 Primary Characteristics
+			.row
+				.col-xs-4.col-sm-3.text-right
+					p Characteristic
+				.col-xs-3.col-sm-2.text-center
+					p Roll
+				.col-xs-4
+					p Value
+			.row
+				.col-xs-4.col-sm-3.text-right
+					strong STR
+				.col-xs-3.col-sm-2.text-center
+					strong= '-' + calculateRoll(character.STR + character.STRmod)
+				.col-xs-4
+					p= character.STR + character.STRmod
+			.row
+				.col-xs-4.col-sm-3.text-right
+					strong DEX
+				.col-xs-3.col-sm-2.text-center
+					strong= '-' + calculateRoll(character.DEX + character.DEXmod)
+				.col-xs-4
+					p= character.DEX + character.DEXmod
+			.row
+				.col-xs-4.col-sm-3.text-right
+					strong CON
+				.col-xs-3.col-sm-2.text-center
+					strong= '-' + calculateRoll(character.CON + character.CONmod)
+				.col-xs-4
+					p= character.CON + character.CONmod
+			.row
+				.col-xs-4.col-sm-3.text-right
+					strong BODY
+				.col-xs-3.col-sm-2.text-center
+					strong= '-' + calculateRoll(character.BODY + character.BODYmod)
+				.col-xs-4
+					p= character.BODY + character.BODYmod
+			.row
+				.col-xs-4.col-sm-3.text-right
+					strong INT
+				.col-xs-3.col-sm-2.text-center
+					strong= '-' + calculateRoll(character.INT + character.INTmod)
+				.col-xs-4 
+					p= character.INT + character.INTmod
+			.row
+				.col-xs-4.col-sm-3.text-right
+					strong EGO
+				.col-xs-3.col-sm-2.text-center
+					strong= '-' + calculateRoll(character.EGO + character.EGOmod)
+				.col-xs-4 
+					p= character.EGO + character.EGOmod
+			.row
+				.col-xs-4.col-sm-3.text-right
+					strong PRE
+				.col-xs-3.col-sm-2.text-center
+					strong= '-' + calculateRoll(character.PRE + character.PREmod)
+				.col-xs-4 
+					p= character.PRE + character.PREmod
+			.row
+				.col-xs-4.col-sm-3.text-right
+					strong COM
+				.col-xs-3.col-sm-2.text-center
+					strong= '-' + calculateRoll(character.COM + character.COMmod)
+				.col-xs-4 
+					p= character.COM + character.COMmod
+
+		.col-sm-6
+			h2 Figured Characteristics
+			.row
+				.col-xs-4.text-right
+					p Characteristic
+				.col-xs-4
+					p Value
+			.row
+				.col-xs-4.text-right
+					strong PD
+				.col-xs-4
+					p= character.PD + character.PDmod
+			.row
+				.col-xs-4.text-right
+					strong ED
+				.col-xs-4
+					p= character.ED + character.EDmod
+			.row
+				.col-xs-4.text-right
+					strong SPD
+				.col-xs-4
+					p= character.SPD + character.SPDmod
+			.row
+				.col-xs-4.text-right
+					strong END
+				.col-xs-4
+					p= character.END + character.ENDmod
+			.row
+				.col-xs-4.text-right
+					strong STUN
+				.col-xs-4
+					p= character.STUN + character.STUNmod
+	.row
+		.col-sm-6
+			h2 Movement
+			.row
+				.col-xs-4 Running
+				.col-xs-4 #{character.Running}"
+			.row
+				.col-xs-4 Swimming
+				.col-xs-4 #{character.Swimming}"
+			.row
+				.col-xs-4 Leap
+				.col-xs-4 #{character.Leap}"
 	h2 Description
 	p #{character.description}
-
-	h2 Primary Characteristics
-	dl.dl-horizontal
-		dt STR
-		dd #{character.STR}
-		dt DEX
-		dd #{character.DEX}
-		dt CON
-		dd #{character.CON}
-		dt BODY
-		dd #{character.BODY}
-		dt INT
-		dd #{character.INT}
-		dt EGO
-		dd #{character.EGO}
-		dt PRE
-		dd #{character.PRE}
-		dt COM
-		dd #{character.COM}
-	
-	h2 Figured Characteristics
-	dl.dl-horizontal
-		dt PD
-		dd #{character.PD}
-		dt ED
-		dd #{character.ED}
-		dt SPD
-		dd #{character.SPD}
-		dt END
-		dd #{character.END}
-		dt STUN
-		dd #{character.STUN}
