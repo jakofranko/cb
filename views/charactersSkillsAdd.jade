@@ -2,32 +2,71 @@ extends layout
 
 block content
 	h1 #{title}
+		a(href="/characters/skills/" + character._id).btn.btn-link Cancel
 	if character.basePool
-		p Base Character Point Pool: #{character.basePool}
-		p Character Points Spent: #{character.pointsSpent}
-	.row
-		.col-sm-4
-			.form-group
-				label(for='skilltype').control-label Select Skill
-				select(name='skilltype').form-control#skilltype
-					option(value='') Please Select Skill
-					each skilltype, i in skilltypes
-						option(value='#{skilltype._id}') #{skilltype.skill}
-		each skilltype, i in skilltypes
-			if skilltype.categories.length > 0
-				.col-sm-4(id=skilltype._id, style='display: none;')
-					h2 #{skilltype.skill} Categories
-					each category, i in skilltype.categories
-						.categories
-							.checkbox
-								label
-									input(value=category.name, type='checkbox').category 
-									| #{category.name}
-							each subcategory, i in category.subcategories
-								.col-xs-10.col-xs-offset-2
+		p Remaining Character Points: 
+			span#remainingPoints #{character.basePool - character.pointsSpent}
+		p.lead Skill Cost: 
+			span#skillCost 0
+	form(method="post", action="/characters/addSkill")
+		.row
+			.col-sm-4
+				.form-group
+					label(for='skilltype').control-label Select Skill
+					select(name='skilltype').form-control#skilltype
+						option(value='') Please Select Skill
+						each skilltype, i in skilltypes
+							option(value='#{skilltype._id}') #{skilltype.skill}
+				.checkbox
+					label
+						input(type="checkbox" name="familiarity") 
+						| Familiarity
+			.col-sm-4
+				div(style='display:none')#2pointCSLOption
+					.form-group
+						label(for='2pointCSLattack').control-label Type of Attack
+						//- TODO: once powers are built, should be a dropdown of attack powers (which can also be weapons)
+						input(name='2pointCSLattack', type='text')#2pointCSLattack
+				div(style='display:none')#3pointCSLOption
+					.form-group
+						label(for='3pointCSLattacks').control-label Any 3 attacks (Seperated by commas) or tight group of attacks
+						input(name='3pointCSLattacks', type='text').form-control#3pointCSLattacks
+				div(style='display:none')#5pointCSLOption
+					.form-group
+						label(for='5pointCSLattacks').control-label Any 3 attacks (Seperated by commas) or tight group of attacks
+						select(name='5pointCSLattacks').form-control#5pointCSLattacks
+							option(value='') Select CSL Option
+							option(value='HTH') +1 with HTH Combat
+							option(value='Ranged') +1 with Ranged Combat
+							option(value='Attacks') +1 with a Related Group of attacks
+							option(value='DCV') +1 to DCV
+						label(for='5pointAttacks') Related Group of Attacks
+						input(name='5pointAttacks', type="text").form-control#5pointAttacks
+				div(style='display:none')#backgroundSkill
+					.checkbox
+						label.control-label
+							input(type="checkbox" name="characteristicBased") 
+							| Characteristic Based?
+				div(style='display:none')#languageOption
+					.form-group
+						label(for='language').control-label Language
+						input(type='text', name='language')#language
+			.col-sm-4
+				each skilltype, i in skilltypes
+					if skilltype.categories.length > 0
+						div(id=skilltype._id, style='display: none;')
+							h2 #{skilltype.skill} Categories
+							each category, i in skilltype.categories
+								.categories.clearfix
 									.checkbox
 										label
-											input(value=subcategory, type='checkbox').subcategory
-											| #{subcategory}
+											input(value=category.name, type='checkbox').category 
+											| #{category.name}
+									each subcategory, i in category.subcategories
+										.col-xs-10.col-xs-offset-2
+											.checkbox
+												label
+													input(value=subcategory, type='checkbox').subcategory
+													| #{subcategory}
 										
 	script(rel='text/javascript', src='/js/charactersSkillsAdd.js')

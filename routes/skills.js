@@ -37,7 +37,7 @@ router.get('/manage', function(req, res) {
 			if(err) throw new Error(err);
 			else {
 				console.log(skilltypes);
-				res.render('skillTypeManage', { title: 'Manage Skill Types', types: skilltypes });
+				res.render('skillTypeManage', { title: 'Manage Skill Types', types: skilltypes, session: req.session });
 			}
 		});
 	} else {

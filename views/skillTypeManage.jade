@@ -1,6 +1,9 @@
 extends layout
 
 block content
+	a(href="/dashboard/" + session.username)
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;back to Dashboard
 	h1 #{title}
 		a(href="/skills/create").btn.btn-link
 			span.glyphicon.glyphicon-plus

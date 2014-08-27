@@ -1,17 +1,19 @@
-// TODO: Implement a base point pool, "experience points" and a disadvantage points system
+// TODO: Implement "experience points" and a disadvantage points system
 // TODO: Skills, feats, talents, powers, perks, disadvantages
 // TODO: figure out how to check cost of abilities vs base/experience/disadvantage pool. That might be front end validation, but would probably benefit from backend validation as well
 var mongoose = require('mongoose'),
 	users = require('./users');
+
 
 var skillSchema = mongoose.Schema({
 	skill: String,
 	categories: Array,
 	subcategories: Array,
 	characteristicBased: Boolean,
+	familiarity: Boolean,
 	baseRoll: Number,
 	rollMod: Number,
-	skillOptions: Array
+	skillOptions: Object
 });
 
 // Notes
@@ -68,6 +70,7 @@ var	characterSchema = mongoose.Schema({
 	Swimming: Number,
 	Leap: Number,
 	Skills: [skillSchema],
+	skillEnhancers: Array,
 	basePool: Number,
 	pointsSpent: Number
 });
@@ -167,6 +170,11 @@ module.exports = {
 			if(err) callback(err);
 			else callback(err, results);
 		});
+	},
+
+	listSkillEnhancers: function() {
+		var skillEnhancers = ['Jack of All Trades', 'Linguist', 'Scholar', 'Scientist', 'Scientist', 'Traveler', 'Well-Connected'];
+		return skillEnhancers;
 	},
 
 	removeCharacter: function(condition, callback) {
