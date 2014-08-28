@@ -15,43 +15,123 @@ block content
 					label(for='skilltype').control-label Select Skill
 					select(name='skilltype').form-control#skilltype
 						option(value='') Please Select Skill
+						//- Should check to see if any other Defensive maneuvers have been purchased, and only display the highest available (The character should not be able to buy multiple Defensive Maneuvers)
 						each skilltype, i in skilltypes
 							option(value='#{skilltype._id}') #{skilltype.skill}
 				.checkbox
 					label
 						input(type="checkbox" name="familiarity") 
 						| Familiarity
-			.col-sm-4
+				.form-group#bonusToRoll
+					label(for='modifier').control-label Bonus to roll
+					.row
+						.col-xs-3
+							input(type='number', name='modifier', min='0').form-control#modifier
+			.col-sm-4#options
+				//- Options for skills
+				//- --------------------------------------
+
+				//- Associated Characteristic
+				div(style='display:none')#associatedCharacteristicOptions
+					.form-group
+						label(for='associatedCharacteristic').control-label Associated Characteristic
+						select(name='associatedCharacteristic').form-control#associatedCharacteristic
+							option(value="STR") STR
+							option(value="DEX") DEX
+							option(value="INT") INT
+							option(value="CON") CON
+							option(value="BODY") BODY
+							option(value="EGO") EGO
+							option(value="PRE") PRE
+							option(value="COM") COM
+				//- Combat Skill Levels
 				div(style='display:none')#2pointCSLOption
 					.form-group
 						label(for='2pointCSLattack').control-label Type of Attack
 						//- TODO: once powers are built, should be a dropdown of attack powers (which can also be weapons)
-						input(name='2pointCSLattack', type='text')#2pointCSLattack
+						input(name='2pointCSLattack', type='text').form-control#2pointCSLattack
 				div(style='display:none')#3pointCSLOption
 					.form-group
 						label(for='3pointCSLattacks').control-label Any 3 attacks (Seperated by commas) or tight group of attacks
 						input(name='3pointCSLattacks', type='text').form-control#3pointCSLattacks
 				div(style='display:none')#5pointCSLOption
 					.form-group
-						label(for='5pointCSLattacks').control-label Any 3 attacks (Seperated by commas) or tight group of attacks
+						label(for='5pointCSLattacks').control-label General Group of Attacks
 						select(name='5pointCSLattacks').form-control#5pointCSLattacks
 							option(value='') Select CSL Option
 							option(value='HTH') +1 with HTH Combat
 							option(value='Ranged') +1 with Ranged Combat
-							option(value='Attacks') +1 with a Related Group of attacks
+							option(value='Attacks') +1 with a Related Group of Attacks
 							option(value='DCV') +1 to DCV
 						label(for='5pointAttacks') Related Group of Attacks
 						input(name='5pointAttacks', type="text").form-control#5pointAttacks
+
+				//- Background Skills
 				div(style='display:none')#backgroundSkill
 					.checkbox
-						label.control-label
-							input(type="checkbox" name="characteristicBased") 
+						label(for='characteristicBased').control-label
+							input(type="checkbox" name="characteristicBased").form-control#characteristicBased
 							| Characteristic Based?
+
+				//- Language
 				div(style='display:none')#languageOption
 					.form-group
 						label(for='language').control-label Language
 						input(type='text', name='language')#language
-			.col-sm-4
+
+				//- Knowledge Skill
+				div(style='display:none')#knowledgeSkillOption
+					.form-group
+						label(for='knowledgeSkillType').control-label Knowledge Skill Type
+						select(name='knowledgeSkillType').form-control#knowledgeSkillType
+							option(value='') Select Type
+							option(value='Groups') Group(s) Knowledge
+							option(value='People') People Knowledge
+							option(value='Area') Area Knowledge
+							option(value='City') City Knowledge
+							option(value='Things') Thing(s) Knowledge
+					.form-group
+						label(for='knowledgeSkillArea').control-label Area of Knowledge
+						input(name='knowledgeSkillArea' type="text" placeholder='Area of Knowledge').form-control#knowledgeSkillArea
+
+				//- Penalty Skill Levels
+				div(style='display:none')#halfPointPSLOption
+					.form-group
+						label(for='halfPointPSLattack').control-label Type of Attack
+						//- TODO: once powers are built, should be a dropdown of attack powers (which can also be weapons)
+						input(name='halfPointPSLattack', type='text')#halfPointPSLattack
+				div(style='display:none')#3pointCSLOption
+					.form-group
+						label(for='2pointPSLattacks').control-label Any 3 attacks (Seperated by commas) or tight group of attacks
+						input(name='2pointPSLattacks', type='text').form-control#2pointPSLattacks
+				//- Power Skill
+				div(style='display:none')#powerOptions
+					.form-group
+						label(for='customLabel').control-label Custom Label
+						input(name='customLabel', type='text').form-control#customLabel
+
+				//- Professional Skills
+				div(style='display:none')#professionalOption
+					.form-group
+						label(for='professionalSkillArea').control-label Area of Knowledge
+						input(name='professionalSkillArea' type="text" placeholder='Area of Knowledge').form-control#professionalSkillArea
+
+				//- Rapid Fire
+				div(style="display:none")#rapidFireOption
+					.form-group
+						label(for='rapidFireType').control-label
+						select(name='rapidFireType').form-control#rapidFireType
+							option(value="HTH") HTH
+							option(value="Ranged") Ranged
+
+				//- Science Skills
+				div(style='display:none')#scienceOption
+					.form-group
+						label(for='scienceSkillArea').control-label Area of Knowledge
+						input(name='scienceSkillArea' type="text" placeholder='Area of Knowledge').form-control#scienceSkillArea
+
+
+			.col-sm-4#categories
 				each skilltype, i in skilltypes
 					if skilltype.categories.length > 0
 						div(id=skilltype._id, style='display: none;')
