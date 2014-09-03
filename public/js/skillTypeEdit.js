@@ -3,6 +3,11 @@ $(document).ready(function() {
 		var categoryCount = $('.category').length;
 		var html  = '<div class="form-group clearfix">';
 			html +=		'<label class="control-label"></label>';
+			html +=		'<div class="checkbox">';
+			html +=			'<label>';
+			html +=				'<input type="checkbox", name="category' + (categoryCount+1) + 'purchasable" checked/> purchasable as group?';
+			html +=			'</label>';
+			html +=		'</div>';
 			html +=			'<div class="input-group">';
 			html +=				'<span class="input-group-btn">';
 			html +=					'<button type="button" class="btn btn-default del-category"><span class="glyphicon glyphicon-minus"></span></button>';
@@ -21,7 +26,6 @@ $(document).ready(function() {
 		var parent = $(this).parent();
 		var categoryCount = parent.find(".category").attr("name").split("category")[1];
 		var subCount 	  = parent.find(".sub-category").length + 1;
-		console.log(categoryCount, subCount);
 
 		var html  = '<div class="row sub-group">';
 			html += 	'<div class="col-sm-10 col-sm-offset-2">';

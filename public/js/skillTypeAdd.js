@@ -3,6 +3,11 @@ $(document).ready(function() {
 		var categoryCount = $('.category').length;
 		var html  = '<div class="form-group clearfix">';
 			html +=		'<label class="control-label">Category ' + (categoryCount+1) + '</label>';
+			html +=		'<div class="checkbox">';
+			html +=			'<label>';
+			html +=				'<input type="checkbox", name="category' + (categoryCount+1) + 'purchasable" checked/> Purchasable as group?';
+			html +=			'</label>';
+			html +=		'</div>';
 			html +=		'<input type="text" name="category' + (categoryCount+1) + '" placeholder="Category Name" class="form-control category" />';
 			html +=		'<button type="button" class="btn btn-default pull-right add-sub">Add Sub-Category</button>';
 			html += '</div>';

@@ -31,11 +31,15 @@ block content
 					each category, i in skill.categories
 						.form-group.clearfix
 							label(for='#{category._id}').control-label
+							.checkbox
+								label
+									input(type='checkbox', name='category' + Number(i+1) + 'purchasable', checked=((category.purchasableAsGroup && category.purchasableAsGroup == true) ? 'checked' : null) )
+									| Purchasable as Group?
 							.input-group
 								span.input-group-btn
 									button.btn.btn-default.del-category
 										span.glyphicon.glyphicon-minus
-								input(type="text", name='category' + i, id='#{category._id}', value='#{category.name}').category.form-control
+								input(type="text", name='category' + Number(i+1), id='#{category._id}', value='#{category.name}').category.form-control
 							
 							if category.subcategories.length > 0
 								each subcategory, index in category.subcategories
@@ -45,18 +49,22 @@ block content
 												span.input-group-btn
 													button(type='button').btn.btn-default.del-sub
 														span.glyphicon.glyphicon-minus
-												input(type='text', name='category' + i + 'sub' + index, value='#{subcategory}').sub-category.form-control
+												input(type='text', name='category' + Number(i+1) + 'sub' + Number(index+1), value='#{subcategory}').sub-category.form-control
 								button(type='button').btn.btn-default.add-sub.pull-right Add Sub-Category
 					button(type='button').btn.btn-default.add-category Add Category
 				else
 					.form-group.clearfix
-						label(for='category1').control-label Category 1
+						label(for='category1').control-label
+						.checkbox
+							label
+								input(type='checkbox', name='category1purchasable')
+								| Purchasable as Group?
 						.input-group
 							span.input-group-btn
 								button.btn.btn-default.del-category
 									span.glyphicon.glyphicon-minus
 							input(type="text", name='category1', id='category1', placeholder='Category Name').category.form-control
-					button(type='button').btn.btn-default.add-sub.pull-right Add Sub-Category
+						button(type='button').btn.btn-default.add-sub.pull-right Add Sub-Category
 					button(type='button').btn.btn-default.add-category Add Category
 		.row
 			.col-sm-12

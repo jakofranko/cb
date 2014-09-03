@@ -44,8 +44,12 @@ block content
 							hr
 							each category, i in type.categories
 								dt= category.name
+									if category.purchasableAsGroup === false
+										| *
 								if category.subcategories.length > 0
 									each subcategory, i in category.subcategories
 										dd= subcategory
 								else
 									dd &nbsp;
+					.modal-footer
+						* Cannot be purchased as a group (subcategories must be purchased individually)

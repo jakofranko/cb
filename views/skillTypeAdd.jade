@@ -74,6 +74,10 @@ block content
 							input(type="text", placeholder="Cost +1 for All Categories", name="basePlusOne").form-control#basePlusOne
 						.form-group.clearfix
 							label(for='category1').control-label Category 1
+							.checkbox
+								label
+									input(type='checkbox', name='category1purchasable', checked)
+									| Purchasable as Group?
 							input(type="text", placeholder="Category Name", name='category1').form-control.category#category1
 							button(type='button').btn.btn-default.pull-right.add-sub Add Sub-Category
 						button(type='button').btn.btn-default.add-category Add Category

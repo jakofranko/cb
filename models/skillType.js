@@ -3,7 +3,8 @@ var mongoose = require('mongoose'),
 
 var skillCategorySchema = mongoose.Schema({
 	name: String,
-	subcategories: Array
+	subcategories: Array,
+	purchasableAsGroup: Boolean
 });
 
 var skillTypeSchema = mongoose.Schema({
@@ -58,6 +59,7 @@ module.exports = {
 	},
 
 	updateSkillType: function(query, updates, callback) {
+		console.log('updateSkillType: ', query, updates);
 		SkillType.findOneAndUpdate(query, updates, function(err, updatedSkill) {
 			if(err) callback(err);
 			else callback(err, updatedSkill);

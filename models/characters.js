@@ -6,7 +6,7 @@ var mongoose = require('mongoose'),
 
 
 var skillSchema = mongoose.Schema({
-	skill: String,
+	skill: Object,
 	categories: Array,
 	subcategories: Array,
 	characteristicBased: Boolean,
@@ -79,7 +79,7 @@ var Character = mongoose.model('Character', characterSchema);
 
 module.exports = {
 
-	addSkill: function(characterID, skill, categories, subcategories, characteristicBased, baseRoll, rollMod, skillOptions, callback) {
+	addSkill: function(characterID, skill, categories, subcategories, characteristicBased, familiarity, baseRoll, rollMod, skillOptions, callback) {
 		Character.findOne({ _id: characterID }, function(err, character) {
 			if(err) callback(err);
 			else {
