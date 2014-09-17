@@ -10,6 +10,8 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/cb');
 var db = mongoose.connection;
 
+// ROUTES
+// ---------------------------------------
 var api         = require('./routes/api');
 var characters  = require('./routes/characters');
 var dashboard   = require('./routes/dashboard');
@@ -30,6 +32,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(session({secret: 'nyan cats and bulldobs'}));
+
+// Static routes (for Bower componenents and things like that)
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
 app.use(express.static(path.join(__dirname, 'bower_components/bootstrap/dist'))); // Use Bootstrap stuff. This way, can compile to dist from bower_compoenents/bootstrap
