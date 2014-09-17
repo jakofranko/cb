@@ -11,7 +11,6 @@ var skillTypes = require('../models/skillType');
 // Gets -------------------------------
 router.get('/skills/add/:characterID', function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
-		console.log(character);
 		if(character.userID == req.session._id) {
 			var skilltypes;
 			skillTypes.listSkillTypes(function(err, results) {
@@ -24,15 +23,35 @@ router.get('/skills/add/:characterID', function(req, res) {
 	});	
 });
 
-router.get('/skills/edit/:characterID', function(req, res) {
+router.get('/skills/edit/:characterID,:skillID', function(req, res) {
+	var character;
 	characters.findCharacterById(req.params.characterID, function(err, character) {
-		res.render('skillsEdit', { title: character.alias + ' edit skills', character: character, username: req.session.username });
+		if(character.userID == req.session._id) {
+			character = character;
+			characters.findSkill(req.params.characterID, req.params.skillID, function(err, skill) {
+				console.log(skill);
+				res.render('charactersSkillsEdit', { title: 'Editing ' + skill.skillType.name, character: character, username: req.session.username, skill: skill });
+			});
+		} else { 
+			res.redirect('/');
+		}
+	});
+});
+
+router.get('/skills/deleteSkill/:charID,:skillID', function(req, res) {
+	characters.removeSkill(req.params.charID, req.params.skillID, function(err, character, numAffected) {
+		if(err) throw new Error(err);
+		else res.redirect('/characters/skills/' + character._id)
 	});
 });
 
 router.get('/skills/:characterID', function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
-		res.render('charactersSkills', { title: character.alias + ' skills', character: character, username: req.session.username });
+		if(character.userID == req.session._id) {
+			res.render('charactersSkills', { title: character.alias + ' skills', character: character, username: req.session.username });
+		} else {
+			res.redirect('/');
+		}
 	});
 });
 
@@ -60,6 +79,7 @@ router.get('/remove/:characterID', function(req, res) {
 
 router.get('/:characterID', function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
+		console.log(character.Skills[0]);
 		res.render('charactersShow', { title: character.alias, character: character, username: req.session.username });
 	});
 });
@@ -77,6 +97,29 @@ router.post('/addCharacter', function(req, res) {
 		} else {
 			console.log(userID, results);		
 			res.redirect('/characters/edit/' + results._id);
+		}
+	});
+});
+
+router.post('/addSkill', function(req, res) {
+	var 	skill = req.body.skill,
+			categories = req.body.categories || [],
+			subcategories = req.body.subcategories || [],
+			characteristicBased = req.body.characteristicBased,
+			roll = req.body.roll,
+			skillOptions = req.body.skillOptions || [],
+			cost = req.body.cost;
+
+	console.log(req.body);
+
+	characters.addSkill(req.body.characterID, req.body.skill, req.body.categories, req.body.subcategories, req.body.characteristicBased, req.body.familiarity, Number(req.body.roll), req.body.skillOptions, req.body.cost, function(err, result) {
+		if(err) {
+			throw new Error(err);
+		} else {
+			characters.updateSpentPoints(req.body.characterID, -cost, function(err, updatedChar) {
+				if(err) throw new Error(err);
+			});
+			res.send(result);	
 		}
 	});
 });

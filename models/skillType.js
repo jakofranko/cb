@@ -8,7 +8,7 @@ var skillCategorySchema = mongoose.Schema({
 });
 
 var skillTypeSchema = mongoose.Schema({
-	skill: String,
+	name: String,
 	type: String,
 	associatedCharacteristic: String,
 	baseCost: Number,		// This is also the cost for one general category of a skill
@@ -21,9 +21,9 @@ var skillTypeSchema = mongoose.Schema({
 var SkillType = mongoose.model('SkillType', skillTypeSchema);
 
 module.exports = {
-	createSkillType: function(skill, type, associatedCharacteristic, baseCost, basePlusOne, categories, callback) {
+	createSkillType: function(name, type, associatedCharacteristic, baseCost, basePlusOne, categories, callback) {
 		var skillType = new SkillType({
-			skill: skill,
+			name: name,
 			type: type,
 			associatedCharacteristic: associatedCharacteristic,
 			baseCost: baseCost,
@@ -59,7 +59,6 @@ module.exports = {
 	},
 
 	updateSkillType: function(query, updates, callback) {
-		console.log('updateSkillType: ', query, updates);
 		SkillType.findOneAndUpdate(query, updates, function(err, updatedSkill) {
 			if(err) callback(err);
 			else callback(err, updatedSkill);

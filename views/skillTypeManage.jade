@@ -20,7 +20,7 @@ block content
 		tbody
 			each type, i in types
 				tr
-					td= type.skill
+					td= type.name
 						a(href="/skills/edit/" + type._id).pull-right
 							span.glyphicon.glyphicon-edit
 					td= type.type
@@ -36,7 +36,7 @@ block content
 			.modal-dialog
 				.modal-content
 					.modal-header
-						h3 #{type.skill} Categories
+						h3 #{type.name} Categories
 					.modal-body
 						dl.dl-horizontal
 							dt Category

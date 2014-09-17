@@ -12,7 +12,7 @@ block content
 			.col-sm-4.col-sm-offset-2
 				.form-group
 					label(for='skill').control-label Skill Name
-					input(type="text", name='skill', id='skill', value='#{skill.skill}').form-control
+					input(type="text", name='skill', id='skill', value='#{skill.name}').form-control
 				.form-group
 					label(for='type').control-label Skill Type
 					input(type="text", name='type', id='type', value='#{skill.type}').form-control
@@ -77,7 +77,7 @@ block content
 						button(type='button', data-dismiss='modal').close &times;
 						h4 Are you sure?
 					.modal-body
-						p Are you sure you want to delete #{skill.skill}? This will be permanant.
+						p Are you sure you want to delete #{skill.name}? This will be permanant.
 						.text-center
 							a(href='/skills/removeSkill/' + skill._id).btn.btn-danger Yes
 							| &nbsp;

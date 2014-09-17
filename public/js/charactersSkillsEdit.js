@@ -52,7 +52,6 @@ $(document).ready(function() {
 		var rollMod = $('#modifier').val();
 		var familiarity = $('#familiarity').prop('checked');
 		var background = ($('#characteristicBased').prop('checked') == true || $('#characteristicBased').filter(':visible').length == 0) ? false : true;
-		var literate = ($('[name=literate]').prop('checked') == false || $('[name=literate]').filter(':visible').length == 0) ? false : true;
 		var subcategories = false;
 		if(skill.categories.length > 0) {
 			console.log("has categories");
@@ -88,18 +87,12 @@ $(document).ready(function() {
 					}
 				});
 			}
-
 		} else if(familiarity) {	// If there are no categories, add the price of the skill only once
 			cost += 1;
 		} else if(background) {
 			cost += 2;
 		} else {
 			cost += skill.baseCost;
-
-			// Add one if literacy is checked
-			if(literate) {
-				cost += 1
-			}
 		}
 		
 		// If there is a base +1 to roll cost set, adds that price to the cost. Otherwise, the skill has a static cost.
@@ -356,11 +349,6 @@ $(document).ready(function() {
 		calculateSkillCost(skill);
 	});
 
-	$('[name=literate]').change(function() {
-		console.log($(this));
-		calculateSkillCost(skill);
-	});
-
 	
 	// TODO: Process and then post data when the add skill buton is clicked
 	$('#addSkill').click(function() {
@@ -376,9 +364,7 @@ $(document).ready(function() {
 		$('#options').find('[name]').filter(':visible').not(':disabled').each(function() {
 			var key = $(this).attr('name');
 			var value = $(this).val();
-			if(value == 'on') {
-				options[key] == $(this).prop('checked');
-			} else if(value != null && value != undefined && value != "") {
+			if(value != null && value != undefined && value != "") {
 				options[key] = value;	
 			}
 		});

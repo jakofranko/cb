@@ -10,11 +10,63 @@ block content
 			if character.basePool
 				p Base Character Point Pool: #{character.basePool}
 				p Character Points Spent: #{character.pointsSpent}
-			h2 Skill List
+			h2 Skill List 
+			a(href="/characters/skills/add/" + character._id).btn.btn-primary
+					span.glyphicon.glyphicon-plus
+					|  Add Skill
 			
-			a(href="/characters/skills/add/" + character._id) 
-				span.glyphicon.glyphicon-plus
-				| &nbsp;Add Skills
-			a(href='/characters/skills/edit/' + character._id).btn.btn-link
-				span.glyphicon.glyphicon-edit
-				| &nbsp;Edit Skills
+	if character.Skills.length > 0
+		table.table
+			thead
+				tr
+					th Skill Name
+					th Roll
+					th Categories
+					th Subcategories
+					th Familiarity Only
+					th Characteristic Based
+					th
+			tbody
+				each skill, i in character.Skills
+					tr
+						td 
+							| #{skill.skillType.name}
+							a(href='/characters/skills/edit/' + character._id + "," + skill._id).btn.btn-link.pull-right
+								span.glyphicon.glyphicon-edit
+						td
+							if skill.roll != null && skill.roll != 0 && skill.roll != undefined
+								| -#{skill.roll}
+						td.col-xs-2
+							if skill.categories.length > 0
+								each category, i in skill.categories
+									| #{category.name}
+									if i != skill.categories.length - 1
+										| , 
+
+						td.col-xs-2
+							if skill.subcategories.length > 0
+								each subcategory, i in skill.subcategories
+									| #{subcategory}
+									if i != skill.subcategories.length - 1
+										| , 
+						td
+							if skill.roll != null && skill.roll != 0 && skill.roll != undefined
+								if skill.familiarity
+									span.glyphicon.glyphicon-ok.text-success
+								else
+									span.glyphicon.glyphicon-remove.text-danger
+						td
+							if skill.roll != null && skill.roll != 0 && skill.roll != undefined
+								if skill.characteristicBased
+									span.glyphicon.glyphicon-ok.text-success
+								else
+									span.glyphicon.glyphicon-remove.text-danger
+						td
+							if skill.skillOptions
+								each option, i in skill.skillOptions
+									if option != 'on'
+										//- insert a space before all caps and uppercase the first character
+										//- if it matches one of the skill level skills, it will make sure those get displayed without spaces
+										p
+											= i.replace(/([A-Z0-9])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); }).replace(/([A-Z]?)\s(S)\s(L)/, '$1$2$3 ')
+											| : #{option}

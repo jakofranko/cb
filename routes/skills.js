@@ -25,7 +25,7 @@ router.get('/edit/:skillTypeID', function(req, res) {
 	if(req.session.role == 'admin') {
 		skillTypes.findSkillType({ _id: req.params.skillTypeID }, function(err, skill) {
 			console.log(skill);
-			res.render('skillTypeEdit', { title: 'Edit ' + skill.skill, skill: skill })
+			res.render('skillTypeEdit', { title: 'Edit ' + skill.name, skill: skill })
 		});
 	} else {
 		res.redirect('/');

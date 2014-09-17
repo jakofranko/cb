@@ -92,14 +92,41 @@ describe('characters.createCharacter()', function() {
     });
   });
 
-  
   describe('characters.addSkill', function() {
     it('should add a skill to the selected character', function() {
-      characters.addSkill(testCharacter._id, 'testSkill', ['testCategory'], ['subcat1', 'subcat2'], true, 11, 2, ['options1', 'options2'], function(err, results) {
+      characters.addSkill(testCharacter._id, 'testSkill', ['testCategory'], ['subcat1', 'subcat2'], true, false, 14, ['options1', 'options2'], 9, function(err, results) {
         should.not.exist(err);
       });
     });
   });
+
+  
+
+  describe('characters.updateSpentPoints', function() {
+    it('should add or subtract the passed number from the character object', function() {
+      characters.updateSpentPoints(testCharacter._id, -50, function(err, newTotal) {
+        should.not.exist(err);
+        should.exist(newTotal);
+      });
+    });
+  });
+
+  // describe('characters.removeSkill', function() {
+  //   it('should remove the specified skill from the character', function() {
+  //     characters.findCharacterByAlias('Superman', function(err, character) {
+  //       characters.addSkill(character._id, 'testSkill', ['testCategory'], ['subcat1', 'subcat2'], true, false, 14, ['options1', 'options2'], 9, function(err, results) {
+  //         console.log(results);
+  //         characters.removeSkill(character._id, character.Skills[0]._id, function(err, character, numAffected) {
+  //           console.log(character);
+  //           console.log(err, character, numAffected);
+  //           should.not.exist(err);
+  //           should.exist(character);
+  //           numAffected.should.have.length(1);
+  //         });
+  //       });
+  //     });
+  //   });
+  // });
 
   // Also having trouble getting this test to work
 

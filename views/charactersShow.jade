@@ -158,5 +158,43 @@ block content
 			.row
 				.col-xs-4 Leap
 				.col-xs-4 #{character.Leap}"
+	.row
+		.col-sm-6
+			h2 Skills
+			.row
+				.col-xs-6
+					strong Skill
+				.col-xs-6
+					strong Roll
+			each skill, i in character.Skills
+				if skill.subcategories.length > 0
+					if skill.skillType.name == 'Transport Familiarity'
+						each subcategory, i in skill.subcategories
+							.row
+								.col-xs-6
+									p TF: #{subcategory}
+								if skill.roll != 0 && skill.roll != null && skill.roll != undefined
+									.col-xs-6
+										p -#{skill.roll}
+
+				else if skill.categories.length > 0
+					if skill.skillType.name == 'Transport Familiarity'
+						each category, i in skill.categories
+							.row
+								.col-xs-6
+									p TF: #{subcategory}
+								if skill.roll != 0 && skill.roll != null && skill.roll != undefined
+									.col-xs-6
+										p -#{skill.roll}
+								
+				else
+					.row
+						.col-xs-6
+							p #{skill.skillType.name}
+						if skill.roll != 0 && skill.roll != null && skill.roll != undefined
+							.col-xs-6
+								p -#{skill.roll}
+
+
 	h2 Description
 	p #{character.description}

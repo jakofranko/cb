@@ -1,0 +1,254 @@
+extends layout
+
+block content
+	=console.log(skill.skillOptions)
+	h1 #{title}
+		a(href='/characters/skills/' + character._id).btn.btn-link Back
+	.row
+		.col-sm-4
+			if character.basePool
+				p Remaining Character Points: 
+					span#remainingPoints #{character.basePool - character.pointsSpent}
+			p.lead Skill Cost: 
+				span#skillCost #{skill.cost}
+			p.lead Roll: -
+				span#roll 
+					if skill.roll != 0
+						| #{skill.roll}
+		.col-sm-4
+			#skillDesciption
+				//- TODO: add skill description here that fades in and out when the skill changes
+	form(method='post', action='/characters/addSkill')
+		.row
+			.col-sm-3
+				.checkbox
+					label
+						input(type='checkbox', name='familiarity', checked=((skill.familiarity) ? 'checked' : null), disabled=((skill.skillType.basePlusOne && skill.skillType.basePlusOne != undefined && skill.skillType.basePlusOne != '') ? null : 'disabled'))#familiarity
+						| Familiarity
+				.form-group#bonusToRoll
+					label(for='modifier').control-label Bonus to roll
+					.row
+						.col-xs-4
+							input(type='number', name='modifier', min='0', value='0').form-control#modifier
+				button(type='button').btn.btn-primary.btn-lg#addSkill Update Skill
+				button(type='button', data-toggle='modal', data-target='#deleteModal').btn.btn-link
+					span.glyphicon.glyphicon-trash
+					|  Delete Skill
+			.col-sm-8
+				#options
+					if skill.skillOptions != undefined
+						//- Options for skills
+						//- --------------------------------------
+						//- Combat Skill Levels
+						if skill.skillType.name == 'Combat Skill Level (2-point)'
+							div#2pointCSLOption
+								.form-group
+									label(for='2pointCSLattack').control-label Type of Attack
+									//- TODO: once powers are built, should be a dropdown of attack powers (which can also be weapons)
+									input(name='2pointCSLattack', type='text', value=((skill.skillOptions['2pointCSLattack'] != undefined) ? skill.skillOptions['2pointCSLattack'] : null)).form-control#2pointCSLattack
+
+						if skill.skillType.name == 'Combat Skill Level (3-point)'
+							div#3pointCSLOption
+								.form-group
+									label(for='3pointCSLattack1').control-label Any 3 attacks
+									//- TODO: once powers are built, should be a dropdown of attack powers (which can also be weapons)
+									input(name='3pointCSLattack1', type='text', placeholder='Attack 1', value=((skill.skillOptions['3pointCSLattack1'] != undefined) ? skill.skillOptions['3pointCSLattack1'] : null), disabled=((skill.skillOptions['3pointCSLattacks']) ? 'disabled' : null)).form-control#3pointCSLattack1
+									br
+									input(name='3pointCSLattack2', type='text', placeholder='Attack 2', value=((skill.skillOptions['3pointCSLattack2'] != undefined) ? skill.skillOptions['3pointCSLattack2'] : null), disabled=((skill.skillOptions['3pointCSLattacks']) ? 'disabled' : null)).form-control#3pointCSLattack2
+									br
+									input(name='3pointCSLattack3', type='text', placeholder='Attack 3', value=((skill.skillOptions['3pointCSLattack3'] != undefined) ? skill.skillOptions['3pointCSLattack3'] : null), disabled=((skill.skillOptions['3pointCSLattacks']) ? 'disabled' : null)).form-control#3pointCSLattack3
+									br
+									div - Or -
+									br
+									.form-group
+										label(for='3pointCSLattacks') Tight group of attacks
+										input(name='3pointCSLattacks', type='text', placeholder='Group of Attacks', value=((skill.skillOptions['3pointCSLattacks'] != undefined) ? skill.skillOptions['3pointCSLattacks'] : null), disabled=((!skill.skillOptions['3pointCSLattacks']) ? 'disabled' : null)).form-control#3pointCSLattacks
+
+						if skill.skillType.name == 'Combat Skill Level (5-point)'
+							div#5pointCSLOption
+								.form-group
+									label(for='5pointCSLattacks').control-label General Group of Attacks
+									select(name='5pointCSLattacks').form-control#5pointCSLattacks
+										option(value='') Select CSL Option
+										option(value='HTH', selected=((skill.skillOptions['5pointCSLattacks'] == 'HTH') ? 'selected' : null)) +1 with HTH Combat
+										option(value='Ranged', selected=((skill.skillOptions['5pointCSLattacks'] == 'Ranged') ? 'selected' : null)) +1 with Ranged Combat
+										option(value='Group of Attacks', selected=((skill.skillOptions['5pointCSLattacks'] == 'Group of Attacks') ? 'selected' : null)) +1 with a Related Group of Attacks
+										option(value='DCV', selected=((skill.skillOptions['5pointCSLattacks'] == 'DCV') ? 'selected' : null)) +1 to DCV
+								div(style='disaplay:none').form-group#5pointAttacksOption
+									label(for='5pointAttacks') Related Group of Attacks
+									input(name='5pointAttacks', type='text', value=((skill.skillOptions['5pointAttacks']) ? skill.skillOptions['5pointAttacks'] : null)).form-control#5pointAttacks
+
+						//- Background Skills
+						if skill.skillType.name == 'Knowledge Skill' || skill.skillType.name == 'Professional Skill' || skill.skillType.name == 'Science Skill'
+							div#backgroundSkill
+								.checkbox
+									label(for='characteristicBased')
+										input(type='checkbox' name='characteristicBased', checked=((skill.characteristicBased) ? 'checked' : null))#characteristicBased
+										| Characteristic Based?
+
+						//- Language
+						if skill.skillType.name == 'Language (Basic Conversation)' || skill.skillType.name == 'Language (Fluent Conversation)' || skill.skillType.name == 'Language (Completely Fluent, with Accent)' || skill.skillType.name == 'Language (Idiomatic, native accent)' || skill.skillType.name == 'Language (Imitate Dialects)'
+							=console.log(skill.skillOptions['language'])
+							div#languageOption
+								.form-group
+									label(for='language').control-label Language
+									input(type='text', name='language', placeholder='Language', value=((skill.skillOptions['language']) ? skill.skillOptions['language'] : null)).form-control#language
+								.checkbox
+									label
+										input(type='checkbox', name='literate', checked=((skill.skillOptions.literate && skill.skillOptions.literate == 'on') ? 'checked' : null))
+										| Literate (If not standard for setting)
+
+						//- Knowledge Skill
+						if skill.skillType.name == 'Knowledge Skill'
+							div#knowledgeSkillOption
+								.form-group
+									label(for='knowledgeSkillType').control-label Knowledge Skill Type
+									select(name='knowledgeSkillType').form-control#knowledgeSkillType
+										option(value='') Select Type
+										option(value='Groups', selected=((skill.skillOptions.knowledgeSkillType && skill.skillOptions.knowledgeSkillType == 'Groups') ? 'selected' : null)) Group(s) Knowledge
+										option(value='People', selected=((skill.skillOptions.knowledgeSkillType && skill.skillOptions.knowledgeSkillType == 'People') ? 'selected' : null)) People Knowledge
+										option(value='Area', selected=((skill.skillOptions.knowledgeSkillType && skill.skillOptions.knowledgeSkillType == 'Area') ? 'selected' : null)) Area Knowledge
+										option(value='City', selected=((skill.skillOptions.knowledgeSkillType && skill.skillOptions.knowledgeSkillType == 'City') ? 'selected' : null)) City Knowledge
+										option(value='Things', selected=((skill.skillOptions.knowledgeSkillType && skill.skillOptions.knowledgeSkillType == 'Things') ? 'selected' : null)) Thing(s) Knowledge
+								.form-group
+									label(for='knowledgeSkillArea').control-label Area of Knowledge
+									input(name='knowledgeSkillArea', type='text', placeholder='Area of Knowledge', value=((skill.skillOptions.knowledgeSkillArea) ? skill.skillOptions.knowledgeSkillArea : null)).form-control#knowledgeSkillArea
+
+						//- Penalty Skill Levels
+						if skill.skillType.name == 'Penalty Skill Level (1.5-point)'
+							div#onePointFivePSLOption
+								.form-group
+									label(for='halfPointPSLattack').control-label Type of Attack
+									//- TODO: once powers are built, should be a dropdown of attack powers (which can also be weapons)
+									input(name='halfPointPSLattack', type='text', placeholder='Attack').form-control#halfPointPSLattack
+
+						if skill.skillType.name == 'Penaly Skill Level (2-point)'
+							div#2pointPSLOption
+								.form-group
+									label(for='2pointPSLattack1').control-label Any 3 Attacks
+									input(name='2pointPSLattack1', type='text', placeholder='Attack 1').form-control#2pointPSLattack1
+									br
+									input(name='2pointPSLattack2', type='text', placeholder='Attack 2').form-control#2pointPSLattack2
+									br
+									input(name='2pointPSLattack3', type='text', placeholder='Attack 3').form-control#2pointPSLattack3
+								div - Or -
+								br
+								.form-group
+									label(for='2pointPSLattacks') Tight group of attacks
+									input(name='2pointPSLattacks', type='text', placeholder='Group of Attacks').form-control#2pointPSLattacks
+
+						//- Power Skill
+						if skill.skillType.name == 'Power'
+							div#powerOption
+								.form-group
+									label(for='customLabel').control-label Custom Label
+									input(name='customLabel', type='text', placeholder='E.G., "Brick Tricks" or "Magic"').form-control#customLabel
+
+						//- Professional Skills
+						if skill.skillType.name == 'Professional Skill'
+							div#professionalOption
+								.form-group
+									label(for='professionalSkillArea').control-label Area of Knowledge
+									input(name='professionalSkillArea' type='text' placeholder='Area of Knowledge').form-control#professionalSkillArea
+
+						//- Rapid Attack
+						if skill.skillType.name == 'Rapid Attack'
+							div#rapidAttackOption
+								.form-group
+									label(for='rapidAttackType').control-label Rapid Attack Type
+									select(name='rapidAttackType').form-control#rapidAttackType
+										option(value='') Select Type
+										option(value='HTH', selected=((skill.skillOptions.rapidAttackType == 'HTH') ? 'selected' : null)) HTH
+										option(value='Ranged', selected=((skill.skillOptions.rapidAttackType == 'Ranged') ? 'selected' : null)) Ranged
+
+						//- Science Skills
+						if skill.skillType.name == 'Science Skill'
+							div#scienceOption
+								.form-group
+									label(for='scienceSkillArea').control-label Area of Knowledge
+									input(name='scienceSkillArea' type='text' placeholder='Area of Knowledge').form-control#scienceSkillArea
+
+						//- Associated Characteristic
+						if skill.skillType.name == 'Professional Skill' || skill.skillType.name == 'Power'
+							div#associatedCharacteristicOptions
+								.form-group
+									label(for='associatedCharacteristic').control-label Associated Characteristic
+									select(name='associatedCharacteristic', disabled).form-control#associatedCharacteristic
+										option(value='', selected) Select Characteristic
+										option(value='STR') STR
+										option(value='DEX') DEX
+										option(value='INT') INT
+										option(value='CON') CON
+										option(value='BODY') BODY
+										option(value='EGO') EGO
+										option(value='PRE') PRE
+										option(value='COM') COM
+		
+
+				#categories
+					if skill.skillType.categories && skill.skillType.categories.length > 0
+						div(id=skill.skillType._id).category-group
+							h2 #{skill.skillType.name} Categories
+							each category, i in skill.skillType.categories
+								- var hasCategory = false;
+								each purchasedCategory, i in skill.categories
+									if category.name == purchasedCategory.name 
+										- hasCategory = true;
+										=console.log("hello!")	
+										- break;
+									else 
+										- hasCategory = false;
+								.categories.clearfix
+									//- for some reason, this conditional is blocking jquery from finding the subcategories?
+									if category.purchasableAsGroup && (category.purchasableAsGroup == true || category.purchasableAsGroup == 'true')
+										.checkbox
+											label
+												input(name=category.name, type='checkbox', checked=((hasCategory) ? 'checked' : null)).category 
+												strong #{category.name}
+									else
+										label #{category.name}
+									if category.subcategories && category.subcategories.length > 0
+										each subcategory, i in category.subcategories
+											- var hasSubcategory = false;
+											each purchasedSubcategory, i in skill.subcategories
+												if subcategory == purchasedSubcategory
+													- hasSubcategory = true;
+													- break;
+												else 
+													- hasSubcategory = false;
+											.col-xs-10.col-xs-offset-2
+												.checkbox
+													label
+														input(name=subcategory, type='checkbox', checked=((hasSubcategory) ? 'checked' : null)).subcategory
+														| #{subcategory}
+				input(type='hidden', value=character._id)#characterID
+
+			.modal.fade#addAnother
+				.modal-dialog
+					.modal-content
+						.modal-header
+							button(type='button', data-dismiss='modal').close
+								span(aria-hidden='true') &times;
+								span.sr-only Close
+							h4.modal-title Skill Added!
+						.modal-body.text-center
+							button(type='button').btn.btn-primary#another Add Another Skill
+							button(type='button').btn.btn-default#dashboard Back to Dashbard
+
+	.modal.fade#deleteModal
+		.modal-dialog
+			.modal-content
+				.modal-header
+					button(type='button', data-dismiss='modal').close
+						span(aria-hidden='true') &times;
+						span.sr-only Close
+					h4.modal-title Delete #{skill.skillType.name}
+				.modal-body
+					p Are you sure you want to delete #{skill.skillType.name}?
+				.modal-footer.text-center
+					a(href='/characters/skills/deleteSkill/' + character._id + ',' + skill._id).btn.btn-danger
+						span.glyphicon.glyphicon-trash
+						|  Delete Skill
+					button(type='button', data-dismiss='modal').btn.btn-default Cancel
+												
+	script(rel='text/javascript', src='/js/charactersSkillsEdit.js')

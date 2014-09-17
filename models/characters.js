@@ -6,14 +6,14 @@ var mongoose = require('mongoose'),
 
 
 var skillSchema = mongoose.Schema({
-	skill: Object,
+	skillType: Object,
 	categories: Array,
 	subcategories: Array,
 	characteristicBased: Boolean,
 	familiarity: Boolean,
-	baseRoll: Number,
-	rollMod: Number,
-	skillOptions: Object
+	roll: Number,
+	skillOptions: Object,
+	cost: Number
 });
 
 // Notes
@@ -79,18 +79,19 @@ var Character = mongoose.model('Character', characterSchema);
 
 module.exports = {
 
-	addSkill: function(characterID, skill, categories, subcategories, characteristicBased, familiarity, baseRoll, rollMod, skillOptions, callback) {
+	addSkill: function(characterID, skillType, categories, subcategories, characteristicBased, familiarity, roll, skillOptions, cost, callback) {
 		Character.findOne({ _id: characterID }, function(err, character) {
 			if(err) callback(err);
 			else {
 				character.Skills.push({
-					skill: skill,
+					skillType: skillType,
 					categories: categories,
 					subcategories: subcategories,
 					characteristicBased: characteristicBased,
-					baseRoll: baseRoll,
-					rollMod: rollMod,
-					skillOptions: skillOptions
+					familiarity: familiarity,
+					roll: roll,
+					skillOptions: skillOptions,
+					cost: cost
 				});
 				character.save(callback);
 			}
@@ -159,7 +160,6 @@ module.exports = {
 
 	findCharacterById: function(charID, callback) {
 		Character.findOne({ _id: charID }, function(err, results) {
-			console.log(charID);
 			if(err) callback(err);
 			else callback(err, results);
 		});
@@ -172,6 +172,16 @@ module.exports = {
 		});
 	},
 
+	findSkill: function(charID, skillID, callback) {
+		module.exports.findCharacterById(charID, function(err, character) {
+			if(err) callback(err);
+			else {
+				var skill = character.Skills.id(skillID);
+				callback(err, skill);
+			}
+		});
+	},
+
 	listSkillEnhancers: function() {
 		var skillEnhancers = ['Jack of All Trades', 'Linguist', 'Scholar', 'Scientist', 'Scientist', 'Traveler', 'Well-Connected'];
 		return skillEnhancers;
@@ -181,10 +191,60 @@ module.exports = {
 		Character.remove(condition, callback);
 	},
 
+	removeSkill: function(charID, skillID, callback) {
+		console.log(charID, skillID);
+		module.exports.findCharacterById(charID, function(err, character) {
+			if(err) callback(err);
+			else {
+				var skill = character.Skills.id(skillID);
+				var cost = skill.cost;
+				console.log(cost);
+
+				// Removes the skill from the returned character
+				skill.remove();
+
+				// Update the spent points of the character
+				module.exports.updateSpentPoints(character._id, cost, function(err, result) {
+					if(err) callback(err);
+					else console.log(result);
+				});
+
+				character.save(function(err, character, numAffected) {
+					if(err) callback(err);
+					else { 
+						console.log(err, character, numAffected);
+						callback(err, character, numAffected);
+					}
+				});
+			}
+		});
+	},
+
 	updateCharacter: function(query, updates, callback) {
 		Character.findOneAndUpdate(query, updates, function(err, result) {
 			if(err) callback(err);
 			else callback(err, result);
+		});
+	},
+
+	updateSpentPoints: function(characterID, points, callback) {
+		Character.findOne({ _id: characterID}, function(err, result) {
+			if(err) callback(err);
+			else if(result.pointsSpent) {
+			// If there is already a pointsSpent field, then it subtracts the number from this field (if more points are spent, then it will increase. if something is sold back, it will decrease)
+				result.pointsSpent -= points;
+				result.save(function(err) {
+					if(err) callback(err);
+					else callback(err, result);
+				});
+			} else {
+			// Otherwise, create the field by adding the points to the base pool. If the points number is negative, then it will subtract the number from the base pool
+				result.pointsSpent = result.basePool + points;
+				result.save(function(err) {
+					if(err) callback(err);
+					else callback(err, result);
+				});
+			}
 		});
 	}
 }
