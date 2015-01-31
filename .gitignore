@@ -1,0 +1,12 @@
+# System Files
+.DS_Store
+
+# Node.js files
+npm-debug.log
+bower_components/
+node_modules/
+
+# Other files
+*.swp
+*.sublime-workspace
+*.sublime-project
