@@ -26,6 +26,7 @@ block content
 				p Base Character Point Pool: #{character.basePool}
 				p Character Points Spent: #{character.pointsSpent}
 			
+	.row
 		.col-sm-6
 			h2 Combat
 			.row
@@ -46,6 +47,17 @@ block content
 			.row
 				.col-xs-2: abbr(title='Defensive Ego Combat Value')  DECV
 				.col-xs-6 #{character.ECV}
+		.col-sm-6
+			h2 Movement
+			.row
+				.col-xs-4 Running
+				.col-xs-4 #{character.Running}"
+			.row
+				.col-xs-4 Swimming
+				.col-xs-4 #{character.Swimming}"
+			.row
+				.col-xs-4 Leap
+				.col-xs-4 #{character.Leap}"
 	
 	.row
 		.col-sm-6
@@ -146,18 +158,7 @@ block content
 					strong STUN
 				.col-xs-4
 					p= character.STUN + character.STUNmod
-	.row
-		.col-sm-6
-			h2 Movement
-			.row
-				.col-xs-4 Running
-				.col-xs-4 #{character.Running}"
-			.row
-				.col-xs-4 Swimming
-				.col-xs-4 #{character.Swimming}"
-			.row
-				.col-xs-4 Leap
-				.col-xs-4 #{character.Leap}"
+
 	.row
 		.col-sm-6
 			h2 Skills
@@ -166,8 +167,18 @@ block content
 					strong Skill
 				.col-xs-6
 					strong Roll
+
+			- function sortAlphabetically(a, b) { 
+				- 	if(a.skillType.name > b.skillType.name) {
+				- 		 return 1;
+				- 	} else if(a.skillType.name < b.skillType.name) {
+				- 		 return -1;
+				- 	}
+				- 	return 0;
+				- }
+				- character.Skills.sort(sortAlphabetically);
 			each skill, i in character.Skills
-				if skill.subcategories.length > 0
+				if skill.subcategories && skill.subcategories.length > 0
 					if skill.skillType.name == 'Transport Familiarity'
 						each subcategory, i in skill.subcategories
 							.row
@@ -177,12 +188,23 @@ block content
 									.col-xs-6
 										p -#{skill.roll}
 
-				else if skill.categories.length > 0
-					if skill.skillType.name == 'Transport Familiarity'
+				else if skill.categories && skill.categories.length > 0
+					if skill.skillType.name =='Animal Handler'
+						.row
+								.col-xs-6
+									p #{skill.skillType.name}: 
+										each category, i in skill.categories
+											| #{category.name}
+											if i != skill.categories.length - 1
+												| , 
+								if skill.roll != 0 && skill.roll != null && skill.roll != undefined
+									.col-xs-6
+										p -#{skill.roll}
+					else if skill.skillType.name == 'Transport Familiarity'
 						each category, i in skill.categories
 							.row
 								.col-xs-6
-									p TF: #{subcategory}
+									p TF: #{category}
 								if skill.roll != 0 && skill.roll != null && skill.roll != undefined
 									.col-xs-6
 										p -#{skill.roll}
@@ -190,7 +212,10 @@ block content
 				else
 					.row
 						.col-xs-6
-							p #{skill.skillType.name}
+							if skill.skillType.name == 'Language (Basic Conversation)' || skill.skillType.name == 'Language (Fluent Conversation)' || skill.skillType.name == 'Language (Completely Fluent, with Accent)' || skill.skillType.name == 'Language (Idiomatic, native accent)' || skill.skillType.name == 'Language (Imitate Dialects)'
+								p #{skill.skillType.name}: #{skill.skillOptions.language}
+							else
+								p #{skill.skillType.name}
 						if skill.roll != 0 && skill.roll != null && skill.roll != undefined
 							.col-xs-6
 								p -#{skill.roll}

@@ -124,6 +124,38 @@ router.post('/addSkill', function(req, res) {
 	});
 });
 
+router.post('/updateSkill', function(req, res) {
+	var skillID = req.body.skillID,
+		categories = (req.body.categories) ? req.body.categories : null,
+		subcategories = (req.body.subcategories) ? req.body.subcategories : null,
+		familiarity = req.body.familiarity,
+		characteristicBased = req.body.characteristicBased,
+		roll = Number(req.body.roll);
+		skillOptions = (req.body.skillOptions) ? req.body.skillOptions : null,
+		cost = req.body.cost;
+
+	var updates = {
+		categories: categories,
+		subcategories: subcategories,
+		familiarity: familiarity,
+		characteristicBased: characteristicBased,
+		roll: roll,
+		skillOptions: skillOptions,
+		cost: cost
+	};
+
+	characters.updateSkill(req.body.characterID, skillID, updates, function(err, result, numAffected) {
+		if(err) {
+			throw new Error(err);
+		} else {
+			characters.updateSpentPoints(req.body.characterID, -cost, function(err, updatedChar) {
+				if(err) throw new Error(err);
+			});
+			res.send(result);	
+		}
+	});
+});
+
 router.post('/updateCharacter', function(req, res) {
 	// All of the mods need to have the base subtracted from them in order to get the actual difference. Otherwise, these stats will inflate every time they're updated.
 	console.log(req.body._id);

@@ -18,15 +18,15 @@ block content
 					input(type="text", name='type', id='type', value='#{skill.type}').form-control
 				.form-group
 					label(for='associatedCharacteristic').control-label Roll
-					input(type="text", name='associatedCharacteristic', id='associatedCharacteristic', value='#{skill.associatedCharacteristic}').form-control
+					input(type="text", name='associatedCharacteristic', id='associatedCharacteristic', value=((skill.associatedCharacteristic && skill.associatedCharacteristic != '' && skill.associatedCharacteristic != 'none') ? skill.associatedCharacteristic : null)).form-control
 				.form-group
 					label(for='baseCost').control-label Base Cost
 					input(type="text", name='baseCost', id='baseCost', value='#{skill.baseCost}').form-control
 				.form-group
 					label(for='basePlusOne').control-label Base +1 Cost
-					input(type="text", name='basePlusOne', id='basePlusOne', value='#{skill.basePlusOne}').form-control
+					input(type="text", name='basePlusOne', id='basePlusOne', value=((skill.basePlusOne) ? skill.basePlusOne : null)).form-control
 
-			.col-sm-4
+			.col-sm-4#categoryContainer
 				if skill.categories.length > 0
 					each category, i in skill.categories
 						.form-group.clearfix

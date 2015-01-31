@@ -191,7 +191,7 @@ router.post('/updateSkillType', function(req, res) {
 	console.log('Categories: ', categories);
 	skillTypes.updateSkillType({ _id: req.body.skillID }, 
 		{ 	
-			skill: req.body.skill,
+			name: req.body.skill,
 			type: req.body.type,
 			associatedCharacteristic: req.body.associatedCharacteristic,
 			baseCost: req.body.baseCost,		// This is also the cost for one general category of a skill

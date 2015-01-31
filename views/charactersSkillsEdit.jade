@@ -1,7 +1,7 @@
 extends layout
 
 block content
-	=console.log(skill.skillOptions)
+	=console.log(skill)
 	h1 #{title}
 		a(href='/characters/skills/' + character._id).btn.btn-link Back
 	.row
@@ -15,25 +15,38 @@ block content
 				span#roll 
 					if skill.roll != 0
 						| #{skill.roll}
+			input(type='hidden', value=skill.skillType._id)#skilltypeID
+			input(type='hidden', value=skill._id)#skillID
 		.col-sm-4
 			#skillDesciption
 				//- TODO: add skill description here that fades in and out when the skill changes
-	form(method='post', action='/characters/addSkill')
+	form(method='post', action='/characters/addSkill')#editSkillForm
 		.row
 			.col-sm-3
 				.checkbox
 					label
 						input(type='checkbox', name='familiarity', checked=((skill.familiarity) ? 'checked' : null), disabled=((skill.skillType.basePlusOne && skill.skillType.basePlusOne != undefined && skill.skillType.basePlusOne != '') ? null : 'disabled'))#familiarity
 						| Familiarity
+
+				if skill.skillType.basePlusOne && skill.familiarity != true
+					- var bonusToRoll;
+					if skill.skillType.associatedCharacteristic != 'none' && skill.skillType.associatedCharacteristic != 'varies' 
+						- bonusToRoll = skill.roll - (9 + (Number(character[skill.skillType.associatedCharacteristic])/5));
+					else if skill.skillType.associatedCharacteristic == 'varies' && skill.skillOptions.associatedCharacteristic
+						- bonusToRoll = skill.roll - (9 + (Number(character[skill.skillOptions.associatedCharacteristic])/5));
+					else
+						- bonusToRoll = 0;
+
 				.form-group#bonusToRoll
 					label(for='modifier').control-label Bonus to roll
 					.row
 						.col-xs-4
-							input(type='number', name='modifier', min='0', value='0').form-control#modifier
+							input(type='number', name='modifier', min='0', value=((skill.skillType.basePlusOne && skill.familiarity != true) ? bonusToRoll : 0), disabled=((skill.familiarity || skill.skillType.basePlusOne == undefined || skill.skillType.basePlusOne == '') ? 'disabled' : null)).form-control#modifier
 				button(type='button').btn.btn-primary.btn-lg#addSkill Update Skill
 				button(type='button', data-toggle='modal', data-target='#deleteModal').btn.btn-link
 					span.glyphicon.glyphicon-trash
 					|  Delete Skill
+
 			.col-sm-8
 				#options
 					if skill.skillOptions != undefined
@@ -88,14 +101,13 @@ block content
 
 						//- Language
 						if skill.skillType.name == 'Language (Basic Conversation)' || skill.skillType.name == 'Language (Fluent Conversation)' || skill.skillType.name == 'Language (Completely Fluent, with Accent)' || skill.skillType.name == 'Language (Idiomatic, native accent)' || skill.skillType.name == 'Language (Imitate Dialects)'
-							=console.log(skill.skillOptions['language'])
 							div#languageOption
 								.form-group
 									label(for='language').control-label Language
 									input(type='text', name='language', placeholder='Language', value=((skill.skillOptions['language']) ? skill.skillOptions['language'] : null)).form-control#language
 								.checkbox
 									label
-										input(type='checkbox', name='literate', checked=((skill.skillOptions.literate && skill.skillOptions.literate == 'on') ? 'checked' : null))
+										input(type='checkbox', name='literate', checked=((skill.skillOptions.literate && skill.skillOptions.literate == 'true') ? 'checked' : null))
 										| Literate (If not standard for setting)
 
 						//- Knowledge Skill
@@ -120,36 +132,36 @@ block content
 								.form-group
 									label(for='halfPointPSLattack').control-label Type of Attack
 									//- TODO: once powers are built, should be a dropdown of attack powers (which can also be weapons)
-									input(name='halfPointPSLattack', type='text', placeholder='Attack').form-control#halfPointPSLattack
+									input(name='halfPointPSLattack', type='text', placeholder='Attack', value=((skill.skillOptions.halfPointPSLattack) ? skill.skillOptions.halfPointPSLattack : null)).form-control#halfPointPSLattack
 
-						if skill.skillType.name == 'Penaly Skill Level (2-point)'
+						if skill.skillType.name == 'Penalty Skill Level (2-point)'
 							div#2pointPSLOption
 								.form-group
 									label(for='2pointPSLattack1').control-label Any 3 Attacks
-									input(name='2pointPSLattack1', type='text', placeholder='Attack 1').form-control#2pointPSLattack1
+									input(name='2pointPSLattack1', type='text', placeholder='Attack 1', value=((skill.skillOptions['2pointPSLattack1']) ? skill.skillOptions['2pointPSLattack1'] : null), disabled=((skill.skillOptions['2pointPSLattacks']) ? 'disabled' : null)).form-control#2pointPSLattack1
 									br
-									input(name='2pointPSLattack2', type='text', placeholder='Attack 2').form-control#2pointPSLattack2
+									input(name='2pointPSLattack2', type='text', placeholder='Attack 2', value=((skill.skillOptions['2pointPSLattack2']) ? skill.skillOptions['2pointPSLattack2'] : null), disabled=((skill.skillOptions['2pointPSLattacks']) ? 'disabled' : null)).form-control#2pointPSLattack2
 									br
-									input(name='2pointPSLattack3', type='text', placeholder='Attack 3').form-control#2pointPSLattack3
+									input(name='2pointPSLattack3', type='text', placeholder='Attack 3', value=((skill.skillOptions['2pointPSLattack3']) ? skill.skillOptions['2pointPSLattack3'] : null), disabled=((skill.skillOptions['2pointPSLattacks']) ? 'disabled' : null)).form-control#2pointPSLattack3
 								div - Or -
 								br
 								.form-group
 									label(for='2pointPSLattacks') Tight group of attacks
-									input(name='2pointPSLattacks', type='text', placeholder='Group of Attacks').form-control#2pointPSLattacks
+									input(name='2pointPSLattacks', type='text', placeholder='Group of Attacks', value=((skill.skillOptions['2pointPSLattacks']) ? skill.skillOptions['2pointPSLattacks'] : null), disabled=((skill.skillOptions['2pointPSLattack1'] || skill.skillOptions['2pointPSLattack2'] || skill.skillOptions['2pointPSLattack3']) ? 'disabled' : null)).form-control#2pointPSLattacks
 
 						//- Power Skill
 						if skill.skillType.name == 'Power'
 							div#powerOption
 								.form-group
 									label(for='customLabel').control-label Custom Label
-									input(name='customLabel', type='text', placeholder='E.G., "Brick Tricks" or "Magic"').form-control#customLabel
+									input(name='customLabel', type='text', placeholder='E.G., "Brick Tricks" or "Magic"', value=((skill.skillOptions.customLabel) ? skill.skillOptions.customLabel : null)).form-control#customLabel
 
 						//- Professional Skills
 						if skill.skillType.name == 'Professional Skill'
 							div#professionalOption
 								.form-group
 									label(for='professionalSkillArea').control-label Area of Knowledge
-									input(name='professionalSkillArea' type='text' placeholder='Area of Knowledge').form-control#professionalSkillArea
+									input(name='professionalSkillArea', type='text', placeholder='Area of Knowledge', value=((skill.skillOptions.professionalSkillArea) ? skill.skillOptions.professionalSkillArea : null)).form-control#professionalSkillArea
 
 						//- Rapid Attack
 						if skill.skillType.name == 'Rapid Attack'
@@ -161,28 +173,119 @@ block content
 										option(value='HTH', selected=((skill.skillOptions.rapidAttackType == 'HTH') ? 'selected' : null)) HTH
 										option(value='Ranged', selected=((skill.skillOptions.rapidAttackType == 'Ranged') ? 'selected' : null)) Ranged
 
+						//- Skill Levels
+						if skill.skillType.name == 'Skill Level (2-point)'
+							#2pointSLOption
+								.form-group
+									label(for='2pointSLskill').control-label One Skill
+									select(name='2pointSLskill').form-control#2pointSLskill
+										option(value='') Select Skill
+										each skill, i in character.Skills
+											//- Show options for Background skills
+											if skill.skillType.name.match(/Language/)
+												option(value='#{skill.skillType.name}: #{skill.skillOptions.language}') Language: #{skill.skillOptions.language}
+											else if skill.skillType.name.match(/^Power$/)
+												option(value='#{skill.skillType.name}: #{skill.skillOptions.customLabel}') Power: #{skill.skillOptions.customLabel}
+											else if skill.skillType.name.match(/Knowledge Skill/)
+												option(value='#{skill.skillType.name}: #{skill.skillOptions.knowledgeSkillArea}') KS: #{skill.skillOptions.knowledgeSkillArea}
+											else if skill.skillType.name.match(/Professional Skill/)
+												option(value='#{skill.skillType.name}: #{skill.skillOptions.professionalSkillArea}') PS: #{skill.skillOptions.professionalSkillArea}
+											else if skill.skillType.name.match(/Science Skill/)
+												option(value='#{skill.skillType.name}: #{skill.skillOptions.scienceSkillArea}') SS: #{skill.skillOptions.scienceSkillArea}
+											else if !skill.skillType.name.match(/Skill Level/) && skill.skillType.basePlusOne
+												option(value='#{skill.skillType.name}') #{skill.skillType.name}
+							
+						if skill.skillType.name == 'Skill Level (3-point)'
+							#3pointSLOption
+								.form-group
+									label(for='3pointSLskill1').control-label Any 3 Closely Related Skills
+									//- TODO: once powers are built, should be a dropdown of attack powers (which can also be weapons)
+									select(name='3pointSLskill1', placeholder='Skill 1').form-control#3pointSLskill1
+										option(value='') Select Skill
+										each charSkill, i in character.Skills
+											//- Show options
+											if charSkill.skillType.name.match(/Language/)
+												option(value='#{charSkill.skillType.name}: #{charSkill.skillOptions.language}') Language: #{charSkill.skillOptions.language}
+											else if charSkill.skillType.name.match(/^Power$/)
+												option(value='#{charSkill.skillType.name}: #{charSkill.skillOptions.customLabel}') Power: #{charSkill.skillOptions.customLabel}
+											else if charSkill.skillType.name.match(/Knowledge Skill/)
+												option(value='#{charSkill.skillType.name}: #{charSkill.skillOptions.knowledgeSkillArea}') KS: #{charSkill.skillOptions.knowledgeSkillArea}
+											else if charSkill.skillType.name.match(/Professional Skill/)
+												option(value='#{charSkill.skillType.name}: #{charSkill.skillOptions.professionalSkillArea}') PS: #{charSkill.skillOptions.professionalSkillArea}
+											else if charSkill.skillType.name.match(/Science Skill/)
+												option(value='#{charSkill.skillType.name}: #{charSkill.skillOptions.scienceSkillArea}') SS: #{charSkill.skillOptions.scienceSkillArea}
+											else if !charSkill.skillType.name.match(/Skill Level/) && charSkill.skillType.basePlusOne
+												option(value='#{charSkill.skillType.name}') #{charSkill.skillType.name}
+
+									br
+									select(name='3pointSLskill2', placeholder='Skill 2').form-control#3pointSLskill2
+										option(value='') Select Skill
+										each charSkill, i in character.Skills
+											//- Show options
+											if charSkill.skillType.name.match(/Language/)
+												option(value='#{charSkill.skillType.name}: #{charSkill.skillOptions.language}') Language: #{charSkill.skillOptions.language}
+											else if charSkill.skillType.name.match(/^Power$/)
+												option(value='#{charSkill.skillType.name}: #{charSkill.skillOptions.customLabel}') Power: #{charSkill.skillOptions.customLabel}
+											else if charSkill.skillType.name.match(/Knowledge Skill/)
+												option(value='#{charSkill.skillType.name}: #{charSkill.skillOptions.knowledgeSkillArea}') KS: #{charSkill.skillOptions.knowledgeSkillArea}
+											else if charSkill.skillType.name.match(/Professional Skill/)
+												option(value='#{charSkill.skillType.name}: #{charSkill.skillOptions.professionalSkillArea}') PS: #{charSkill.skillOptions.professionalSkillArea}
+											else if charSkill.skillType.name.match(/Science Skill/)
+												option(value='#{charSkill.skillType.name}: #{charSkill.skillOptions.scienceSkillArea}') SS: #{charSkill.skillOptions.scienceSkillArea}
+											else if !charSkill.skillType.name.match(/Skill Level/) && charSkill.skillType.basePlusOne
+												option(value='#{charSkill.skillType.name}') #{charSkill.skillType.name}
+
+									br
+									select(name='3pointSLskill3', placeholder='Skill 3').form-control#3pointSLskill3
+										option(value='') Select Skill
+										each charSkill, i in character.Skills
+											//- Show options
+											if charSkill.skillType.name.match(/Language/)
+												option(value='#{charSkill.skillType.name}: #{charSkill.skillOptions.language}') Language: #{charSkill.skillOptions.language}
+											else if charSkill.skillType.name.match(/^Power$/)
+												option(value='#{charSkill.skillType.name}: #{charSkill.skillOptions.customLabel}') Power: #{charSkill.skillOptions.customLabel}
+											else if charSkill.skillType.name.match(/Knowledge Skill/)
+												option(value='#{charSkill.skillType.name}: #{charSkill.skillOptions.knowledgeSkillArea}') KS: #{charSkill.skillOptions.knowledgeSkillArea}
+											else if charSkill.skillType.name.match(/Professional Skill/)
+												option(value='#{charSkill.skillType.name}: #{charSkill.skillOptions.professionalSkillArea}') PS: #{charSkill.skillOptions.professionalSkillArea}
+											else if charSkill.skillType.name.match(/Science Skill/)
+												option(value='#{charSkill.skillType.name}: #{charSkill.skillOptions.scienceSkillArea}') SS: #{charSkill.skillOptions.scienceSkillArea}
+											else if !charSkill.skillType.name.match(/Skill Level/) && charSkill.skillType.basePlusOne
+												option(value='#{charSkill.skillType.name}') #{charSkill.skillType.name}
+
+						if skill.skillType.name == 'Skill Level (5-point)'
+							#5pointSLOption
+								.form-group
+									label(for='5pointSLskills') Group of Skills
+									select(name='5pointSLskills').form-control#3pointSLskills
+										option(value="Agility") Agility Skills
+										option(value="Background") Background Skills
+										option(value="Combat") Combat Skills
+										option(value="Intellect") Intellect Skills
+										option(value="Interaction") Interaction Skills
+
 						//- Science Skills
 						if skill.skillType.name == 'Science Skill'
 							div#scienceOption
 								.form-group
 									label(for='scienceSkillArea').control-label Area of Knowledge
-									input(name='scienceSkillArea' type='text' placeholder='Area of Knowledge').form-control#scienceSkillArea
+									input(name='scienceSkillArea', type='text', placeholder='Area of Knowledge', value=((skill.skillOptions.scienceSkillArea) ? skill.skillOptions.scienceSkillArea : null)).form-control#scienceSkillArea
 
 						//- Associated Characteristic
 						if skill.skillType.name == 'Professional Skill' || skill.skillType.name == 'Power'
 							div#associatedCharacteristicOptions
 								.form-group
 									label(for='associatedCharacteristic').control-label Associated Characteristic
-									select(name='associatedCharacteristic', disabled).form-control#associatedCharacteristic
+									select(name='associatedCharacteristic', disabled=((skill.skillOptions.characteristicBased || skill.skillOptions.characteristicBased == 'true') ? null : 'disabled')).form-control#associatedCharacteristic
 										option(value='', selected) Select Characteristic
-										option(value='STR') STR
-										option(value='DEX') DEX
-										option(value='INT') INT
-										option(value='CON') CON
-										option(value='BODY') BODY
-										option(value='EGO') EGO
-										option(value='PRE') PRE
-										option(value='COM') COM
+										option(value='STR', selected=((skill.skillOptions.associatedCharacteristic == 'STR') ? 'selected' : null)) STR
+										option(value='DEX', selected=((skill.skillOptions.associatedCharacteristic == 'DEX') ? 'selected' : null)) DEX
+										option(value='INT', selected=((skill.skillOptions.associatedCharacteristic == 'INT') ? 'selected' : null)) INT
+										option(value='CON', selected=((skill.skillOptions.associatedCharacteristic == 'CON') ? 'selected' : null)) CON
+										option(value='BODY', selected=((skill.skillOptions.associatedCharacteristic == 'BODY') ? 'selected' : null)) BODY
+										option(value='EGO', selected=((skill.skillOptions.associatedCharacteristic == 'EGO') ? 'selected' : null)) EGO
+										option(value='PRE', selected=((skill.skillOptions.associatedCharacteristic == 'PRE') ? 'selected' : null)) PRE
+										option(value='COM', selected=((skill.skillOptions.associatedCharacteristic == 'COM') ? 'selected' : null)) COM
 		
 
 				#categories
@@ -194,7 +297,6 @@ block content
 								each purchasedCategory, i in skill.categories
 									if category.name == purchasedCategory.name 
 										- hasCategory = true;
-										=console.log("hello!")	
 										- break;
 									else 
 										- hasCategory = false;
@@ -232,8 +334,7 @@ block content
 								span.sr-only Close
 							h4.modal-title Skill Added!
 						.modal-body.text-center
-							button(type='button').btn.btn-primary#another Add Another Skill
-							button(type='button').btn.btn-default#dashboard Back to Dashbard
+							button(type='button').btn.btn-default#done Back to Dashbard
 
 	.modal.fade#deleteModal
 		.modal-dialog

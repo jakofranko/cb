@@ -227,6 +227,27 @@ module.exports = {
 		});
 	},
 
+	updateSkill: function(charID, skillID, updates, callback) {
+		module.exports.findCharacterById(charID, function(err, character) {
+			if(err) callback(err);
+			else {
+				console.log(character.Skills.id(skillID));
+				character.Skills.id(skillID).categories = updates.categories;
+				character.Skills.id(skillID).subcategories = updates.subcategories;
+				character.Skills.id(skillID).cost = updates.cost;
+				character.Skills.id(skillID).roll = updates.roll;
+				character.Skills.id(skillID).familiarity = updates.familiarity;
+				character.Skills.id(skillID).characteristicBased = updates.characteristicBased;
+				character.Skills.id(skillID).skillOptions = updates.skillOptions;
+				console.log(character.Skills.id(skillID));
+				
+				character.save(function(err, result, numAffected) {
+					callback(err, result, numAffected);
+				});
+			}
+		});
+	},
+
 	updateSpentPoints: function(characterID, points, callback) {
 		Character.findOne({ _id: characterID}, function(err, result) {
 			if(err) callback(err);

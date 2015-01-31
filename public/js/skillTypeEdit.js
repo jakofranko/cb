@@ -5,7 +5,7 @@ $(document).ready(function() {
 			html +=		'<label class="control-label"></label>';
 			html +=		'<div class="checkbox">';
 			html +=			'<label>';
-			html +=				'<input type="checkbox", name="category' + (categoryCount+1) + 'purchasable" checked/> purchasable as group?';
+			html +=				'<input type="checkbox", name="category' + (categoryCount+1) + 'purchasable" checked/> Purchasable as group?';
 			html +=			'</label>';
 			html +=		'</div>';
 			html +=			'<div class="input-group">';
@@ -17,9 +17,11 @@ $(document).ready(function() {
 			html +=		'<button type="button" class="btn btn-default pull-right add-sub">Add Sub-Category</button>';
 			html += '</div>';
 
-		var appendTo = $(".category").last().parents('.form-group');
-
-		appendTo.after(html);
+		if(categoryCount > 0) {
+			$(".category").last().parents('.form-group').after(html);
+		} else {
+			$("#categoryContainer").prepend(html);
+		}
 	});
 
 	$(document).on('click', '.add-sub', function() {
@@ -44,11 +46,8 @@ $(document).ready(function() {
 	$(document).on('click', '.del-category', function() {
 		var parent = $(this).parents('.form-group');
 		var catNum = $('.category').length;
-		if(catNum > 1) {
-			parent.remove();
-		} else {
-			return false;
-		}
+
+		parent.remove();
 	});
 
 	$(document).on('click', '.del-sub', function() {

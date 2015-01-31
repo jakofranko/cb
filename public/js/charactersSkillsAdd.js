@@ -1,4 +1,6 @@
 $(document).ready(function() {
+	$('#addSkillForm').validate();
+
 	var character;
 	var skill;
 	$.ajax({
@@ -55,7 +57,6 @@ $(document).ready(function() {
 		var literate = ($('[name=literate]').prop('checked') == false || $('[name=literate]').filter(':visible').length == 0) ? false : true;
 		var subcategories = false;
 		if(skill.categories.length > 0) {
-			console.log("has categories");
 			// Check to see if selected skill has any sub categories
 			for(i = 0; i < skill.categories.length; i++) {
 				if(skill.categories[i].subcategories.length > 0) {
@@ -76,14 +77,11 @@ $(document).ready(function() {
 					cost += skill.baseCost;
 				}
 			});
-			console.log(cost);
 
 			// Increment cost per subcategory
 			if(subcategories) {
-				console.log("has subcategories");
 				$('.subcategory').filter(':visible').filter(':checked').each(function() {
 					if($(this).parents('.categories').find('.category').prop('checked') == false || $(this).parents('.categories').find('.category').length == 0) {
-						console.log("has cost");
 						cost += 1;
 					}
 				});
@@ -221,6 +219,17 @@ $(document).ready(function() {
 			switchOptions('#scienceOption', true);
 		}
 
+		// SLs -----------------------------
+		if(skilltypeName == 'Skill Level (2-point)') {
+			switchOptions('#2pointSLOption', false);
+		}
+		if(skilltypeName == 'Skill Level (3-point)') {
+			switchOptions('#3pointSLOption', false);
+		}
+		if(skilltypeName == 'Skill Level (5-point)') {
+			switchOptions('#5pointSLOption', false);
+		}
+
 		// Validation
 		// --------------------------------------
 		if(skill.basePlusOne) {
@@ -273,6 +282,7 @@ $(document).ready(function() {
 
 	$('#familiarity').change(function() {
 		if($(this).prop('checked')) {
+			$('#modifier').val('0');
 			$('#modifier').attr('disabled', true);
 		} else {
 			$('#modifier').attr('disabled', false);
@@ -305,7 +315,7 @@ $(document).ready(function() {
 
 	var threeAttacks = /attack\d{1}$/;
 	var groupOfAttacks = /attacks$/;
-	$('#3pointCSLOption').find('input').focus(function() {
+	$('#3pointCSLOption').add('#2pointPSLOption').find('input').focus(function() {
 		var inputID = $(this).attr('id');
 		if(inputID.match(threeAttacks)) {
 			$(this).parents('.form-group').siblings('.form-group').find('input').filter(function() {
@@ -317,12 +327,11 @@ $(document).ready(function() {
 			$(this).parents('.form-group').siblings('.form-group').find('input').filter(function() {
 				if($(this).attr('id').match(threeAttacks)) {
 					$(this).prop('disabled', true);
-					$(this).val(null);
 				}
 			});
 		}
 	});
-	$('#3pointCSLOption').find('input').blur(function() {
+	$('#3pointCSLOption').add('#2pointPSLOption').find('input').blur(function() {
 		$(this).parents('.form-group').parent().find('input').prop('disabled', false);
 	});
 
@@ -364,64 +373,70 @@ $(document).ready(function() {
 	
 	// TODO: Process and then post data when the add skill buton is clicked
 	$('#addSkill').click(function() {
-		var characterID = $('#characterID').val();
-		var options = {};
-		var characteristicBased = true;
-		var familiarity = false;
-		var categories = [];
-		var subcategories = [];
-		var roll = Number($('#roll').text().replace("-", ""));
-		var cost = Number($('#skillCost').text());
+		if($('#addSkillForm').valid()) {
+			var characterID = $('#characterID').val();
+			var options = {};
+			var characteristicBased = true;
+			var familiarity = false;
+			var categories = [];
+			var subcategories = [];
+			var roll = Number($('#roll').text().replace("-", ""));
+			var cost = Number($('#skillCost').text());
 
-		$('#options').find('[name]').filter(':visible').not(':disabled').each(function() {
-			var key = $(this).attr('name');
-			var value = $(this).val();
-			if(value == 'on') {
-				options[key] == $(this).prop('checked');
-			} else if(value != null && value != undefined && value != "") {
-				options[key] = value;	
+			$('#options').find('[name]').filter(':visible').not(':disabled').each(function() {
+				var key = $(this).attr('name');
+				var value = $(this).val();
+				if(value == 'on') {
+					options[key] = $(this).prop('checked');
+					console.log(options[key], key, $(this).prop('checked'));
+				} else if(value != null && value != undefined && value != "") {
+					options[key] = value;	
+				}
+			});
+
+
+			// If a category is checked, then it adds it, and all it's subcategories to the category list
+			$('#categories').find('.category').filter(':visible').not(':disabled').each(function() {
+				if($(this).prop('checked')) {
+					var thisSubcategories = [];
+					$(this).parents('.categories').find('.subcategory').each(function() {
+						thisSubcategories.push($(this).attr('name'));
+					});
+					categories.push({ name: $(this).attr('name'), subcategories: thisSubcategories});
+				}
+			});
+
+			// If a subcategory is checked, and it's parent is not checked, then it adds it to an array of subcategories
+			$('#categories').find('.subcategory').filter(':visible').not(':disabled').each(function() {
+				if($(this).prop('checked') && ($(this).parents('.categories').find('.category').prop('checked') == false || $(this).parents('.categories').find('.category').length == 0)) {
+					subcategories.push($(this).attr('name'));
+				}
+			});
+
+			if($('#backgroundSkill').filter(':visible').length > 0 && $('#characteristicBased').prop('checked') == false) {
+				characteristicBased = false;
 			}
-		});
 
-		// If a category is checked, then it adds it, and all it's subcategories to the category list
-		$('#categories').find('.category').filter(':visible').not(':disabled').each(function() {
-			if($(this).prop('checked')) {
-				var thisSubcategories = [];
-				$(this).parents('.categories').find('.subcategory').each(function() {
-					thisSubcategories.push($(this).attr('name'));
-				});
-				categories.push({ name: $(this).attr('name'), subcategories: thisSubcategories});
+			if($('#familiarity').prop('checked')) {
+				familiarity = true;
 			}
-		});
-
-		// If a subcategory is checked, and it's parent is not checked, then it adds it to an array of subcategories
-		$('#categories').find('.subcategory').filter(':visible').not(':disabled').each(function() {
-			if($(this).prop('checked') && ($(this).parents('.categories').find('.category').prop('checked') == false || $(this).parents('.categories').find('.category').length == 0)) {
-				subcategories.push($(this).attr('name'));
+			
+			var skillToSubmit = {
+				characterID: characterID,
+				skill: skill,
+				roll: roll,
+				categories: categories,
+				subcategories: subcategories,
+				characteristicBased: characteristicBased,
+				familiarity: familiarity,
+				skillOptions: options,
+				cost: cost
 			}
-		});
-
-		if($('#backgroundSkill').filter(':visible').length > 0 && $('#characteristicBased').prop('checked') == false) {
-			characteristicBased = false;
+			console.log(skillToSubmit);
+			$.post('/characters/addSkill', skillToSubmit).done(function() { $('#addAnother').modal('show'); });
+		} else {
+			alert('Please fill out all the required fields');
 		}
-
-		if($('#familiarity').prop('checked')) {
-			familiarity = true;
-		}
-		
-		var skillToSubmit = {
-			characterID: characterID,
-			skill: skill,
-			roll: roll,
-			categories: categories,
-			subcategories: subcategories,
-			characteristicBased: characteristicBased,
-			familiarity: familiarity,
-			skillOptions: options,
-			cost: cost
-		}
-		console.log(skillToSubmit);
-		$.post('/characters/addSkill', skillToSubmit).done(function() { $('#addAnother').modal('show'); });		
 	});
 	
 	$('#another').click(function() { location.reload(); });

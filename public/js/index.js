@@ -34,4 +34,8 @@ $(document).ready(function() {
       }
     });
   });
+
+  $('#login').on('shown.bs.modal', function() {
+    $('#login-username').focus();
+  });
 });
