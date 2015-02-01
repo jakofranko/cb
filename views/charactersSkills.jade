@@ -77,5 +77,5 @@ block content
 										//- insert a space before all caps and uppercase the first character
 										//- if it matches one of the skill level skills, it will make sure those get displayed without spaces
 										p
-											= i.replace(/([A-Z0-9])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); }).replace(/([A-Z]?)\s(S)\s(L)/, ' $1$2$3 ')
+											= i.replace(/([A-Z0-9])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); }).replace(/([PC]?)\s(S)\s(L)/, ' $1$2$3 ').replace(/(\d)(point)/, '$1-$2', function(str){ return str.toUpperCase(); })
 											| : #{option}

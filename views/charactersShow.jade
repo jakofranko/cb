@@ -9,6 +9,7 @@ block content
 			return Math.round(9 - (characteristic / 5));
 	- 	}
 	- }
+	- var slRegex = /(\w*)?Skill Level/
 
 	a(href="/dashboard/" + username)
 		span.glyphicon.glyphicon-arrow-left
@@ -208,17 +209,36 @@ block content
 								if skill.roll != 0 && skill.roll != null && skill.roll != undefined
 									.col-xs-6
 										p -#{skill.roll}
-								
-				else
+					
+				else if skill.skillType.name.match(slRegex) && skill.skillOptions
+					- var slOptions = ""
 					.row
 						.col-xs-6
-							if skill.skillType.name == 'Language (Basic Conversation)' || skill.skillType.name == 'Language (Fluent Conversation)' || skill.skillType.name == 'Language (Completely Fluent, with Accent)' || skill.skillType.name == 'Language (Idiomatic, native accent)' || skill.skillType.name == 'Language (Imitate Dialects)'
-								p #{skill.skillType.name}: #{skill.skillOptions.language}
-							else
-								p #{skill.skillType.name}
-						if skill.roll != 0 && skill.roll != null && skill.roll != undefined
+							p
+								| +1 to 
+								each option, key in skill.skillOptions
+									if key != '5pointCSLattacks'
+										- slOptions += option + ', '
+								= slOptions.replace(/,\s?$/, '', function(str){ return str; })
+				else
+					- var skillName = skill.skillType.name
+					- console.log(skill)
+					if skillName.match(/Professional Skill/)
+						.row
+							.col-xs-6
+								p PS: #{skill.skillOptions.professionalSkillArea}
 							.col-xs-6
 								p -#{skill.roll}
+					else
+						.row
+							.col-xs-6
+								if skill.skillType.name == 'Language (Basic Conversation)' || skill.skillType.name == 'Language (Fluent Conversation)' || skill.skillType.name == 'Language (Completely Fluent, with Accent)' || skill.skillType.name == 'Language (Idiomatic, native accent)' || skill.skillType.name == 'Language (Imitate Dialects)'
+									p #{skill.skillType.name}: #{skill.skillOptions.language}
+								else
+									p #{skill.skillType.name}
+							if skill.roll != 0 && skill.roll != null && skill.roll != undefined
+								.col-xs-6
+									p -#{skill.roll}
 
 
 	h2 Description
