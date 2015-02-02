@@ -29,8 +29,7 @@ router.get('/skills/edit/:characterID,:skillID', function(req, res) {
 		if(character.userID == req.session._id) {
 			character = character;
 			characters.findSkill(req.params.characterID, req.params.skillID, function(err, skill) {
-				console.log(skill);
-				res.render('charactersSkillsEdit', { title: 'Editing ' + skill.skillType.name, character: character, username: req.session.username, skill: skill });
+								res.render('charactersSkillsEdit', { title: 'Editing ' + skill.skillType.name, character: character, username: req.session.username, skill: skill });
 			});
 		} else { 
 			res.redirect('/');
@@ -72,14 +71,12 @@ router.get('/edit/:characterID', function(req, res) {
 
 router.get('/remove/:characterID', function(req, res) {
 	characters.removeCharacter({ _id: req.params.characterID }, function(err, character) {
-		console.log(err, character);
 		res.redirect('/dashboard/' + req.session.username);
 	});
 });
 
 router.get('/:characterID', function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
-		console.log(character.Skills[0]);
 		res.render('charactersShow', { title: character.alias, character: character, username: req.session.username });
 	});
 });
@@ -110,8 +107,7 @@ router.post('/addSkill', function(req, res) {
 			skillOptions = req.body.skillOptions || [],
 			cost = req.body.cost;
 
-	console.log(req.body);
-
+	
 	characters.addSkill(req.body.characterID, req.body.skill, req.body.categories, req.body.subcategories, req.body.characteristicBased, req.body.familiarity, Number(req.body.roll), req.body.skillOptions, req.body.cost, function(err, result) {
 		if(err) {
 			throw new Error(err);
@@ -158,8 +154,7 @@ router.post('/updateSkill', function(req, res) {
 
 router.post('/updateCharacter', function(req, res) {
 	// All of the mods need to have the base subtracted from them in order to get the actual difference. Otherwise, these stats will inflate every time they're updated.
-	console.log(req.body._id);
-	characters.updateCharacter({_id: req.body._id },
+		characters.updateCharacter({_id: req.body._id },
 	{ 
 		alias: req.body.alias,
 		name: req.body.name,
@@ -193,8 +188,7 @@ router.post('/updateCharacter', function(req, res) {
 		PreAtt: Number(req.body.PreAtt),
 		pointsSpent: Number(req.body.pointsSpent)
 	}, function(err, result) {
-		console.log(err, result);
-		res.redirect('/characters/' + req.body._id);
+				res.redirect('/characters/' + req.body._id);
 	});
 });
 
