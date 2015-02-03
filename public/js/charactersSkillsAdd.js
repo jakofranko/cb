@@ -16,7 +16,11 @@ $(document).ready(function() {
 
 	// Functions
 	// --------------------------------------
-	function switchOptions(selectedOptionDiv, backgroundSkill) {
+	function switchOptions() {
+		var selectedOptionDiv = arguments[0];
+		var backgroundSkill = arguments[1];
+		var skillLevel = arguments[2];
+		
 		if(selectedOptionDiv) {
 			if($('.activeOption').length > 0) {
 				$('.activeOption')
@@ -34,21 +38,35 @@ $(document).ready(function() {
 		} else {
 			$('.activeOption').fadeOut();
 		}
+
+		if(skillLevel) {
+			$('#numberOfSLs').fadeIn(function() {
+				if(skill) {
+					calculateSkillCost(skill);
+				}
+			});
+		} else {
+			$('#numberOfSLs').fadeOut(function() {
+				if(skill) {
+					calculateSkillCost(skill);
+				}
+			});
+		}
+
 		if(backgroundSkill == true) {
 			$('#backgroundSkill').fadeIn();
 		} else {
 			$('#backgroundSkill').fadeOut();
 		}
+
 		if(selectedOptionDiv == "#powerOption" || selectedOptionDiv == "#professionalOption") {
 			$('#associatedCharacteristicOptions').fadeIn();
 		} else {
 			$('#associatedCharacteristicOptions').fadeOut();
 		}
+
 	}
 
-	// TODO: Need to update the skill cost
-	//		-> For Background and Familiarity
-	//		-> Per Category
 	function calculateSkillCost(skill) {
 		var cost = 0;
 		var rollMod = $('#modifier').val();
@@ -56,6 +74,8 @@ $(document).ready(function() {
 		var background = ($('#characteristicBased').prop('checked') == true || $('#characteristicBased').filter(':visible').length == 0) ? false : true;
 		var literate = ($('[name=literate]').prop('checked') == false || $('[name=literate]').filter(':visible').length == 0) ? false : true;
 		var subcategories = false;
+		var numberOfSLs = $('[name=numberOfSkillLevels]:visible').val();
+		
 		if(skill.categories.length > 0) {
 			// Check to see if selected skill has any sub categories
 			for(i = 0; i < skill.categories.length; i++) {
@@ -100,12 +120,16 @@ $(document).ready(function() {
 			}
 		}
 		
-		// If there is a base +1 to roll cost set, adds that price to the cost. Otherwise, the skill has a static cost.
+		// If there is a base +1 to roll cost set, adds that price to the cost.
 		if(skill.basePlusOne && skill.basePlusOne != '' && skill.basePlusOne != null) {
 			cost += Number(rollMod * skill.basePlusOne);
 		}
 
-		console.log(cost, rollMod, subcategories);
+		// If the skill is a Skill level of some kind, then multiply the cost by the number of skill levels
+		if(numberOfSLs !== undefined) {
+			cost *= numberOfSLs;
+		}
+
 		$('#skillCost').text(cost);
 	}
 
@@ -144,7 +168,6 @@ $(document).ready(function() {
 		} else {
 			rollSpan.text(null);
 		}
-
 	}
 
 	$('#skilltype').change(function() {
@@ -154,8 +177,8 @@ $(document).ready(function() {
 			async: false,
 		  	url: '/api/skill/' + skilltype,
 		  	success: function( data ) { 
-		  	skill = data
-		  }
+			  	skill = data
+		  	}
 		});
 
 		// Show Options
@@ -164,13 +187,16 @@ $(document).ready(function() {
 
 		// CSLs ----------------------------
 		if(skilltypeName == 'Combat Skill Level (2-point)') {
-			switchOptions('#2pointCSLOption', false);
+			switchOptions('#2pointCSLOption', false, true);
 		}
 		if(skilltypeName == 'Combat Skill Level (3-point)') {
-			switchOptions('#3pointCSLOption', false);
+			switchOptions('#3pointCSLOption', false, true);
 		}
 		if(skilltypeName == 'Combat Skill Level (5-point)') {
-			switchOptions('#5pointCSLOption', false);
+			switchOptions('#5pointCSLOption', false, true);
+		}
+		if(skilltypeName == 'Combat Skill Level (8-point)') {
+			switchOptions(false, false, true);
 		}
 
 		// Fast Draw -----------------------
@@ -192,10 +218,13 @@ $(document).ready(function() {
 
 		// Penalty Skill Levels
 		if(skilltypeName == 'Penalty Skill Level (1.5-point)') {
-			switchOptions('#onePointFivePSLOption', false);
+			switchOptions('#onePointFivePSLOption', false, true);
 		}
 		if(skilltypeName == 'Penalty Skill Level (2-point)') {
-			switchOptions('#2pointPSLOption', false);
+			switchOptions('#2pointPSLOption', false, true);
+		}
+		if(skilltypeName == 'Penalty Skill Level (3-point)') {
+			switchOptions(false, false, true);
 		}
 
 		// Power Option
@@ -221,13 +250,19 @@ $(document).ready(function() {
 
 		// SLs -----------------------------
 		if(skilltypeName == 'Skill Level (2-point)') {
-			switchOptions('#2pointSLOption', false);
+			switchOptions('#2pointSLOption', false, true);
 		}
 		if(skilltypeName == 'Skill Level (3-point)') {
-			switchOptions('#3pointSLOption', false);
+			switchOptions('#3pointSLOption', false, true);
 		}
 		if(skilltypeName == 'Skill Level (5-point)') {
-			switchOptions('#5pointSLOption', false);
+			switchOptions('#5pointSLOption', false, true);
+		}
+		if(skilltypeName == 'Skill Level (8-point)') {
+			switchOptions(false, false, true);
+		}
+		if(skilltypeName == 'Skill Level (10-point)') {
+			switchOptions(false, false, true);
 		}
 
 		// Validation
@@ -261,7 +296,6 @@ $(document).ready(function() {
 		} else if(skilltypeName == 'Fast Draw') {
 			$('.category-group').find('h2').each(function() {
 				if($(this).text() == 'Weapon Familiarity Categories') {
-					console.log($(this));
 					$(this).parent().fadeIn().addClass('active');
 				}
 			});
@@ -298,7 +332,7 @@ $(document).ready(function() {
 
 	$('#characteristicBased').change(function() {
 		if($(this).prop('checked')) {
-			$('#familiarity').attr('disabled', true);
+			$('#familiarity').prop('checked', false).attr('disabled', true).trigger('change');
 			$('#associatedCharacteristic').attr('disabled', false);
 		} else {
 			$('#familiarity').attr('disabled', false);
@@ -311,6 +345,10 @@ $(document).ready(function() {
 	$('#associatedCharacteristic').change(function() {
 		calculateSkillCost(skill);
 		calculateSkillRoll(character, skill);
+	});
+
+	$('[name=numberOfSkillLevels]').change(function() {
+		calculateSkillCost(skill);
 	});
 
 	var threeAttacks = /attack\d{1}$/;
@@ -358,15 +396,13 @@ $(document).ready(function() {
 	});
 
 	$('.subcategory').change(function() {
-		console.log("clicked");
-		if($(this).parents('.categories').find('.category').prop('checked')) {
+			if($(this).parents('.categories').find('.category').prop('checked')) {
 			$(this).parents('.categories').find('.category').prop('checked', false);
 		}
 		calculateSkillCost(skill);
 	});
 
 	$('[name=literate]').change(function() {
-		console.log($(this));
 		calculateSkillCost(skill);
 	});
 
@@ -383,17 +419,15 @@ $(document).ready(function() {
 			var roll = Number($('#roll').text().replace("-", ""));
 			var cost = Number($('#skillCost').text());
 
-			$('#options').find('[name]').filter(':visible').not(':disabled').each(function() {
-				var key = $(this).attr('name');
+			$('#options').find('[name]').add('[name=numberOfSkillLevels]').filter(':visible').not(':disabled').each(function() {
+				var key = String($(this).attr('name'));
 				var value = $(this).val();
 				if(value == 'on') {
 					options[key] = $(this).prop('checked');
-					console.log(options[key], key, $(this).prop('checked'));
 				} else if(value != null && value != undefined && value != "") {
 					options[key] = value;	
 				}
 			});
-
 
 			// If a category is checked, then it adds it, and all it's subcategories to the category list
 			$('#categories').find('.category').filter(':visible').not(':disabled').each(function() {
@@ -420,6 +454,8 @@ $(document).ready(function() {
 			if($('#familiarity').prop('checked')) {
 				familiarity = true;
 			}
+
+			console.log(options);
 			
 			var skillToSubmit = {
 				characterID: characterID,
@@ -432,7 +468,6 @@ $(document).ready(function() {
 				skillOptions: options,
 				cost: cost
 			}
-			console.log(skillToSubmit);
 			$.post('/characters/addSkill', skillToSubmit).done(function() { $('#addAnother').modal('show'); });
 		} else {
 			alert('Please fill out all the required fields');

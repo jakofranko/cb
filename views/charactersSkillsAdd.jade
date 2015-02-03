@@ -66,10 +66,14 @@ block content
 						input(type="checkbox" name="familiarity", disabled)#familiarity
 						| Familiarity
 				.form-group#bonusToRoll
-					label(for='modifier').control-label Bonus to roll
 					.row
-						.col-xs-3
+						.col-xs-6
+							label(for='modifier').control-label Bonus to roll
 							input(type='number', name='modifier', min='0', value='0').form-control#modifier
+						.row(style='display:none;')#numberOfSLs
+							.col-xs-6
+								label(for='numberOfSkillLevels').control-label Number of SLs
+								input(type='number', name='numberOfSkillLevels', min='1', value='1').form-control
 				button(type='button').btn.btn-primary.btn-lg#addSkill
 					span.glyphicon.glyphicon-plus
 					|  Add Skill

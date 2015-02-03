@@ -240,6 +240,13 @@ block content
 								p #{skill.skillOptions.knowledgeSkillType} Knowledge: #{skill.skillOptions.knowledgeSkillArea}
 							.col-xs-6
 								p -#{skill.roll}
+								p -#{skill.roll}
+					else if skillName.match(/Science Skill/)
+						.row
+							.col-xs-6
+								p SS: #{skill.skillOptions.scienceSkillArea}
+							.col-xs-6
+								p -#{skill.roll}
 					else
 						.row
 							.col-xs-6

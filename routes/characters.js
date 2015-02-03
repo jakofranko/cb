@@ -107,7 +107,7 @@ router.post('/addSkill', function(req, res) {
 			skillOptions = req.body.skillOptions || [],
 			cost = req.body.cost;
 
-	
+	console.log(skillOptions);
 	characters.addSkill(req.body.characterID, req.body.skill, req.body.categories, req.body.subcategories, req.body.characteristicBased, req.body.familiarity, Number(req.body.roll), req.body.skillOptions, req.body.cost, function(err, result) {
 		if(err) {
 			throw new Error(err);
