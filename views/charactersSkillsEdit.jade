@@ -22,11 +22,12 @@ block content
 				//- TODO: add skill description here that fades in and out when the skill changes
 	form(method='post', action='/characters/addSkill')#editSkillForm
 		.row
-			.col-sm-3
-				.checkbox
-					label
-						input(type='checkbox', name='familiarity', checked=((skill.familiarity) ? 'checked' : null), disabled=((skill.skillType.basePlusOne && skill.skillType.basePlusOne != undefined && skill.skillType.basePlusOne != '') ? null : 'disabled'))#familiarity
-						| Familiarity
+			.col-sm-4
+				.form-group
+					.checkbox
+						label
+							input(type='checkbox', name='familiarity', checked=((skill.familiarity) ? 'checked' : null), disabled=((skill.skillType.basePlusOne && skill.skillType.basePlusOne != undefined && skill.skillType.basePlusOne != '') ? null : 'disabled'))#familiarity
+							| Familiarity
 
 				if skill.skillType.basePlusOne && skill.familiarity != true
 					- var bonusToRoll;
@@ -37,11 +38,17 @@ block content
 					else
 						- bonusToRoll = 0;
 
-				.form-group#bonusToRoll
-					label(for='modifier').control-label Bonus to roll
-					.row
-						.col-xs-4
+				.row
+					.col-xs-6
+						.form-group
+							label(for='modifier').control-label Bonus to roll
 							input(type='number', name='modifier', min='0', value=((skill.skillType.basePlusOne && skill.familiarity != true) ? bonusToRoll : 0), disabled=((skill.familiarity || skill.skillType.basePlusOne == undefined || skill.skillType.basePlusOne == '') ? 'disabled' : null)).form-control#modifier
+					if skill.skillType.name.match(/Skill Level/) && skill.skillOptions.numberOfSkillLevels
+						.col-xs-6#numberOfSLs
+							.form-group
+								label(for='numberOfSkillLevels').control-label Number of SLs
+								input(type='number', name='numberOfSkillLevels', min='1', value=(skill.skillOptions.numberOfSkillLevels) ? skill.skillOptions.numberOfSkillLevels : '1').form-control
+					
 				button(type='button').btn.btn-primary.btn-lg#addSkill Update Skill
 				button(type='button', data-toggle='modal', data-target='#deleteModal').btn.btn-link
 					span.glyphicon.glyphicon-trash

@@ -68,6 +68,8 @@ $(document).ready(function() {
 		var background = ($('#characteristicBased').prop('checked') == true || $('#characteristicBased').filter(':visible').length == 0) ? false : true;
 		var literate = ($('[name=literate]').prop('checked') == false || $('[name=literate]').filter(':visible').length == 0) ? false : true;
 		var subcategories = false;
+		var numberOfSLs = $('[name=numberOfSkillLevels]:visible').val();
+		
 		if(skill.categories && skill.categories.length > 0) {
 			// Check to see if selected skill has any sub categories
 			for(i = 0; i < skill.categories.length; i++) {
@@ -112,9 +114,14 @@ $(document).ready(function() {
 			}
 		}
 		
-		// If there is a base +1 to roll cost set, adds that price to the cost. Otherwise, the skill has a static cost.
+		// If there is a base +1 to roll cost set, adds that price to the cost.
 		if(skill.basePlusOne && skill.basePlusOne != '' && skill.basePlusOne != null) {
 			cost += Number(rollMod * skill.basePlusOne);
+		}
+
+		// If the skill is a Skill level of some kind, then multiply the cost by the number of skill levels
+		if(numberOfSLs !== undefined) {
+			cost *= numberOfSLs;
 		}
 
 		$('#skillCost').text(cost);
@@ -244,6 +251,10 @@ $(document).ready(function() {
 	});
 
 	$('[name=literate]').change(function() {
+		calculateSkillCost(skill);
+	});
+
+	$('[name=numberOfSkillLevels]').change(function() {
 		calculateSkillCost(skill);
 	});
 

@@ -9,6 +9,26 @@ var skillTypes = require('../models/skillType');
 
 
 // Gets -------------------------------
+router.get('/characteristics/edit/:characterID', function(req, res) {
+	characters.findCharacterById(req.params.characterID, function(err, character) {
+		if(character.userID == req.session._id) {
+			res.render('characteristicsEdit', { title: character.alias + ' Characteristics', character: character, username: req.session.username });
+		} else {
+			res.redirect('/');
+		}
+	});
+});
+
+router.get('/characteristics/:characterID', function(req, res) {
+	characters.findCharacterById(req.params.characterID, function(err, character) {
+		if(character.userID == req.session._id) {
+			res.render('characteristicsShow', { title: character.alias + ' Characteristics', character: character, username: req.session.username });
+		} else {
+			res.redirect('/');
+		}
+	});
+});
+
 router.get('/skills/add/:characterID', function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(character.userID == req.session._id) {
@@ -29,7 +49,7 @@ router.get('/skills/edit/:characterID,:skillID', function(req, res) {
 		if(character.userID == req.session._id) {
 			character = character;
 			characters.findSkill(req.params.characterID, req.params.skillID, function(err, skill) {
-								res.render('charactersSkillsEdit', { title: 'Editing ' + skill.skillType.name, character: character, username: req.session.username, skill: skill });
+				res.render('charactersSkillsEdit', { title: 'Editing ' + skill.skillType.name, character: character, username: req.session.username, skill: skill });
 			});
 		} else { 
 			res.redirect('/');
@@ -107,7 +127,6 @@ router.post('/addSkill', function(req, res) {
 			skillOptions = req.body.skillOptions || [],
 			cost = req.body.cost;
 
-	console.log(skillOptions);
 	characters.addSkill(req.body.characterID, req.body.skill, req.body.categories, req.body.subcategories, req.body.characteristicBased, req.body.familiarity, Number(req.body.roll), req.body.skillOptions, req.body.cost, function(err, result) {
 		if(err) {
 			throw new Error(err);
@@ -153,13 +172,21 @@ router.post('/updateSkill', function(req, res) {
 });
 
 router.post('/updateCharacter', function(req, res) {
-	// All of the mods need to have the base subtracted from them in order to get the actual difference. Otherwise, these stats will inflate every time they're updated.
-		characters.updateCharacter({_id: req.body._id },
+	characters.updateCharacter({_id: req.body._id },
 	{ 
 		alias: req.body.alias,
 		name: req.body.name,
 		description: req.body.description,
 		basePool: req.body.basePool,
+	}, function(err, result) {
+		res.redirect('/characters/' + req.body._id);
+	});
+});
+
+router.post('/updateCharacteristics', function(req, res) {
+	// All of the mods need to have the base subtracted from them in order to get the actual difference. Otherwise, these stats will inflate every time they're updated.
+	characters.updateCharacter({_id: req.body._id },
+	{ 
 		STRmod: (req.body.STRmod - 10),
 		DEXmod: (req.body.DEXmod - 10),
 		CONmod: (req.body.CONmod - 10),
@@ -188,7 +215,7 @@ router.post('/updateCharacter', function(req, res) {
 		PreAtt: Number(req.body.PreAtt),
 		pointsSpent: Number(req.body.pointsSpent)
 	}, function(err, result) {
-				res.redirect('/characters/' + req.body._id);
+		res.redirect('/characters/' + req.body._id);
 	});
 });
 

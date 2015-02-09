@@ -9,7 +9,7 @@ $(document).ready(function() {
 	var otherSkills = [];
 	skills.each(function(i, elem) {
 		if(elem) {
-			if($(elem).find('.col-xs-6:first').text().match(/^\+1 to/)) {
+			if($(elem).find('.col-xs-6:first').text().match(/^\+\d (to)?/)) {
 				plusOnes.push(elem);
 			} else {
 				otherSkills.push(elem);

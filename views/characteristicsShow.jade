@@ -1,0 +1,314 @@
+extends layout
+
+block content
+	- function calculateRoll(characteristic) {
+	- 	if(characteristic >= 0) {
+	- 		return Math.round(9 + (characteristic / 5));
+	- 	} else {
+			return Math.round(9 - (characteristic / 5));
+	- 	}
+	- }
+
+	- function calculateCost(characteristic, costMod) {
+	- 	return (characteristic - 10) * costMod;
+	- }
+
+	- function calculateFiguredCost(baseFigured, characteristic, costMod) {
+	- 	return (characteristic - baseFigured) * costMod;
+	- }
+
+	- function calculateCOMCost(comeliness, comelinessCost) {
+	- 	if(comeliness < 0) {
+	- 		return ((comeliness - 10) * comelinessCost) + (-comeliness);
+	- 	} else {
+	- 		return (comeliness - 10) * comelinessCost;
+	- 	}
+	- }
+	- STRcost = 1,
+	- DEXcost = 3,
+	- INTcost = 1,
+	- CONcost = 2,
+	- EGOcost = 2,
+	- BODYcost = 2,
+	- PREcost = 1,
+	- COMcost = 0.5,
+	- PDcost = 1,
+	- EDcost = 1,
+	- SPDcost = 10,
+	- RECcost = 2,
+	- ENDcost = 0.5,
+	- STUNcost = 1,
+	- RUNcost = 2,
+	- SWIMcost = 1,
+	- LEAPcost = 1
+
+
+	a(href="/characters/" + character._id)
+		span.glyphicon.glyphicon-arrow-left
+		|  Back
+	h1 #{character.alias}'s Characteristics
+		a(href='/characters/characteristics/edit/' + character._id).btn.btn-link
+			span.glyphicon.glyphicon-edit
+			|  Edit
+
+	.row
+		.col-sm-6
+			h2 Primary Characteristics
+			.row
+				.col-sm-2
+					strong.pull-right CHAR
+				.col-sm-3
+					strong Total Score
+				.col-sm-3
+					strong Base Score
+				.col-sm-2
+					strong Roll
+				.col-sm-2
+					strong Cost
+			hr
+			div.form-group.clearfix
+				.col-sm-2
+					strong.pull-right  STR
+				.col-sm-3
+					p#STRmod #{character.STR + character.STRmod}
+				.col-sm-3
+					p #{character.STR}
+				.col-sm-2
+					p#STRroll= '-' + calculateRoll((character.STR + character.STRmod))
+				.col-sm-2
+					p.cost#STRcost= calculateCost((character.STR + character.STRmod), STRcost)
+
+			div.form-group.clearfix
+				.col-sm-2
+					strong.pull-right  DEX
+				.col-sm-3
+					p#DEXmod #{character.DEX + character.DEXmod}
+				.col-sm-3
+					p #{character.DEX}
+				.col-sm-2
+					p#DEXroll= '-' + calculateRoll((character.DEX + character.DEXmod))
+				.col-sm-2
+					p.cost#DEXcost= calculateCost((character.DEX + character.DEXmod), DEXcost)
+
+			div.form-group.clearfix
+				.col-sm-2
+					strong.pull-right  CON
+				.col-sm-3
+					p#CONmod #{character.CON + character.CONmod}
+				.col-sm-3
+					p #{character.CON}
+				.col-sm-2
+					p#CONroll= '-' + calculateRoll((character.CON + character.CONmod))
+				.col-sm-2
+					p.cost#CONcost= calculateCost((character.CON + character.CONmod), CONcost)
+
+			div.form-group.clearfix
+				.col-sm-2
+					strong.pull-right  BODY
+				.col-sm-3
+					p#BODYmod #{character.BODY + character.BODYmod}
+				.col-sm-3
+					p #{character.BODY}
+				.col-sm-2
+					p#BODYroll= '-' + calculateRoll((character.BODY + character.BODYmod))
+				.col-sm-2
+					p.cost#BODYcost= calculateCost((character.BODY + character.BODYmod), BODYcost)
+
+			div.form-group.clearfix
+				.col-sm-2
+					strong.pull-right  INT
+				.col-sm-3
+					p#INTmod #{character.INT + character.INTmod}
+				.col-sm-3
+					p #{character.INT}
+				.col-sm-2
+					p#INTroll= '-' + calculateRoll((character.INT + character.INTmod))
+				.col-sm-2
+					p.cost#INTcost= calculateCost((character.INT + character.INTmod), INTcost)
+
+			div.form-group.clearfix
+				.col-sm-2
+					strong.pull-right  EGO
+				.col-sm-3
+					p#EGOmod #{character.EGO + character.EGOmod}
+				.col-sm-3
+					p #{character.EGO}
+				.col-sm-2
+					p#EGOroll= '-' + calculateRoll((character.EGO + character.EGOmod))
+				.col-sm-2
+					p.cost#EGOcost= calculateCost((character.EGO + character.EGOmod), EGOcost)
+
+			div.form-group.clearfix
+				.col-sm-2
+					strong.pull-right  PRE
+				.col-sm-3
+					p#PREmod #{character.PRE + character.PREmod}
+				.col-sm-3
+					p #{character.PRE}
+				.col-sm-2
+					p#PREroll= '-' + calculateRoll((character.PRE + character.PREmod))
+				.col-sm-2
+					p.cost#PREcost= calculateCost((character.PRE + character.PREmod), PREcost)
+
+			div.form-group.clearfix
+				.col-sm-2
+					strong.pull-right  COM
+				.col-sm-3
+					p#COMmod #{character.COM + character.COMmod}
+				.col-sm-3
+					p #{character.COM}
+				.col-sm-2
+					p#COMroll= '-' + calculateRoll((character.COM + character.COMmod))
+				.col-sm-2
+					p.cost#COMcost= calculateCOMCost((character.COM + character.COMmod), COMcost)
+
+		.col-sm-6
+			h2 Figured Characteristics
+			.row
+				.col-sm-3
+					strong.pull-right CHAR
+				.col-sm-3
+					strong Total Score
+				.col-sm-3
+					strong Base Score
+				.col-sm-2
+					strong Cost
+			hr
+			div.form-group.clearfix
+				.col-sm-3
+					strong.pull-right  PD
+				.col-sm-3
+					p#PDmod #{character.PD + character.PDmod}
+				.col-sm-3
+					p#PDbase #{character.PD}
+					input(type='hidden', value='#{character.PD}', name='PD')#PD
+				.col-sm-2
+					p.cost#PDcost= calculateFiguredCost(character.PD, (character.PD + character.PDmod), PDcost)
+
+			div.form-group.clearfix
+				.col-sm-3
+					strong.pull-right  ED
+				.col-sm-3
+					p#EDmod #{character.ED + character.EDmod}
+				.col-sm-3
+					p#EDbase #{character.ED}
+					input(type='hidden', value='#{character.ED}', name='ED')#ED
+				.col-sm-2
+					p.cost#EDcost= calculateFiguredCost(character.ED, (character.ED + character.EDmod), EDcost)
+
+			div.form-group.clearfix
+				.col-sm-3
+					strong.pull-right  SPD
+				.col-sm-3
+					p#SPDmod #{character.SPD + character.SPDmod}
+				.col-sm-3
+					p#SPDbase #{character.SPD}
+					input(type='hidden', value='#{character.SPD}', name='SPD')#SPD
+				.col-sm-2
+					p.cost#SPDcost= calculateFiguredCost(character.SPD, (character.SPD + character.SPDmod), SPDcost)
+
+			div.form-group.clearfix 
+				.col-sm-3
+					strong.pull-right  REC
+				.col-sm-3
+					p#RECmod #{character.REC + character.RECmod}
+				.col-sm-3
+					p#RECbase #{character.REC}
+					input(type='hidden', value='#{character.REC}', name='REC')#REC
+				.col-sm-2
+					p.cost#RECcost= calculateFiguredCost(character.REC, (character.REC + character.RECmod), RECcost)
+
+			div.form-group.clearfix 
+				.col-sm-3
+					strong.pull-right  END
+				.col-sm-3
+					p#ENDmod #{character.END + character.ENDmod}
+				.col-sm-3
+					p#ENDbase #{character.END}
+					input(type='hidden', value='#{character.END}', name='END')#END
+				.col-sm-2
+					p.cost#ENDcost= calculateFiguredCost(character.END, (character.END + character.ENDmod), ENDcost)
+
+			div.form-group.clearfix
+				.col-sm-3
+					strong.pull-right  STUN
+				.col-sm-3
+					p#STUNmod #{character.STUN + character.STUNmod}
+				.col-sm-3
+					p#STUNbase #{character.STUN}
+					input(type='hidden', value='#{character.STUN}', name='STUN')#STUN
+				.col-sm-2
+					p.cost#STUNcost= calculateFiguredCost(character.STUN, (character.STUN + character.STUNmod), STUNcost)
+
+	.row
+		.col-sm-4
+			h2 Movement
+			.row
+				.col-sm-6
+					strong Move Type
+				.col-sm-6
+					strong Move in "
+			hr
+			.form-group.clearfix
+				.col-sm-6
+					strong Running
+				.col-sm-6 
+					p#RUNbase #{character.Running}"
+			.form-group.clearfix
+				.col-sm-6
+					strong Swimming
+				.col-sm-6 
+					p#SWIMbase #{character.Swimming}"
+			.form-group.clearfix
+				.col-sm-6
+					strong Leap
+				.col-sm-6 
+					p#LEAPbase #{character.Leap} "
+					input(type='hidden', value='#{character.Leap}', name='Leap')#LEAP
+		.col-sm-4
+			h2 Combat Value
+			.row
+				.col-sm-6
+					strong Type
+				.col-sm-6
+					strong Value
+			hr
+			.row
+				.col-sm-6
+					strong CV
+				.col-sm-6
+					p#CVbase #{character.CV}
+					input(type='hidden', value='#{character.CV}', name='CV')#CV
+			.row
+				.col-sm-6
+					strong ECV
+				.col-sm-6
+					p#ECVbase #{character.ECV}
+					input(type='hidden', value='#{character.ECV}', name='ECV')#ECV
+		.col-sm-4
+			h2 Misc.
+			hr
+			.row
+				.col-sm-6
+					strong Lift
+				.col-sm-6
+					p 
+						span#LIFT #{character.Lift}
+						| kg
+					input(type='hidden', value='#{character.Lift}', name='Lift')#LIFT
+			.row
+				.col-sm-6
+					strong HTH
+				.col-sm-6
+					p 
+						span#HTHattack #{character.HTH}
+						| d6
+					input(type='hidden', value='#{character.HTH}', name='HTH')#HTH
+			.row
+				.col-sm-6
+					strong PRE Attack
+				.col-sm-6
+					p 
+						span#PREattack #{character.PreAtt}
+						| d6
+					input(type='hidden', value='#{character.PreAtt}', name='PreAtt')#PREatt

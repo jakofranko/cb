@@ -214,17 +214,28 @@ block content
 					
 				else if skill.skillType.name.match(slRegex) && skill.skillOptions
 					- var slOptions = ""
+					- var skillName = skill.skillType.name
 					//- - console.log(skill)
 					.row
 						.col-xs-6
 							p
-								each option, key in skill.skillOptions
-									- slOptions += option + ', '
-								if slOptions != ""
-									| +1 to 
-									= slOptions.replace(/,\s?$/, '', function(str){ return str; })
+								if skillName.match(/^Combat Skill Level \(8\-point\)$/)
+									| +#{skill.skillOptions.numberOfSkillLevels} Overall CSL
+								else if skillName.match(/^Penalty Skill Level \(3\-point\)$/)
+									| +#{skill.skillOptions.numberOfSkillLevels} Overall PSL
+								else if skillName.match(/^Skill Level \(8\-point\)$/)
+									| +#{skill.skillOptions.numberOfSkillLevels} Non-combat SL
+								else if skillName.match(/^Skill Level \(10\-point\)$/)
+									| +#{skill.skillOptions.numberOfSkillLevels} Overall SL
 								else
-									= console.log(skill)
+									each option, key in skill.skillOptions
+										if key != 'numberOfSkillLevels'
+											- slOptions += option + ', '
+									if slOptions != ""
+										| +#{skill.skillOptions.numberOfSkillLevels} to 
+										= slOptions.replace(/,\s?$/, '', function(str){ return str; })
+									else
+										= console.log(skill)
 				else
 					- var skillName = skill.skillType.name
 					//- console.log(skill)
@@ -239,7 +250,6 @@ block content
 							.col-xs-6
 								p #{skill.skillOptions.knowledgeSkillType} Knowledge: #{skill.skillOptions.knowledgeSkillArea}
 							.col-xs-6
-								p -#{skill.roll}
 								p -#{skill.roll}
 					else if skillName.match(/Science Skill/)
 						.row
