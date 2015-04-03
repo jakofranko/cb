@@ -9,6 +9,7 @@ var skillTypes = require('../models/skillType');
 
 
 // Gets -------------------------------
+// Characteristics
 router.get('/characteristics/edit/:characterID', function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(character.userID == req.session._id) {
@@ -29,6 +30,20 @@ router.get('/characteristics/:characterID', function(req, res) {
 	});
 });
 
+router.get('/martialArts/:characterID', function(req, res) {
+	charcters.findCharacterById(req.params.characterID, function(err, character) {
+		if(character.userID == req.session._id) {
+			var martialArts;
+			martialArts.getMartialArts(character._id, function(err, ma) {
+				res.render('martialArtsShow', { martialArts: ma });
+			});
+		} else {
+			res.redirect('/');
+		}
+	});
+});
+
+// Skills
 router.get('/skills/add/:characterID', function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(character.userID == req.session._id) {
@@ -74,12 +89,12 @@ router.get('/skills/:characterID', function(req, res) {
 	});
 });
 
-
+// Characters
 router.get('/add', function(req, res) {
 	res.render('charactersAdd', { title: 'New Character', username: req.session.username });
 });
 
-// Need to add authentication, so that only users that own the character can edit or remove those characters
+// TODO: Need to add authentication, so that only users that own the character can edit or remove those characters
 router.get('/edit/:characterID', function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(character != null)

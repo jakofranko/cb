@@ -198,5 +198,4 @@ describe('characters.createCharacter()', function() {
     });
     
   });
-
 });
