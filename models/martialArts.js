@@ -44,8 +44,11 @@ module.exports = {
 
 	},
 
-	deleteMartialArt: function(callback) {
-
+	removeMartialArt: function(maID, callback) {
+		MartialArt.findByIdAndRemove(maID, function(err, ma) {
+			if(err) callback(err);
+			else callback(err, ma);
+		});
 	}
 
 }

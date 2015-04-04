@@ -192,13 +192,11 @@ module.exports = {
 	},
 
 	removeSkill: function(charID, skillID, callback) {
-		console.log(charID, skillID);
 		module.exports.findCharacterById(charID, function(err, character) {
 			if(err) callback(err);
 			else {
 				var skill = character.Skills.id(skillID);
 				var cost = skill.cost;
-				console.log(cost);
 
 				// Removes the skill from the returned character
 				skill.remove();
@@ -206,13 +204,12 @@ module.exports = {
 				// Update the spent points of the character
 				module.exports.updateSpentPoints(character._id, cost, function(err, result) {
 					if(err) callback(err);
-					else console.log(result);
+					else return true;
 				});
 
 				character.save(function(err, character, numAffected) {
 					if(err) callback(err);
 					else { 
-						console.log(err, character, numAffected);
 						callback(err, character, numAffected);
 					}
 				});
@@ -231,16 +228,13 @@ module.exports = {
 		module.exports.findCharacterById(charID, function(err, character) {
 			if(err) callback(err);
 			else {
-				console.log(character.Skills.id(skillID));
 				character.Skills.id(skillID).categories = updates.categories;
 				character.Skills.id(skillID).subcategories = updates.subcategories;
 				character.Skills.id(skillID).cost = updates.cost;
 				character.Skills.id(skillID).roll = updates.roll;
 				character.Skills.id(skillID).familiarity = updates.familiarity;
 				character.Skills.id(skillID).characteristicBased = updates.characteristicBased;
-				character.Skills.id(skillID).skillOptions = updates.skillOptions;
-				console.log(character.Skills.id(skillID));
-				
+				character.Skills.id(skillID).skillOptions = updates.skillOptions;				
 				character.save(function(err, result, numAffected) {
 					callback(err, result, numAffected);
 				});

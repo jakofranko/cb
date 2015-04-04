@@ -6,10 +6,17 @@ var assert = require('assert'),
     should = require('should'),
     testUser;
 
-describe('Database Connection', function() {
-  describe('Open the Database', function() {
-    it("Should open should open database connection", function() {
-      db.on('open', function() { return true; });
+describe('Database Connection Test:', function() {
+  describe('db.on()', function() {
+    it("should open should open database connection", function() {
+      db.on('open', function() { 
+        console.log("connection established");
+        return true;
+      });
+      db.on('error', function() {
+        console.error.bind(console, 'connection error:');
+        return false;
+      });
     });
   });
 });

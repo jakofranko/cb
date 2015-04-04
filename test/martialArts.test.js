@@ -20,24 +20,37 @@ describe('Martial Arts Test Suite', function() {
 			  	should.not.exist(err);
 			  	should.exist(character); 
 			  	testCharacter = character;
-			  	
+
 			  	describe('createMartialArt', function() {
-					it('should create a new martial art', function() {
+					it('should create a new martial art', function(done) {
 						martialArt.createMartialArt('Fencing', character._id, function(err, ma) {
 							should.not.exist(err);
 							should.exist(ma);
+							testMartialArt = ma;
+							done();
 						});
 					});
 				});
 
 				describe('listMartialArts', function() {
-					it('should list martial arts that belong to a character', function() {
+					it('should list martial arts that belong to a character', function(done) {
 						martialArt.listMartialArts(character._id, function(err, ma) {
 							should.not.exist(err);
 							should.exist(ma);
+							done();
 						});
 					});
 				});
+
+				describe('removeMartialArt', function() {
+					it('should remove the martial art specified by id', function(done) {
+						martialArt.removeMartialArt(testMartialArt._id, function(err, martialArt) {
+							should.not.exist(err);
+							should.exist(martialArt);
+							done();
+						})
+					})
+				})
 
 			});
 		}
