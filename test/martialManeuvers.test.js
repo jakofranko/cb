@@ -1,7 +1,7 @@
 // This is piggybacking of of db.test.js's mongoose connection. 
 'use strict';
 var assert = require('assert'),
-    martialArt = require('../models/martialArts'),
+    martialManeuver = require('../models/martialManeuvers'),
     characters = require('../models/characters'),
     users = require('../models/users'),
     mongoose = require('mongoose'),
@@ -9,9 +9,9 @@ var assert = require('assert'),
     should = require('should'),
     testCharacter,
     testUser,
-    testMartialArt;
+    testMartialManeuver;
 
-describe('Martial Arts Test Suite', function() {
+describe('Martial Maneuvers Test Suite', function() {
 	before('Create a test user and a test character', function(done) {
 		users.createUser('heck', 'heckWord', function(err, user) {
 			if(err) throw new Error(err);
@@ -27,20 +27,20 @@ describe('Martial Arts Test Suite', function() {
     	});
 	});
 
-    describe('createMartialArt', function() {
-		it('should create a new martial art', function(done) {
-			martialArt.createMartialArt('Fencing', testCharacter._id, function(err, ma) {
+    describe('createMartialManeuver', function() {
+		it('should create a new martial maneuver', function(done) {
+			martialManeuver.createMartialManeuver('Test Maneuver', 4, -2, 5, function(err, mm) {
 				should.not.exist(err);
-				should.exist(ma);
-				testMartialArt = ma;
+				should.exist(mm);
+				testMartialManeuver = mm;
 				done();
 			});
 		});
 	});
 
-	describe('listMartialArts', function() {
+	describe('listMartialManeuvers', function() {
 		it('should list martial arts that belong to a character', function(done) {
-			martialArt.listMartialArts(testCharacter._id, function(err, ma) {
+			martialManeuver.listMartialManeuvers(function(err, ma) {
 				should.not.exist(err);
 				should.exist(ma);
 				done();
@@ -48,19 +48,18 @@ describe('Martial Arts Test Suite', function() {
 		});
 	});
 
-	describe('removeMartialArt', function() {
+	describe('removeMartialManeuver', function() {
 		it('should remove the martial art specified by id', function(done) {
-			martialArt.removeMartialArt(testMartialArt._id, function(err, martialArt) {
+			martialManeuver.removeMartialManeuver(testMartialManeuver._id, function(err, martialManeuver) {
 				should.not.exist(err);
-				should.exist(martialArt);
+				should.exist(martialManeuver);
 				done();
-			})
-		})
-	})
+			});
+		});
+	});
 
     // After test suite
 	after('Clean up test user and test character', function(done) {
-    
 		characters.removeCharacter({ _id: testCharacter._id }, function(err, results) {
 		  should.not.exist(err);
 		  should.exist(results);

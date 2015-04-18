@@ -3,10 +3,7 @@ var mongoose = require('mongoose'),
 
 var maneuverSchema = mongoose.Schema({
 	name: String,	// Custom Name
-	type: String,	// Name of martial maneuver
-	ocv: String,
-	dcv: String,
-	cost: Number
+	type: Object	// MartialManever model
 });
 
 var martialArtSchema = mongoose.Schema({
@@ -40,8 +37,11 @@ module.exports = {
 		})
 	},
 
-	updateMartialArt: function(callback) {
-
+	updateMartialArt: function(query, updates, callback) {
+		findOneAndUpdate(query, updates, function(err, result) {
+			if(err) callback(err);
+			else callback(err, result);
+		});
 	},
 
 	removeMartialArt: function(maID, callback) {
