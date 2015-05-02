@@ -32,7 +32,11 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
-app.use(session({secret: 'nyan cats and bulldobs'}));
+app.use(session({
+    resave: false,
+    saveUninitialized: false,
+    secret: 'nyan cats and bulldobs'
+}));
 
 // Static routes (for Bower componenents and things like that)
 app.use(express.static(path.join(__dirname, 'public')));
