@@ -1,4 +1,3 @@
-// This is piggybacking of of db.test.js's mongoose connection. 
 'use strict';
 var assert = require('assert'),
     martialArt = require('../models/martialArts'),

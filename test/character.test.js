@@ -1,4 +1,4 @@
-// This is piggybacking of of db.test.js's mongoose connection. 
+// This establishes the test database connection because it is the first test to run in the suite
 // 'use strict';
 var assert = require('assert'),
     characters = require('../models/characters'),
