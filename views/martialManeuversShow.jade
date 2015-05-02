@@ -2,5 +2,33 @@ extends layout
 
 block content
 
-	h1 Martial Maneuvers
+	a(href="/dashboard/" + session.username)
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;back to Dashboard
 	
+	h1 Martial Maneuvers
+		a(href="/martialManeuvers/add").btn.btn-link
+			span.glyphicon.glyphicon-plus
+			|  Add New
+	table.table
+		thead
+			tr
+				th
+				th Name
+				th Phase
+				th OCV
+				th DCV
+				th Cost
+				th Effects
+		tbody
+			each mm, i in mms
+				tr
+					td
+						a(href="/martialManeuvers/edit/" + mm._id)
+							span.glyphicon.glyphicon-edit
+					td #{mm.name}
+					td #{mm.phase}
+					td #{mm.ocv}
+					td #{mm.dcv}
+					td #{mm.cost}
+					td #{mm.effects}
