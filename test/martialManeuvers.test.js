@@ -28,7 +28,7 @@ describe('Martial Maneuvers Test Suite', function() {
 
     describe('createMartialManeuver', function() {
 		it('should create a new martial maneuver', function(done) {
-			martialManeuver.createMartialManeuver('Test Maneuver', 4, -2, 5, function(err, mm) {
+			martialManeuver.createMartialManeuver('Test Maneuver', "0.5", "+4", "-2", 5, "+15 INT vs dumbness", function(err, mm) {
 				should.not.exist(err);
 				should.exist(mm);
 				testMartialManeuver = mm;

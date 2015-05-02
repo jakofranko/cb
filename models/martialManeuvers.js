@@ -2,20 +2,24 @@ var mongoose = require('mongoose');
 
 var MartialManeuverSchema = mongoose.Schema({
 	name: String,
-	ocv: Number,
-	dcv: Number,
-	cost: Number
+	phase: String,
+	ocv: String,
+	dcv: String,
+	cost: Number,
+	effects: String
 });
 	
 var MartialManeuver = mongoose.model('MartialManeuver', MartialManeuverSchema);
 
 module.exports = {
-	createMartialManeuver: function(name, ocv, dcv, cost, callback) {
+	createMartialManeuver: function(name, phase, ocv, dcv, cost, effects, callback) {
 		var martialManeuver = new MartialManeuver({
 			name: name,
+			phase: phase,
 			ocv: ocv,
 			dcv: dcv,
-			cost: cost
+			cost: cost,
+			effects: effects
 		});
 
 		martialManeuver.save(function(err, results) {
