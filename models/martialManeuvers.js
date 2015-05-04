@@ -35,6 +35,13 @@ module.exports = {
 		})
 	},
 
+	getMartialManeuver: function(query, callback) {
+		MartialManeuver.findOne(query, function(err, results) {
+			if(err) callback(err);
+			else callback(err, results);
+		})
+	},
+
 	updateMartialManeuver: function(query, updates, callback) {
 		MartialManeuver.findOneAndUpdate(query, updates, function(err, result) {
 			if(err) callback(err);

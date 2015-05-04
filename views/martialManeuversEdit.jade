@@ -1,0 +1,34 @@
+extends layout
+
+block content
+	a(href="/martialManeuvers/")
+		span.glyphicon.glyphicon-arrow-left
+		|  Back to Martial Maneuvers
+
+	h1 New Martial Maneuver
+
+	.row
+		.col-sm-6.col-sm-offset-3
+			form(action="/martialManeuvers/addMartialManeuver" method="post")
+				input(type="hidden" name="_id" value=maneuver._id)
+				.form-group
+					label.control-label(for="name") Maneuver Name
+					input.form-control(type="text" name="name" id="name" placeholder="Ex. Martial Throw" value=maneuver.name)
+				.form-group
+					label.control-label(for="phase") Phase
+					input.form-control(type="text" name="phase" id="phase" placeholder="Ex. 0.5 or var" value=maneuver.phase)
+				.form-group
+					label.control-label(for="ocv") OCV
+					input.form-control(type="text" name="ocv" id="ocv" placeholder="Ex. +2 or -1" value=maneuver.ocv)
+				.form-group
+					label.control-label(for="dcv") DCV
+					input.form-control(type="text" name="dcv" id="dcv" placeholder="Ex. +2 or -1" value=maneuver.dcv)
+				.form-group
+					label.control-label(for="cost") Cost
+					input.form-control(type="text" name="cost" id="cost" placeholder="Ex. 5" value=maneuver.cost)
+				.form-group
+					label.control-label(for="effects") Effects
+					input.form-control(type="text" name="effects" id="effects" placeholder="Ex. STR Strike or Grab, 2d6 NND (see text)" value=maneuver.effects)
+				button.btn.btn-primary(type="submit")
+					span.glyphicon.glyphicon-plus
+					|  Add Maneuver

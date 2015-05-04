@@ -47,6 +47,18 @@ describe('Martial Maneuvers Test Suite', function() {
 		});
 	});
 
+	describe('getMartialManeuver', function() {
+		it('should fetch the martial maneuver according to the query passed to it', function(done) {
+			martialManeuver.getMartialManeuver({ name: 'Test Maneuver' }, function(err, maneuver) {
+				should.exist(maneuver);
+				maneuver.should.be.Object;
+				maneuver.should.not.be.Array;
+				should.not.exist(err);
+				done();
+			})
+		})
+	})
+
 	describe('removeMartialManeuver', function() {
 		it('should remove the martial art specified by id', function(done) {
 			martialManeuver.removeMartialManeuver(testMartialManeuver._id, function(err, martialManeuver) {

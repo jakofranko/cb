@@ -25,6 +25,20 @@ router.get('/add', function(req, res) {
 	}
 });
 
+router.get('/edit/:mmId', function(req, res) {
+	if(req.session.role == 'admin')	{
+		martialManeuvers.getMartialManeuver({ _id: req.params.mmId }, function(err, maneuver) {
+			if(err) throw new Error(err);
+			else {
+				console.log(maneuver);
+				res.render('martialManeuversEdit', { maneuver: maneuver })
+			}
+		});
+	} else {
+		res.redirect('/dashboard/' + req.session._id);
+	}
+});
+
 // POST
 // --------------------------------------------------------------
 router.post('/addMartialManeuver', function(req, res) {
