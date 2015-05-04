@@ -43,9 +43,42 @@ router.get('/edit/:mmId', function(req, res) {
 // --------------------------------------------------------------
 router.post('/addMartialManeuver', function(req, res) {
 	if(req.session.role == 'admin')	{
-		console.log(req.body);
 		var mm = req.body;
 		martialManeuvers.createMartialManeuver(mm.name, mm.phase, mm.ocv, mm.dcv, mm.cost, mm.effects, function(err, result) {
+			if(err) throw new Error(err);
+			else {
+				res.redirect("/martialManeuvers/");
+			}
+		});
+	} else {
+		res.redirect('/dashboard/' + req.session._id);
+	}
+});
+
+router.post('/updateMartialManeuver', function(req, res) {
+	if(req.session.role == 'admin')	{
+		var mm = req.body;
+		var update = new Object();
+		for(var key in mm) {
+			if(key != '_id') {
+				update[key] = mm[key];	
+			}
+		}
+		martialManeuvers.updateMartialManeuver({ _id: mm._id }, update, function(err, result) {
+			if(err) throw new Error(err);
+			else {
+				res.redirect("/martialManeuvers/");
+			}
+		});
+	} else {
+		res.redirect('/dashboard/' + req.session._id);
+	}
+});
+
+router.post('/deleteMartialManeuver', function(req, res) {
+	if(req.session.role == 'admin')	{
+		var mm = req.body;
+		martialManeuvers.removeMartialManeuver(mm._id, function(err, result) {
 			if(err) throw new Error(err);
 			else {
 				res.redirect("/martialManeuvers/");

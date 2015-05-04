@@ -5,11 +5,11 @@ block content
 		span.glyphicon.glyphicon-arrow-left
 		|  Back to Martial Maneuvers
 
-	h1 New Martial Maneuver
+	h1 Edit Martial Maneuver
 
 	.row
 		.col-sm-6.col-sm-offset-3
-			form(action="/martialManeuvers/addMartialManeuver" method="post")
+			form(action="/martialManeuvers/updateMartialManeuver" method="post")
 				input(type="hidden" name="_id" value=maneuver._id)
 				.form-group
 					label.control-label(for="name") Maneuver Name
@@ -30,5 +30,24 @@ block content
 					label.control-label(for="effects") Effects
 					input.form-control(type="text" name="effects" id="effects" placeholder="Ex. STR Strike or Grab, 2d6 NND (see text)" value=maneuver.effects)
 				button.btn.btn-primary(type="submit")
-					span.glyphicon.glyphicon-plus
-					|  Add Maneuver
+					span.glyphicon.glyphicon-ok
+					|  Update
+				button(type="button" data-toggle="modal" data-target="#confirmDelete").btn.btn-link.text-danger.pull-right.delete
+					span.glyphicon.glyphicon-trash
+					|  Delete
+
+	.modal.fade#confirmDelete
+		.modal-dialog.modal-sm
+			.modal-content
+				form(action="/martialManeuvers/deleteMartialManeuver" method="post")
+					.modal-header
+						button(data-dismiss="modal").close &times;
+						| Delete #{maneuver.name}?
+					.modal-body 
+						| Are you sure?
+						input(type="hidden", value=maneuver._id, name="_id")
+					.modal-footer
+						button(type="submit").btn.btn-danger.confirm-delete
+							span.glyphicon.glyphicon-trash
+							|  Delete
+						button(data-dismiss="modal").btn.btn-link Cancel
