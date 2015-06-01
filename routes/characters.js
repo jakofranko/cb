@@ -3,6 +3,8 @@ var router = express.Router();
 var users = require('../models/users');
 var characters = require('../models/characters');
 var skillTypes = require('../models/skillType');
+var martialArts = require('../models/martialArts');
+var martialManeuvers = require('../models/martialManeuvers');
 
 // CHARACTERS
 // ------------------------------------
@@ -30,12 +32,24 @@ router.get('/characteristics/:characterID', function(req, res) {
 	});
 });
 
-router.get('/martialArts/:characterID', function(req, res) {
-	charcters.findCharacterById(req.params.characterID, function(err, character) {
+router.get('/martialArts/add/:characterID', function(req, res) {
+	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(character.userID == req.session._id) {
-			var martialArts;
-			martialArts.getMartialArts(character._id, function(err, ma) {
-				res.render('martialArtsShow', { martialArts: ma });
+			martialManeuvers.listMartialManeuvers(function(err, mm) {
+				res.render('martialArts/add', { character: character, mm: mm });
+			});
+		} else {
+			res.redirect('/');
+		}
+	});
+});
+
+router.get('/martialArts/:characterID', function(req, res) {
+	characters.findCharacterById(req.params.characterID, function(err, character) {
+		if(character.userID == req.session._id) {
+			martialArts.listMartialArts(character._id, function(err, ma) {
+				console.log(err, ma);
+				res.render('martialArts/list', { character: character, martialArts: ma });
 			});
 		} else {
 			res.redirect('/');

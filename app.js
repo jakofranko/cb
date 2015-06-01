@@ -16,7 +16,7 @@ var api              = require('./routes/api');
 var characters       = require('./routes/characters');
 var dashboard        = require('./routes/dashboard');
 var index            = require('./routes/index');
-var martialManeuvers = require('./routes/martialManeuvers')
+var martialManeuvers = require('./routes/martialManeuvers');
 var skills           = require('./routes/skills');
 var users            = require('./routes/users');
 
