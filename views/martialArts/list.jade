@@ -1,0 +1,12 @@
+extends ../layout
+
+block content
+	a(href="/dashboard/" + username)
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;back to Dashboard
+	.row
+		.col-sm-6
+			h1 #{character.alias} &nbsp;
+			if character.basePool
+				p Base Character Point Pool: #{character.basePool}
+				p Character Points Spent: #{character.pointsSpent}

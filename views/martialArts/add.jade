@@ -1,0 +1,27 @@
+extends ../layout
+
+block content
+	a(href="/dashboard/" + username)
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;back to Dashboard
+	
+	h1 #{character.alias} &nbsp;
+	if character.basePool
+		p Base Character Point Pool: #{character.basePool}
+		p Character Points Spent: #{character.pointsSpent}
+	.row
+		.col-sm-5
+			.form-group
+				label.control-label(for="maneuvers") Select which maneuvers to include in your martial art
+				select#maneuvers.form-control(name="maneuvers" style="height:300px;" multiple)
+					each maneuver in mm
+						option(value=maneuver._id) #{maneuver.name}
+		.col-sm-2.text-center(style="margin:130px 0")
+			button.btn.btn-primary.remove-maneuver
+				span.glyphicon.glyphicon-arrow-left
+
+			br
+			br
+
+			button.btn.btn-primary.add-maneuver
+				span.glyphicon.glyphicon-arrow-right
