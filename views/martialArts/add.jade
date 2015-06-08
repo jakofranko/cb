@@ -1,14 +1,14 @@
 extends ../layout
 
 block content
-	a(href="/dashboard/" + username)
-		span.glyphicon.glyphicon-arrow-left
-		| &nbsp;back to Dashboard
-	
-	h1 #{character.alias} &nbsp;
+	h1 Create Martial Art for #{character.alias}
+		a(href="/characters/skills/" + character._id).btn.btn-link Back
 	if character.basePool
 		p Base Character Point Pool: #{character.basePool}
-		p Character Points Spent: #{character.pointsSpent}
+		p 
+			| Character Points Remaining: 
+			!= (character.basePool - character.pointsSpent)
+
 	.row
 		.col-sm-5
 			.form-group
@@ -39,6 +39,17 @@ block content
 					label.control-label(for="art") Your Martial Art
 					select#art.form-control(name="art" style="height:300px;" multiple)
 
-		form#newArt
+	
+	form(method="post", action="/characters/addMartialArt/")
+		.row
+			.col-sm-5
+				.form-group
+					label.control-label(for="maName") Martial Art Name
+					input.form-control(type="text" name="maName" placeholder="E.G. Karate, Fencing etc." required)#maName
+					input(type="hidden", name="characterID", value=character._id)
+		#newArt
+		button(type="submit").btn.btn-primary.btn-lg
+			span.glyphicon.glyphicon-plus
+			| &nbsp;Add Martial Art
 
 	script(src='/js/martialArts/add.js' type='text/javascript')

@@ -36,7 +36,7 @@ router.get('/martialArts/add/:characterID', function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(character.userID == req.session._id) {
 			martialManeuvers.listMartialManeuvers(function(err, mm) {
-				res.render('martialArts/add', { character: character, mm: mm });
+				res.render('martialArts/add', { character: character, mm: mm, username: req.session.username });
 			});
 		} else {
 			res.redirect('/');
@@ -246,6 +246,18 @@ router.post('/updateCharacteristics', function(req, res) {
 	}, function(err, result) {
 		res.redirect('/characters/' + req.body._id);
 	});
+});
+
+router.post('/addMartialArt', function(req, res) {
+	martialArts.createMartialArt(req.body.maName, req.body.characterID, function(err, result) {
+		if(result) {
+			var regex = /^mm(\d+)\-(\w+)$/;
+			for(var val in req.body) {
+				var match = val.match(regex);
+				console.log(match);
+			}
+		}
+	});	
 });
 
 module.exports = router;

@@ -11,11 +11,16 @@ $(document).ready(function() {
 	$('.remove-maneuver').click(function() {
 		var selected = art.find(':selected');
 		selected.appendTo(maneuvers);
+		scafoldMartialArt();
 	});
 });
 
 function scafoldMartialArt() {
-	var data = $('#art').val();
+	var newArt = $('#art');
+	
+	newArt.find('option').prop('selected', true);
+	var data = newArt.val();
+	console.log(data); 
 	$.post('/martialManeuvers/newArt/', {mms: data}, function(response) {
 		$("#newArt").html(response);
 	});

@@ -16,6 +16,7 @@ var martialArtSchema = mongoose.Schema({
 
 var MartialArt = mongoose.model('MartialArt', martialArtSchema);
 
+
 module.exports = {
 	createMartialArt: function(name, characterID, callback) {
 		var martialArt = new MartialArt({
@@ -38,7 +39,7 @@ module.exports = {
 	},
 
 	updateMartialArt: function(query, updates, callback) {
-		findOneAndUpdate(query, updates, function(err, result) {
+		MartialArt.findOneAndUpdate(query, updates, function(err, result) {
 			if(err) callback(err);
 			else callback(err, result);
 		});
@@ -48,6 +49,14 @@ module.exports = {
 		MartialArt.findByIdAndRemove(maID, function(err, ma) {
 			if(err) callback(err);
 			else callback(err, ma);
+		});
+	},
+
+	addMartialManeuver: function(maID, mmName, mmID, calback) {
+		MartialArt.findById(maID, function(err, ma) {
+			if(ma) {
+				// var newManeuver = new m
+			}
 		});
 	}
 
