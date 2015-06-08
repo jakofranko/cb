@@ -12,16 +12,33 @@ block content
 	.row
 		.col-sm-5
 			.form-group
-				label.control-label(for="maneuvers") Select which maneuvers to include in your martial art
+				label.control-label(for="maneuvers") Select which maneuvers to include in your Martial Art
 				select#maneuvers.form-control(name="maneuvers" style="height:300px;" multiple)
 					each maneuver in mm
-						option(value=maneuver._id) #{maneuver.name}
-		.col-sm-2.text-center(style="margin:130px 0")
-			button.btn.btn-primary.remove-maneuver
-				span.glyphicon.glyphicon-arrow-left
+						option(value=maneuver._id, data-cost=maneuver.cost) #{maneuver.name} - #{maneuver.cost} pts.
 
-			br
-			br
-
+		.col-sm-2.hidden-xs.text-center(style="margin:130px 0")
 			button.btn.btn-primary.add-maneuver
 				span.glyphicon.glyphicon-arrow-right
+			br
+			br
+			button.btn.btn-primary.remove-maneuver
+				span.glyphicon.glyphicon-arrow-left
+		.col-sm-2.visible-xs.text-center(style="margin:25px 0")
+			.row
+				.col-xs-6
+					button.btn.btn-primary.btn-block.add-maneuver
+						span.glyphicon.glyphicon-arrow-down
+				.col-xs-6
+					button.btn.btn-primary.btn-block.remove-maneuver
+						span.glyphicon.glyphicon-arrow-up
+
+		.col-sm-5
+			form(method="post")#artForm
+				.form-group
+					label.control-label(for="art") Your Martial Art
+					select#art.form-control(name="art" style="height:300px;" multiple)
+
+		form#newArt
+
+	script(src='/js/martialArts/add.js' type='text/javascript')
