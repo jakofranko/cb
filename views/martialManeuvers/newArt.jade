@@ -1,0 +1,20 @@
+each m, i in mms
+	if i % 3 == 0
+		.row
+			each mSub, iSub in mms.slice(i, i + 3)
+				.col-sm-4
+					.form-group
+						label.control-label #{mSub.name}
+						input(name='mmName' placeholder='Custom Maneuver Name').form-control
+					dl
+						if mSub.name != '+1 Damage Class' && mSub.name != 'Weapon Element'
+							dt Phase
+							dd #{mSub.phase}
+							dt OCV
+							dd #{mSub.ocv}
+							dt DCV
+							dd #{mSub.dcv}
+						dt Cost
+						dd #{mSub.cost}
+						dt Effects
+						dd #{mSub.effects}
