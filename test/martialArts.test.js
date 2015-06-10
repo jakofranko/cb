@@ -1,6 +1,7 @@
 'use strict';
 var assert = require('assert'),
-    martialArt = require('../models/martialArts'),
+	martialManeuvers = require('../models/martialManeuvers'),
+    martialArts = require('../models/martialArts'),
     characters = require('../models/characters'),
     users = require('../models/users'),
     mongoose = require('mongoose'),
@@ -8,6 +9,7 @@ var assert = require('assert'),
     should = require('should'),
     testCharacter,
     testUser,
+    testManeuver,
     testMartialArt;
 
 describe('Martial Arts Test Suite', function() {
@@ -22,13 +24,28 @@ describe('Martial Arts Test Suite', function() {
 				  	testCharacter = character;
 				});
 			}
+
+			martialManeuvers.createMartialManeuver('Test Maneuver', "0.5", "+4", "-2", 5, "+15 INT vs dumbness", function(err, mm) {
+				if(err) throw new Error(err);
+				else {
+					should.not.exist(err);
+					should.exist(mm);
+					testManeuver = mm;
+				}
+			});
 			done();
     	});
 	});
 
     describe('createMartialArt', function() {
 		it('should create a new martial art', function(done) {
-			martialArt.createMartialArt('Fencing', testCharacter._id, function(err, ma) {
+			var maneuvers = [
+				{
+					name: 'Frouisment',
+					type: testManeuver
+				}
+			];
+			martialArts.createMartialArt('Fencing', testCharacter._id, maneuvers, function(err, ma) {
 				should.not.exist(err);
 				should.exist(ma);
 				testMartialArt = ma;
@@ -39,7 +56,7 @@ describe('Martial Arts Test Suite', function() {
 
 	describe('listMartialArts', function() {
 		it('should list martial arts that belong to a character', function(done) {
-			martialArt.listMartialArts(testCharacter._id, function(err, ma) {
+			martialArts.listMartialArts(testCharacter._id, function(err, ma) {
 				should.not.exist(err);
 				should.exist(ma);
 				done();
@@ -47,15 +64,43 @@ describe('Martial Arts Test Suite', function() {
 		});
 	});
 
+	describe('addMartialManeuver', function() {
+		it('should add a martial maneuver to an existing martial art', function(done) {
+			testMartialArt.maneuvers.length.should.eql(1);
+			martialArts.addMartialManeuver(testMartialArt._id, 'Touche', testManeuver, function(err, updatedMa) {
+				should.not.exist(err);
+				should.exist(updatedMa);
+				testMartialArt = updatedMa;
+				testMartialArt.maneuvers.length.should.eql(2);
+				done();
+			});
+		});
+	});
+
+	describe('removeMartialManeuver', function() {
+		it('should remove a martial maneuver to an existing martial art', function(done) {
+			testMartialArt.maneuvers.length.should.eql(2);
+			martialArts.removeMartialManeuver(testMartialArt._id, testMartialArt.maneuvers[0]._id, function(err, updatedMa) {
+				should.not.exist(err);
+				should.exist(updatedMa);
+				testMartialArt = updatedMa;
+				testMartialArt.maneuvers.length.should.eql(1);
+				done();
+			});
+		});
+	});
+
 	describe('removeMartialArt', function() {
 		it('should remove the martial art specified by id', function(done) {
-			martialArt.removeMartialArt(testMartialArt._id, function(err, martialArt) {
+			martialArts.removeMartialArt(testMartialArt._id, function(err, martialArt) {
 				should.not.exist(err);
 				should.exist(martialArt);
 				done();
-			})
-		})
-	})
+			});
+		});
+	});
+
+
 
     // After test suite
 	after('Clean up test user and test character', function(done) {
@@ -69,6 +114,11 @@ describe('Martial Arts Test Suite', function() {
       		if (err) throw new Error(err);
       		else user.remove();
     	});
+
+    	martialManeuvers.removeMartialManeuver(testManeuver._id, function(err, martialManeuver) {
+			should.not.exist(err);
+			should.exist(martialManeuver);
+		});
     
     	done();
 	});

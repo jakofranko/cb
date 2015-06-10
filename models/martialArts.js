@@ -7,8 +7,8 @@ var maneuverSchema = mongoose.Schema({
 });
 
 var martialArtSchema = mongoose.Schema({
-	characterID: String,
 	name: String,
+	characterID: String,
 	maneuvers: [maneuverSchema]
 });
 
@@ -18,11 +18,11 @@ var MartialArt = mongoose.model('MartialArt', martialArtSchema);
 
 
 module.exports = {
-	createMartialArt: function(name, characterID, callback) {
+	createMartialArt: function(name, characterID, maneuvers, callback) {
 		var martialArt = new MartialArt({
 			characterID: characterID,
 			name: name,
-			maneuvers: []
+			maneuvers: maneuvers
 		});
 
 		martialArt.save(function(err, results) {
@@ -52,10 +52,33 @@ module.exports = {
 		});
 	},
 
-	addMartialManeuver: function(maID, mmName, mmID, calback) {
+	addMartialManeuver: function(maID, mmName, mm, callback) {
 		MartialArt.findById(maID, function(err, ma) {
-			if(ma) {
-				// var newManeuver = new m
+			if(ma && ma.length !== 0) {
+				var maneuver = {
+					name: mmName,
+					type: mm
+				};
+				ma.maneuvers.push(maneuver);
+				ma.save(function(err) {
+					callback(err, ma);
+				});
+			} else {
+				callback('No martial art was found');
+			}
+		});
+	},
+
+	removeMartialManeuver: function(maID, mmID, callback) {
+		MartialArt.findById(maID, function(err, ma) {
+			if(ma && ma.length !== 0) {
+				var doc = ma.maneuvers.id(mmID).remove();
+				ma.save(function(err) {
+					if(err)
+						callback(err);
+					else
+						callback(err, ma);
+				})
 			}
 		});
 	}
