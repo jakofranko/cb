@@ -64,7 +64,7 @@ router.get('/skills/add/:characterID', function(req, res) {
 			var skilltypes;
 			skillTypes.listSkillTypes(function(err, results) {
 				skilltypes = results;
-				res.render('charactersSkillsAdd', { title: 'Add skills for ' + character.alias, character: character, username: req.session.username, skilltypes: skilltypes });
+				res.render('skills/add', { title: 'Add skills for ' + character.alias, character: character, username: req.session.username, skilltypes: skilltypes });
 			});
 		} else { 
 			res.redirect('/');
@@ -78,7 +78,7 @@ router.get('/skills/edit/:characterID,:skillID', function(req, res) {
 		if(character.userID == req.session._id) {
 			character = character;
 			characters.findSkill(req.params.characterID, req.params.skillID, function(err, skill) {
-				res.render('charactersSkillsEdit', { title: 'Editing ' + skill.skillType.name, character: character, username: req.session.username, skill: skill });
+				res.render('skills/edit', { title: 'Editing ' + skill.skillType.name, character: character, username: req.session.username, skill: skill });
 			});
 		} else { 
 			res.redirect('/');
@@ -96,7 +96,9 @@ router.get('/skills/deleteSkill/:charID,:skillID', function(req, res) {
 router.get('/skills/:characterID', function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(character.userID == req.session._id) {
-			res.render('charactersSkills', { title: character.alias + ' skills', character: character, username: req.session.username });
+			martialArts.listMartialArts(req.params.characterID, function(err, ma) {
+				res.render('skills/view', { title: character.alias + ' skills', character: character, ma: ma, username: req.session.username });	
+			})
 		} else {
 			res.redirect('/');
 		}
@@ -169,14 +171,14 @@ router.post('/addSkill', function(req, res) {
 });
 
 router.post('/updateSkill', function(req, res) {
-	var skillID = req.body.skillID,
-		categories = (req.body.categories) ? req.body.categories : null,
-		subcategories = (req.body.subcategories) ? req.body.subcategories : null,
-		familiarity = req.body.familiarity,
+	var skillID 			= req.body.skillID,
+		categories 			= (req.body.categories) ? req.body.categories : null,
+		subcategories 		= (req.body.subcategories) ? req.body.subcategories : null,
+		familiarity 		= req.body.familiarity,
 		characteristicBased = req.body.characteristicBased,
-		roll = Number(req.body.roll);
-		skillOptions = (req.body.skillOptions) ? req.body.skillOptions : null,
-		cost = req.body.cost;
+		roll 				= Number(req.body.roll);
+		skillOptions 		= (req.body.skillOptions) ? req.body.skillOptions : null,
+		cost 				= req.body.cost;
 
 	var updates = {
 		categories: categories,
@@ -249,15 +251,35 @@ router.post('/updateCharacteristics', function(req, res) {
 });
 
 router.post('/addMartialArt', function(req, res) {
-	martialArts.createMartialArt(req.body.maName, req.body.characterID, function(err, result) {
-		if(result) {
-			var regex = /^mm(\d+)\-(\w+)$/;
-			for(var val in req.body) {
-				var match = val.match(regex);
-				console.log(match);
-			}
-		}
-	});	
+	// Fetch maneuvers, store them in array for manipulation
+	var maneuvers = req.body.mm;
+	for(var key in maneuvers) {
+		// Anonymous function solves scope issue
+		(function(key) {
+			martialManeuvers.getMartialManeuver({ _id: maneuvers[key].type}, function(err, result) {
+				if(err) throw new Error(err);
+				else {
+					// Set the type equal to the standard martial maneuver object
+					maneuvers[key].type = result;
+
+					// If the user did not name the maneuver, use default name
+					if(maneuvers[key].name == '') {
+						maneuvers[key].name = result.name;
+					}
+
+					// Once all the maneuvers have been looped through, create the custom martial art
+					if((Number(key) + 1) == maneuvers.length) {
+						martialArts.createMartialArt(req.body.maName, req.body.characterID, maneuvers, function(err, result) {
+							if(err) throw new Error(err);
+							else {
+								res.redirect('/characters/skills/' + req.body.characterID);
+							}
+						});
+					}
+				}
+			});
+		})(key);
+	}
 });
 
 module.exports = router;

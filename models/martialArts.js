@@ -27,7 +27,17 @@ module.exports = {
 
 		martialArt.save(function(err, results) {
 			if(err) callback(err);
-			else callback(err, results);
+			else {
+				var cost = 0;
+				for(var k in maneuvers) {
+					console.log(maneuvers[k])
+					cost += maneuvers[k].type.cost;
+					if((Number(k) + 1) == maneuvers.length) {
+						console.log(cost);
+						callback(err, results);
+					}
+				}
+			}
 		});
 	},
 

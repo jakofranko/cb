@@ -5,8 +5,8 @@ each m, i in mms
 				.col-sm-4
 					.form-group
 						label.control-label #{mSub.name}
-						input(name='mm' + (Number(iSub) + Number(i)) + '-name' placeholder='Custom Maneuver Name (optional)').form-control
-						input(type="hidden", name='mm' + (Number(iSub) + Number(i)) + '-id', value=mSub._id)
+						input(name='mm[' + (Number(iSub) + Number(i)) + '][name]' placeholder='Custom Maneuver Name (optional)').form-control
+						input(type="hidden", name='mm[' + (Number(iSub) + Number(i)) + '][type]', value=mSub._id)
 					dl
 						if mSub.name != '+1 Damage Class' && mSub.name != 'Weapon Element'
 							dt Phase
