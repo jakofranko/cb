@@ -32,6 +32,7 @@ router.get('/characteristics/:characterID', function(req, res) {
 	});
 });
 
+// Martial Arts
 router.get('/martialArts/add/:characterID', function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(character.userID == req.session._id) {
@@ -40,6 +41,20 @@ router.get('/martialArts/add/:characterID', function(req, res) {
 			});
 		} else {
 			res.redirect('/');
+		}
+	});
+});
+
+router.get('/martialArts/edit/:maID', function(req, res) {
+	martialArts.getMartialArt(req.params.maID, function(err, ma) {
+		if(ma) {
+			characters.findCharacterById(ma.characterID, function(err, character) {
+				if(character.userID == req.session._id) {
+					res.render('martialArts/edit', { character: character, ma: ma, username: req.session.username });
+				} else {
+					res.redirect('/');		
+				}
+			});
 		}
 	});
 });

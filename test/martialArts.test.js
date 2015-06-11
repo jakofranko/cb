@@ -54,6 +54,16 @@ describe('Martial Arts Test Suite', function() {
 		});
 	});
 
+	describe('getMartialArt', function() {
+		it('should fetch one martial art by ID', function(done) {
+			martialArts.getMartialArt(testMartialArt._id, function(err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				done();
+			});
+		});
+	});
+
 	describe('listMartialArts', function() {
 		it('should list martial arts that belong to a character', function(done) {
 			martialArts.listMartialArts(testCharacter._id, function(err, ma) {

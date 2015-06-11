@@ -1,0 +1,56 @@
+extends ../layout
+
+block content
+	h1 Create Martial Art for #{character.alias}
+		a(href="/characters/skills/" + character._id).btn.btn-link Back
+	if character.basePool
+		p Base Character Point Pool: #{character.basePool}
+		p 
+			| Character Points Remaining: 
+			!= (character.basePool - character.pointsSpent)
+
+	.row
+		.col-sm-5
+			.form-group
+				label.control-label(for="maneuvers") Select which maneuvers to include in your Martial Art
+				select#maneuvers.form-control(name="maneuvers" style="height:300px;" multiple)
+					each maneuver in mm
+						option(value=maneuver._id, data-cost=maneuver.cost) #{maneuver.name} - #{maneuver.cost} pts.
+
+		.col-sm-2.hidden-xs.text-center(style="margin:130px 0")
+			button.btn.btn-primary.add-maneuver
+				span.glyphicon.glyphicon-arrow-right
+			br
+			br
+			button.btn.btn-primary.remove-maneuver
+				span.glyphicon.glyphicon-arrow-left
+		.col-sm-2.visible-xs.text-center(style="margin:25px 0")
+			.row
+				.col-xs-6
+					button.btn.btn-primary.btn-block.add-maneuver
+						span.glyphicon.glyphicon-arrow-down
+				.col-xs-6
+					button.btn.btn-primary.btn-block.remove-maneuver
+						span.glyphicon.glyphicon-arrow-up
+
+		.col-sm-5
+			form(method="post")#artForm
+				.form-group
+					label.control-label(for="art") Your Martial Art
+					select#art.form-control(name="art" style="height:300px;" multiple)
+
+	
+	form(method="post", action="/characters/addMartialArt/")
+		.row
+			.col-sm-5
+				.form-group
+					label.control-label(for="maName") Martial Art Name
+					input.form-control(type="text" name="maName" placeholder="E.G. Karate, Fencing etc." required)#maName
+					input(type="hidden", name="characterID", value=character._id)
+		#newArt
+			include ../martialManeuvers/newArt
+		button(type="submit").btn.btn-primary.btn-lg
+			span.glyphicon.glyphicon-plus
+			| &nbsp;Add Martial Art
+
+	script(src='/js/martialArts/add.js' type='text/javascript')

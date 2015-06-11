@@ -22,7 +22,7 @@ block content
 	if ma.length > 0
 		each art, i in ma
 			h3 #{art.name}
-				a(href='/characters/martialArts/edit' + art._id).btn.btn-link
+				a(href='/characters/martialArts/edit/' + art._id).btn.btn-link
 					span.glyphicon.glyphicon-edit 
 					|  Edit
 			table.table

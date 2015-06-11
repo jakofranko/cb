@@ -41,6 +41,13 @@ module.exports = {
 		});
 	},
 
+	getMartialArt: function(maID, callback) {
+		MartialArt.findById(maID, function(err, result) {
+			if(err) callback(err);
+			else callback(err, result);
+		});
+	},
+
 	listMartialArts: function(characterID, callback) {
 		MartialArt.find({characterID: characterID}, function(err, results) {
 			if(err) callback(err);
