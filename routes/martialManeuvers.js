@@ -101,7 +101,7 @@ router.post('/newArt', function(req, res) {
 			martialManeuvers.getMartialManeuver({_id: _id}, function(err, result) {
 				mms.push(result);
 				if(i + 1 == count) {
-					return res.render('martialManeuvers/newArt', { mms: mms });
+					return res.render('martialManeuvers/newArt', { selectedManeuvers: mms });
 				}
 			});
 		})(i);	

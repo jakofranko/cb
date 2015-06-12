@@ -50,13 +50,24 @@ router.get('/martialArts/edit/:maID', function(req, res) {
 		if(ma) {
 			characters.findCharacterById(ma.characterID, function(err, character) {
 				if(character.userID == req.session._id) {
-					res.render('martialArts/edit', { character: character, ma: ma, username: req.session.username });
+					martialManeuvers.listMartialManeuvers(function(err, mms) {
+						res.render('martialArts/edit', { character: character, ma: ma, mms: mms, username: req.session.username });	
+					});
 				} else {
 					res.redirect('/');		
 				}
 			});
 		}
 	});
+});
+
+router.get('/martialArts/deleteMartialArt/:charID,:maID', function(req, res) {
+	martialArts.removeMartialArt(req.params.maID, function(err, result) {
+		if(err) throw new Error(err);
+		else {
+			res.redirect('/characters/skills/' + req.params.charID)
+		}
+	})
 });
 
 router.get('/martialArts/:characterID', function(req, res) {
@@ -149,6 +160,7 @@ router.get('/:characterID', function(req, res) {
 
 
 // Posts ------------------------------
+// Character
 router.post('/addCharacter', function(req, res) {
 	userID = (req.session._id) ? req.session._id : null;
 	
@@ -164,6 +176,19 @@ router.post('/addCharacter', function(req, res) {
 	});
 });
 
+router.post('/updateCharacter', function(req, res) {
+	characters.updateCharacter({_id: req.body._id },
+	{ 
+		alias: req.body.alias,
+		name: req.body.name,
+		description: req.body.description,
+		basePool: req.body.basePool,
+	}, function(err, result) {
+		res.redirect('/characters/' + req.body._id);
+	});
+});
+
+// Skills
 router.post('/addSkill', function(req, res) {
 	var 	skill = req.body.skill,
 			categories = req.body.categories || [],
@@ -217,18 +242,7 @@ router.post('/updateSkill', function(req, res) {
 	});
 });
 
-router.post('/updateCharacter', function(req, res) {
-	characters.updateCharacter({_id: req.body._id },
-	{ 
-		alias: req.body.alias,
-		name: req.body.name,
-		description: req.body.description,
-		basePool: req.body.basePool,
-	}, function(err, result) {
-		res.redirect('/characters/' + req.body._id);
-	});
-});
-
+// Characteristics
 router.post('/updateCharacteristics', function(req, res) {
 	// All of the mods need to have the base subtracted from them in order to get the actual difference. Otherwise, these stats will inflate every time they're updated.
 	characters.updateCharacter({_id: req.body._id },
@@ -265,6 +279,7 @@ router.post('/updateCharacteristics', function(req, res) {
 	});
 });
 
+// Martial Arts
 router.post('/addMartialArt', function(req, res) {
 	// Fetch maneuvers, store them in array for manipulation
 	var maneuvers = req.body.mm;

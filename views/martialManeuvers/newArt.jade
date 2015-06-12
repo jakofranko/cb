@@ -1,21 +1,27 @@
-each m, i in mms
+each m, i in selectedManeuvers
 	if i % 3 == 0
 		.row.clearfix
-			each mSub, iSub in mms.slice(i, i + 3)
+			each mSub, iSub in selectedManeuvers.slice(i, i + 3)
+				-var info;
+				-if(mSub.type) {
+				- info = mSub.type;
+				-} else {
+				-  info = mSub;
+				-}
 				.col-sm-4
 					.form-group
-						label.control-label #{mSub.name}
-						input(name='mm[' + (Number(iSub) + Number(i)) + '][name]' placeholder='Custom Maneuver Name (optional)').form-control
-						input(type="hidden", name='mm[' + (Number(iSub) + Number(i)) + '][type]', value=mSub._id)
+						label.control-label #{info.name}
+						input(name='mm[' + (Number(iSub) + Number(i)) + '][name]', value=(mSub.type) ? mSub.name : null, placeholder='Custom Maneuver Name (optional)').form-control
+						input(type="hidden", name='mm[' + (Number(iSub) + Number(i)) + '][type]', value=info._id)
 					dl
-						if mSub.name != '+1 Damage Class' && mSub.name != 'Weapon Element'
+						if info.name != '+1 Damage Class' && info.name != 'Weapon Element'
 							dt Phase
-							dd #{mSub.phase}
+							dd #{info.phase}
 							dt OCV
-							dd #{mSub.ocv}
+							dd #{info.ocv}
 							dt DCV
-							dd #{mSub.dcv}
+							dd #{info.dcv}
 						dt Cost
-						dd #{mSub.cost}
+						dd #{info.cost}
 						dt Effects
-						dd #{mSub.effects}
+						dd #{info.effects}

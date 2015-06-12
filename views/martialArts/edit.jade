@@ -1,21 +1,27 @@
 extends ../layout
 
 block content
-	h1 Create Martial Art for #{character.alias}
+	h1 Edit Martial Art for #{character.alias}
 		a(href="/characters/skills/" + character._id).btn.btn-link Back
 	if character.basePool
 		p Base Character Point Pool: #{character.basePool}
 		p 
 			| Character Points Remaining: 
 			!= (character.basePool - character.pointsSpent)
+			-console.log(character._id, ",", ma._id)
 
 	.row
 		.col-sm-5
 			.form-group
 				label.control-label(for="maneuvers") Select which maneuvers to include in your Martial Art
 				select#maneuvers.form-control(name="maneuvers" style="height:300px;" multiple)
-					each maneuver in mm
-						option(value=maneuver._id, data-cost=maneuver.cost) #{maneuver.name} - #{maneuver.cost} pts.
+					each maneuver in mms
+						- var hasManeuver = false
+						each m in ma.maneuvers
+							if String(m.type._id) == String(maneuver._id)
+								- hasManeuver = true
+						if !hasManeuver
+							option(value=maneuver._id, data-cost=maneuver.cost) #{maneuver.name} - #{maneuver.cost} pts.
 
 		.col-sm-2.hidden-xs.text-center(style="margin:130px 0")
 			button.btn.btn-primary.add-maneuver
@@ -38,6 +44,8 @@ block content
 				.form-group
 					label.control-label(for="art") Your Martial Art
 					select#art.form-control(name="art" style="height:300px;" multiple)
+						each maneuver in ma.maneuvers
+							option(value=maneuver.type._id) #{maneuver.type.name} - #{maneuver.type.cost} pts.
 
 	
 	form(method="post", action="/characters/addMartialArt/")
@@ -45,12 +53,32 @@ block content
 			.col-sm-5
 				.form-group
 					label.control-label(for="maName") Martial Art Name
-					input.form-control(type="text" name="maName" placeholder="E.G. Karate, Fencing etc." required)#maName
+					input.form-control(type="text" name="maName" placeholder="E.G. Karate, Fencing etc." value=ma.name required)#maName
 					input(type="hidden", name="characterID", value=character._id)
 		#newArt
+			-var selectedManeuvers = ma.maneuvers
 			include ../martialManeuvers/newArt
 		button(type="submit").btn.btn-primary.btn-lg
 			span.glyphicon.glyphicon-plus
 			| &nbsp;Add Martial Art
+		a(href="#deleteModal" data-toggle="modal").btn.btn-link
+			span.glyphicon.glyphicon-trash
+			| &nbsp;Delete Martial Art
+
+	.modal.fade#deleteModal
+		.modal-dialog
+			.modal-content
+				.modal-header
+					button(type='button', data-dismiss='modal').close
+						span(aria-hidden='true') &times;
+						span.sr-only Close
+					h4.modal-title Delete #{ma.name}
+				.modal-body
+					p Are you sure you want to delete the #{ma.name} Martial Art?
+				.modal-footer.text-center
+					a(href='/characters/martialArts/deleteMartialArt/' + character._id + ',' + ma._id).btn.btn-danger
+						span.glyphicon.glyphicon-trash
+						|  Delete Skill
+					button(type='button', data-dismiss='modal').btn.btn-default Cancel
 
 	script(src='/js/martialArts/add.js' type='text/javascript')
