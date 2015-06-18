@@ -25,16 +25,17 @@ module.exports = {
 			maneuvers: maneuvers
 		});
 
+		// Save. On success, update the character's point total.
 		martialArt.save(function(err, results) {
 			if(err) callback(err);
 			else {
 				var cost = 0;
 				for(var k in maneuvers) {
-					console.log(maneuvers[k])
 					cost += maneuvers[k].type.cost;
 					if((Number(k) + 1) == maneuvers.length) {
-						console.log(cost);
-						callback(err, results);
+						characters.updateSpentPoints(characterID, -cost, function(err, result) {
+							callback(err, result);	
+						})
 					}
 				}
 			}
