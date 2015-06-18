@@ -31,6 +31,7 @@ module.exports = {
 			else {
 				var cost = 0;
 				for(var k in maneuvers) {
+					console.log("test");
 					cost += maneuvers[k].type.cost;
 					if((Number(k) + 1) == maneuvers.length) {
 						characters.updateSpentPoints(characterID, -cost, function(err, result) {
