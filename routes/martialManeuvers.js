@@ -91,6 +91,7 @@ router.post('/deleteMartialManeuver', function(req, res) {
 
 router.post('/newArt', function(req, res) {
 	var mms = [];
+	console.log(req.body);
 	var count = req.body.mms.length;
 	for(i = 0; i < count; i++) {
 		var _id = req.body.mms[i];

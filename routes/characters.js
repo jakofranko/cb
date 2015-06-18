@@ -312,4 +312,36 @@ router.post('/addMartialArt', function(req, res) {
 	}
 });
 
+router.post('/updateMartialArt', function(req, res) {
+	console.log(req.body);
+	var maneuvers = req.body.mm;
+	for(var key in maneuvers) {
+		// Anonymous function solves scope issue
+		(function(key) {
+			martialManeuvers.getMartialManeuver({ _id: maneuvers[key].type}, function(err, result) {
+				if(err) throw new Error(err);
+				else {
+					// Set the type equal to the standard martial maneuver object
+					maneuvers[key].type = result;
+
+					// If the user did not name the maneuver, use default name
+					if(maneuvers[key].name == '') {
+						maneuvers[key].name = result.name;
+					}
+
+					// Once all the maneuvers have been looped through, create the custom martial art
+					if((Number(key) + 1) == maneuvers.length) {
+						martialArts.updateMartialArt({ _id: req.body.maID }, { name: req.body.maName, maneuvers: maneuvers }, function(err, result) {
+							if(err) throw new Error(err);
+							else {
+								res.redirect('/characters/skills/' + req.body.characterID);
+							}
+						});
+					}
+				}
+			});
+		})(key);
+	}
+})
+
 module.exports = router;
