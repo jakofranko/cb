@@ -1,0 +1,7 @@
+if character.basePool
+		p Base Character Point Pool:
+			span#total-points #{character.basePool}
+		p 
+			| Character Points Remaining:
+			span#remaining-points
+				!= (character.basePool - character.pointsSpent)
