@@ -3,12 +3,7 @@ extends ../layout
 block content
 	h1 Edit Martial Art for #{character.alias}
 		a(href="/characters/skills/" + character._id).btn.btn-link Back
-	if character.basePool
-		p Base Character Point Pool: #{character.basePool}
-		p 
-			| Character Points Remaining: 
-			!= (character.basePool - character.pointsSpent)
-			-console.log(character._id, ",", ma._id)
+	include ../_common/pointTotals
 
 	.row
 		.col-sm-5
@@ -45,7 +40,7 @@ block content
 					label.control-label(for="art") Your Martial Art
 					select#art.form-control(name="art" style="height:300px;" multiple)
 						each maneuver in ma.maneuvers
-							option(value=maneuver.type._id) #{maneuver.type.name} - #{maneuver.type.cost} pts.
+							option(value=maneuver.type._id, data-cost=maneuver.type.cost) #{maneuver.type.name} - #{maneuver.type.cost} pts.
 
 	
 	form(method="post", action="/characters/updateMartialArt/")
