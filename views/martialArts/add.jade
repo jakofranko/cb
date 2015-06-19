@@ -3,11 +3,7 @@ extends ../layout
 block content
 	h1 Create Martial Art for #{character.alias}
 		a(href="/characters/skills/" + character._id).btn.btn-link Back
-	if character.basePool
-		p Base Character Point Pool: #{character.basePool}
-		p 
-			| Character Points Remaining: 
-			!= (character.basePool - character.pointsSpent)
+	include ../_common/pointTotals
 
 	.row
 		.col-sm-5

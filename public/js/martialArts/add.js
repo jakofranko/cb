@@ -22,7 +22,7 @@ $(document).ready(function() {
 			points += data.cost;
 		});
 		selected.appendTo(maneuvers);
-		updateSpentPoints(points);
+		updateSpentPoints(-points);
 		scafoldMartialArt();
 	});
 });
@@ -32,7 +32,6 @@ function scafoldMartialArt() {
 	
 	newArt.find('option').prop('selected', true);
 	var data = newArt.val();
-	console.log(data); 
 	$.post('/martialManeuvers/newArt/', {mms: data}, function(response) {
 		$("#newArt").html(response);
 	});
