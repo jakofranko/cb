@@ -3,14 +3,26 @@ $(document).ready(function() {
 	var art		  = $('#art');
 
 	$('.add-maneuver').click(function() {
+		var points = 0;
 		var selected = maneuvers.find(':selected');
+		selected.each(function(i, el) {
+			var data = $(el).data();
+			points += data.cost;
+		});
 		selected.appendTo(art);
+		updateSpentPoints(points);
 		scafoldMartialArt();
 	});
 
 	$('.remove-maneuver').click(function() {
+		var points = 0;
 		var selected = art.find(':selected');
+		selected.each(function(i, el) {
+			var data = $(el).data();
+			points += data.cost;
+		});
 		selected.appendTo(maneuvers);
+		updateSpentPoints(points);
 		scafoldMartialArt();
 	});
 });
@@ -24,4 +36,10 @@ function scafoldMartialArt() {
 	$.post('/martialManeuvers/newArt/', {mms: data}, function(response) {
 		$("#newArt").html(response);
 	});
+}
+
+function updateSpentPoints(points) {
+	var remainingPoints = $("#remaining-points");
+	var oldPoints = Number(remainingPoints.text());
+	remainingPoints.text(oldPoints - points);
 }
