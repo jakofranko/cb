@@ -74,7 +74,6 @@ router.get('/martialArts/:characterID', function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(character.userID == req.session._id) {
 			martialArts.listMartialArts(character._id, function(err, ma) {
-				console.log(err, ma);
 				res.render('martialArts/list', { character: character, martialArts: ma });
 			});
 		} else {
@@ -170,7 +169,6 @@ router.post('/addCharacter', function(req, res) {
 		else if(results == "" || results == null) {
 			console.error('Character was not created');
 		} else {
-			console.log(userID, results);		
 			res.redirect('/characters/edit/' + results._id);
 		}
 	});
@@ -313,7 +311,6 @@ router.post('/addMartialArt', function(req, res) {
 });
 
 router.post('/updateMartialArt', function(req, res) {
-	console.log(req.body);
 	var maneuvers = req.body.mm;
 	for(var key in maneuvers) {
 		// Anonymous function solves scope issue

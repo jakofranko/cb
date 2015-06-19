@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
-	characters = require('./characters');
+	characters = require('./characters'),
+	martialManeuvers = require('./martialManeuvers');
 
 var maneuverSchema = mongoose.Schema({
 	name: String,	// Custom Name
@@ -58,9 +59,31 @@ module.exports = {
 	},
 
 	updateMartialArt: function(query, updates, callback) {
-		MartialArt.findOneAndUpdate(query, updates, function(err, result) {
-			if(err) callback(err);
-			else callback(err, result);
+		MartialArt.findOne(query, function(err, oldMa) {
+			if(err) throw new Error(err);
+			else {
+				var oldCost = 0;
+				for(i = 0; i < oldMa.maneuvers.length; i++) {
+					oldCost += oldMa.maneuvers[i].type.cost;
+				}	
+
+				var newCost = 0;
+				for(var update in updates) {
+					oldMa[update] = updates[update];
+					if(update == 'maneuvers') {
+						for(i = 0; i < updates.maneuvers.length; i++) {
+							newCost += updates.maneuvers[i].type.cost;
+						}
+					}
+				}
+
+				oldMa.save(function(err) {
+					var costDifference = oldCost - newCost;
+					characters.updateSpentPoints(oldMa.characterID, costDifference, function(err, result) {
+						callback(err, result);	
+					});
+				});
+			}
 		});
 	},
 
