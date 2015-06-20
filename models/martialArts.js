@@ -90,7 +90,16 @@ module.exports = {
 	removeMartialArt: function(maID, callback) {
 		MartialArt.findByIdAndRemove(maID, function(err, ma) {
 			if(err) callback(err);
-			else callback(err, ma);
+			else {
+				var maCost = 0;
+				for(i = 0; i < ma.maneuvers.length; i++) {
+					maCost += ma.maneuvers[i].type.cost;
+				}
+				characters.updateSpentPoints(ma.characterID, maCost, function(err, result) {
+					if(err) callback(err);
+					else callback(err, [ma, result]);
+				});
+			}
 		});
 	},
 
