@@ -74,6 +74,27 @@ describe('Martial Arts Test Suite', function() {
 		});
 	});
 
+	describe('updateMartialArt', function() {
+		it('should update the specified art according the updates object', function(done) {
+			martialArts.updateMartialArt({ _id: testMartialArt._id }, { name: 'Blah Blah Bar', maneuvers: [{ name: 'Stupid maneuver', type: testManeuver }]}, function(err, newMa) {
+				should.not.exist(err);
+				should.exist(newMa);
+				testMartialArt = newMa;
+				done();
+			});
+		});
+	});
+
+	describe('updateMartialArt', function() {
+		it('should update the specified art according the updates object', function(done) {
+			martialArts.updateMartialArt({ _id: testMartialArt._id }, { name: 'Blah Blah Bar', maneuvers: [{ name: 'Stupid maneuver', type: testManeuver }]}, function(err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				done();
+			});
+		});
+	});
+
 	describe('addMartialManeuver', function() {
 		it('should add a martial maneuver to an existing martial art', function(done) {
 			testMartialArt.maneuvers.length.should.eql(1);
@@ -87,8 +108,9 @@ describe('Martial Arts Test Suite', function() {
 		});
 	});
 
+
 	describe('removeMartialManeuver', function() {
-		it('should remove a martial maneuver to an existing martial art', function(done) {
+		it('should remove a martial maneuver from an existing martial art', function(done) {
 			testMartialArt.maneuvers.length.should.eql(2);
 			martialArts.removeMartialManeuver(testMartialArt._id, testMartialArt.maneuvers[0]._id, function(err, updatedMa) {
 				should.not.exist(err);
@@ -114,7 +136,6 @@ describe('Martial Arts Test Suite', function() {
 
     // After test suite
 	after('Clean up test user and test character', function(done) {
-    
 		characters.removeCharacter({ _id: testCharacter._id }, function(err, results) {
 		  should.not.exist(err);
 		  should.exist(results);

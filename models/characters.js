@@ -4,7 +4,6 @@
 var mongoose = require('mongoose'),
 	users = require('./users');
 
-
 var skillSchema = mongoose.Schema({
 	skillType: Object,
 	categories: Array,
@@ -93,7 +92,12 @@ module.exports = {
 					skillOptions: skillOptions,
 					cost: cost
 				});
-				character.save(callback);
+				character.save(function(err) {
+					module.exports.updateSpentPoints(characterID, -cost, function(err, character) {
+						if(err) throw new Error(err);
+						else callback(err, character);
+					});
+				});
 			}
 		});
 	},
@@ -228,6 +232,9 @@ module.exports = {
 		module.exports.findCharacterById(charID, function(err, character) {
 			if(err) callback(err);
 			else {
+				var oldPoints = character.Skills.id(skillID).cost;
+				var newPoints = updates.cost;
+				var pointDiff = oldPoints - newPoints;
 				character.Skills.id(skillID).categories = updates.categories;
 				character.Skills.id(skillID).subcategories = updates.subcategories;
 				character.Skills.id(skillID).cost = updates.cost;
@@ -236,7 +243,9 @@ module.exports = {
 				character.Skills.id(skillID).characteristicBased = updates.characteristicBased;
 				character.Skills.id(skillID).skillOptions = updates.skillOptions;				
 				character.save(function(err, result, numAffected) {
-					callback(err, result, numAffected);
+					module.exports.updateSpentPoints(charID, pointDiff, function(err, updated) {
+						callback(err, result, numAffected);	
+					});
 				});
 			}
 		});

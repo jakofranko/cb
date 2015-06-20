@@ -32,11 +32,10 @@ module.exports = {
 			else {
 				var cost = 0;
 				for(var k in maneuvers) {
-					console.log("test");
 					cost += maneuvers[k].type.cost;
 					if((Number(k) + 1) == maneuvers.length) {
 						characters.updateSpentPoints(characterID, -cost, function(err, result) {
-							callback(err, result);	
+							callback(err, martialArt);	
 						})
 					}
 				}
@@ -80,7 +79,7 @@ module.exports = {
 				oldMa.save(function(err) {
 					var costDifference = oldCost - newCost;
 					characters.updateSpentPoints(oldMa.characterID, costDifference, function(err, result) {
-						callback(err, result);	
+						callback(err, oldMa);	
 					});
 				});
 			}
