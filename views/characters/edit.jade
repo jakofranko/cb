@@ -1,4 +1,4 @@
-extends layout
+extends ../layout
 
 block content
 	a(href="/characters/" + character._id)
@@ -9,7 +9,6 @@ block content
 		input(type='hidden', name='_id', value=character._id)
 		.row
 			.col-sm-6.col-sm-offset-3
-				= console.log(character)
 				.form-group
 					label(for='alias').control-label Alias
 					input(name='alias', type='text', placeholder='Alias, i.e., "Batman"', value=character.alias).form-control#alias

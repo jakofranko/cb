@@ -132,14 +132,14 @@ router.get('/skills/:characterID', function(req, res) {
 
 // Characters
 router.get('/add', function(req, res) {
-	res.render('charactersAdd', { title: 'New Character', username: req.session.username });
+	res.render('characters/add', { title: 'New Character', username: req.session.username });
 });
 
 // TODO: Need to add authentication, so that only users that own the character can edit or remove those characters
 router.get('/edit/:characterID', function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(character != null)
-			res.render('charactersEdit', { title: 'Edit ' + character.alias, character: character, baseCharicteristic: 10 });
+			res.render('characters/edit', { title: 'Edit ' + character.alias, character: character, baseCharicteristic: 10 });
 		else 
 			res.redirect('/');
 	});
@@ -153,7 +153,7 @@ router.get('/remove/:characterID', function(req, res) {
 
 router.get('/:characterID', function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
-		res.render('charactersShow', { title: character.alias, character: character, username: req.session.username });
+		res.render('characters/view', { title: character.alias, character: character, username: req.session.username });
 	});
 });
 
