@@ -49,7 +49,7 @@ block content
 								label(for='numberOfSkillLevels').control-label Number of SLs
 								input(type='number', name='numberOfSkillLevels', min='1', value=(skill.skillOptions.numberOfSkillLevels) ? skill.skillOptions.numberOfSkillLevels : '1').form-control
 					
-				button(type='button').btn.btn-primary.btn-lg#addSkill Update Skill
+				button(type='button').btn.btn-primary.btn-lg#updateSkill Update Skill
 				button(type='button', data-toggle='modal', data-target='#deleteModal').btn.btn-link
 					span.glyphicon.glyphicon-trash
 					|  Delete Skill
@@ -359,4 +359,4 @@ block content
 						|  Delete Skill
 					button(type='button', data-dismiss='modal').btn.btn-default Cancel
 												
-	script(rel='text/javascript', src='/js/charactersSkillsEdit.js')
+	script(rel='text/javascript', src='/js/skills/edit.js')

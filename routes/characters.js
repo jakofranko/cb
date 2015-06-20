@@ -188,23 +188,17 @@ router.post('/updateCharacter', function(req, res) {
 
 // Skills
 router.post('/addSkill', function(req, res) {
-	var 	skill = req.body.skill,
-			categories = req.body.categories || [],
-			subcategories = req.body.subcategories || [],
-			characteristicBased = req.body.characteristicBased,
-			roll = req.body.roll,
-			skillOptions = req.body.skillOptions || [],
-			cost = req.body.cost;
+	var skill = req.body.skill,
+		categories = req.body.categories || [],
+		subcategories = req.body.subcategories || [],
+		characteristicBased = req.body.characteristicBased,
+		roll = req.body.roll,
+		skillOptions = req.body.skillOptions || [],
+		cost = req.body.cost;
 
 	characters.addSkill(req.body.characterID, req.body.skill, req.body.categories, req.body.subcategories, req.body.characteristicBased, req.body.familiarity, Number(req.body.roll), req.body.skillOptions, req.body.cost, function(err, result) {
-		if(err) {
-			throw new Error(err);
-		} else {
-			characters.updateSpentPoints(req.body.characterID, -cost, function(err, updatedChar) {
-				if(err) throw new Error(err);
-			});
-			res.send(result);	
-		}
+		if(err) throw new Error(err);
+		else res.send(result);
 	});
 });
 

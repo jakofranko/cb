@@ -260,7 +260,7 @@ $(document).ready(function() {
 
 	
 	// TODO: Process and then post data when the add skill buton is clicked
-	$('#addSkill').click(function() {
+	$('#updateSkill').click(function() {
 		if($('#editSkillForm').valid()) {
 			var characterID = $('#characterID').val();
 			var skillID = $('#skillID').val();
@@ -272,7 +272,7 @@ $(document).ready(function() {
 			var roll = Number($('#roll').text().replace("-", ""));
 			var cost = Number($('#skillCost').text());
 
-			$('#options').find('[name]').filter(':visible').not(':disabled').each(function() {
+			$('#options').find('[name]').add('[name=numberOfSkillLevels]').filter(':visible').not(':disabled').each(function() {
 				var key = $(this).attr('name');
 				var value = $(this).val();
 				if(value == 'on') {
