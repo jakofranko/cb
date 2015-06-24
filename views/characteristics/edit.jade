@@ -45,7 +45,7 @@ block content
 
 	a(href="/characters/characteristics/" + character._id) 
 		span.glyphicon.glyphicon-arrow-left
-		| &nbsp;View Character
+		| &nbsp;Back
 	h1 Editing #{character.alias}'s Characeristics
 	include ../_common/pointTotals
 	form(id="editCharacter", method="post", action="/characters/updateCharacteristics").form-horizontal
@@ -53,7 +53,7 @@ block content
 			span.glyphicon.glyphicon-ok
 			| &nbsp;Update Characteristics
 		input(type="hidden" name="characterID" value=character._id)
-		input(type="hidden" name="pointsSpent" value)
+		input(type="hidden" name="pointsSpent" value)#pointsSpent
 		.row
 			.col-sm-4
 				h2 Primary Characteristics

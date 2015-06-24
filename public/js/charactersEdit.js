@@ -51,6 +51,12 @@ $(document).ready(function() {
 		Leap = calculateLeap(STR),
 		LeapCost = 1;
 
+	// The initial value is needed for use in the updateSpentPoints function
+	var remainingPoints = Number($("#remaining-points").text());
+
+	// This is to get the total amount spent so far on characteristics. This is the number that will be compared against when determining the cost (or gain) of an update to characteristics.
+	var initialCost = getTotalCost();
+
 	function calculateRoll(characteristic) {
 		if(characteristic >= 0) {
 			return Math.round(9 + (characteristic / 5));
@@ -66,7 +72,7 @@ $(document).ready(function() {
 
 	function calculateFiguredCost(baseFigured, characteristic, costMod) {
 		var newCost = (characteristic - baseFigured) * costMod;
-		return newCost;
+		return Math.round(newCost * 10) / 10;
 	}
 
 	function calculateCOMCost(comeliness, comelinessCost) {
@@ -74,24 +80,30 @@ $(document).ready(function() {
 		if(comeliness < 0) {
 			newCost = ((comeliness - base) * comelinessCost) + (-comeliness);
 		} else {
-			newCost =(comeliness - base) * comelinessCost;
+			newCost = (comeliness - base) * comelinessCost;
 		}
 		return newCost;
 	}
 
-	function updateSpentPoints() {
-		var basePoints = Number($("#base-points").text());
-		var remainingPoints = Number($("#remaining-points").text());
-		var pointsSpent = remainingPoints - basePoints;
-		$('.cost').each(function() {
-			pointsSpent += Number($(this).text());
+	function getTotalCost() {
+		var totalCost = 0;
+		$('.cost').each(function(i, el) {
+			var cost = $(el).text();
+			totalCost += Number(cost);
 		});
-		console.log(pointsSpent);
-		$('#remaining-points').text(remainingPoints - pointsSpent);
-		$('#pointsSpent').val(pointsSpent);
+		console.log(totalCost);
+		return totalCost;
 	}
 
-	updateSpentPoints();
+	function updateSpentPoints() {
+		var pointsSpent = getTotalCost();
+		var difference = initialCost - pointsSpent;
+		$('#remaining-points').text(remainingPoints + difference);
+		// The difference variable ends up being the inverse of the cost we want to post to our updateCharacter form.	
+		$('#pointsSpent').val(-difference);
+	}
+
+	// updateSpentPoints();
 	// Primary Characteristics
 	//--------------------------------------------------
 	// Do math and update things when STR changes

@@ -219,9 +219,18 @@ module.exports = {
 	},
 
 	updateCharacter: function(query, updates, callback) {
+		console.log(updates);
 		Character.findOneAndUpdate(query, updates, function(err, result) {
 			if(err) callback(err);
-			else callback(err, result);
+			else {
+				if(updates.pointsSpent && updates.characterID) {
+					module.exports.updateSpentPoints(updates.characterID, -updates.pointsSpent, function(err, success) {
+						callback(err, result);
+					});
+				} else {
+					callback(err, result);
+				}
+			}
 		});
 	},
 

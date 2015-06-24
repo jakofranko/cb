@@ -236,7 +236,6 @@ router.post('/updateSkill', function(req, res) {
 
 // Characteristics
 router.post('/updateCharacteristics', function(req, res) {
-	console.log(req.body);
 	// All of the mods need to have the base subtracted from them in order to get the actual difference. Otherwise, these stats will inflate every time they're updated.
 	characters.updateCharacter({_id: req.body.characterID },
 	{ 

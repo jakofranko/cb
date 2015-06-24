@@ -31,10 +31,11 @@ router.get('/:username', function(req, res) {
 				}
 			});
 		} else {
-			var err = new Error('Not Authorized');
-    		err.status = 401;
-			res.status(err.status)
-    		res.render('error', { message: err.message, error: err });
+			res.redirect('/');
+			// var err = new Error('Not Authorized');
+   			// err.status = 401;
+			// res.status(err.status)
+   			// res.render('error', { message: err.message, error: err });
 		}
 	});
 });
