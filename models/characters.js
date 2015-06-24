@@ -1,6 +1,3 @@
-// TODO: Implement "experience points" and a disadvantage points system
-// TODO: Skills, feats, talents, powers, perks, disadvantages
-// TODO: figure out how to check cost of abilities vs base/experience/disadvantage pool. That might be front end validation, but would probably benefit from backend validation as well
 var mongoose = require('mongoose'),
 	users = require('./users');
 

@@ -15,7 +15,7 @@ var martialManeuvers = require('../models/martialManeuvers');
 router.get('/characteristics/edit/:characterID', function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(character.userID == req.session._id) {
-			res.render('characteristicsEdit', { title: character.alias + ' Characteristics', character: character, username: req.session.username });
+			res.render('characteristics/edit', { title: character.alias + ' Characteristics', character: character, username: req.session.username });
 		} else {
 			res.redirect('/');
 		}
@@ -25,7 +25,7 @@ router.get('/characteristics/edit/:characterID', function(req, res) {
 router.get('/characteristics/:characterID', function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(character.userID == req.session._id) {
-			res.render('characteristicsShow', { title: character.alias + ' Characteristics', character: character, username: req.session.username });
+			res.render('characteristics/view', { title: character.alias + ' Characteristics', character: character, username: req.session.username });
 		} else {
 			res.redirect('/');
 		}
@@ -163,13 +163,13 @@ router.get('/:characterID', function(req, res) {
 router.post('/addCharacter', function(req, res) {
 	userID = (req.session._id) ? req.session._id : null;
 	
-	// Right now, base 10 characteristic is hardcoded in. This should become changable by the GM at some point
+	// TODO: Right now, base 10 characteristic is hardcoded in. This should become changable by the GM at some point
 	characters.createCharacter(req.body.name, req.body.alias, req.body.description, req.body.basePool, userID, 10, function(err, results) { 
 		if(err) throw new Error(err);
 		else if(results == "" || results == null) {
 			console.error('Character was not created');
 		} else {
-			res.redirect('/characters/edit/' + results._id);
+			res.redirect('/characters/characteristics/edit/' + results._id);
 		}
 	});
 });
@@ -236,8 +236,9 @@ router.post('/updateSkill', function(req, res) {
 
 // Characteristics
 router.post('/updateCharacteristics', function(req, res) {
+	console.log(req.body);
 	// All of the mods need to have the base subtracted from them in order to get the actual difference. Otherwise, these stats will inflate every time they're updated.
-	characters.updateCharacter({_id: req.body._id },
+	characters.updateCharacter({_id: req.body.characterID },
 	{ 
 		STRmod: (req.body.STRmod - 10),
 		DEXmod: (req.body.DEXmod - 10),
@@ -267,7 +268,8 @@ router.post('/updateCharacteristics', function(req, res) {
 		PreAtt: Number(req.body.PreAtt),
 		pointsSpent: Number(req.body.pointsSpent)
 	}, function(err, result) {
-		res.redirect('/characters/' + req.body._id);
+		if(err) throw new Error(err);
+		else res.redirect('/characters/' + req.body.characterID);
 	});
 });
 

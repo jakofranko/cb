@@ -1,0 +1,270 @@
+extends ../layout
+
+block content
+	- function calculateRoll(characteristic) {
+	- 	if(characteristic >= 0) {
+	- 		return Math.round(9 + (characteristic / 5));
+	- 	} else {
+			return Math.round(9 - (characteristic / 5));
+	- 	}
+	- }
+
+	- function calculateCost(characteristic, costMod) {
+	- 	return (characteristic - 10) * costMod;
+	- }
+
+	- function calculateFiguredCost(baseFigured, characteristic, costMod) {
+	- 	return (characteristic - baseFigured) * costMod;
+	- }
+
+	- function calculateCOMCost(comeliness, comelinessCost) {
+	- 	if(comeliness < 0) {
+	- 		return ((comeliness - 10) * comelinessCost) + (-comeliness);
+	- 	} else {
+	- 		return (comeliness - 10) * comelinessCost;
+	- 	}
+	- }
+	- STRcost = 1,
+	- DEXcost = 3,
+	- INTcost = 1,
+	- CONcost = 2,
+	- EGOcost = 2,
+	- BODYcost = 2,
+	- PREcost = 1,
+	- COMcost = 0.5,
+	- PDcost = 1,
+	- EDcost = 1,
+	- SPDcost = 10,
+	- RECcost = 2,
+	- ENDcost = 0.5,
+	- STUNcost = 1,
+	- RUNcost = 2,
+	- SWIMcost = 1,
+	- LEAPcost = 1
+
+
+	a(href="/characters/characteristics/" + character._id) 
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;View Character
+	h1 Editing #{character.alias}'s Characeristics
+	include ../_common/pointTotals
+	form(id="editCharacter", method="post", action="/characters/updateCharacteristics").form-horizontal
+		button(type="submit").btn.btn-primary.btn-lg
+			span.glyphicon.glyphicon-ok
+			| &nbsp;Update Characteristics
+		input(type="hidden" name="characterID" value=character._id)
+		input(type="hidden" name="pointsSpent" value)
+		.row
+			.col-sm-4
+				h2 Primary Characteristics
+				table.table
+					thead
+						tr
+							th.text-right CHAR
+							th.text-center Total Score
+							th.text-center Base Score
+							th.text-center Roll
+							th.text-center Cost
+					tbody
+						tr.text-center
+							td.text-right
+								strong STR
+							td(width="25%")
+								input(name='STRmod', type='number', value='#{character.STR + character.STRmod}').form-control#STRmod
+							td #{character.STR}
+							td#STRroll= '-' + calculateRoll((character.STR + character.STRmod))
+							td.cost#STRcost= calculateCost((character.STR + character.STRmod), STRcost)
+						tr.text-center
+							td.text-right
+								strong DEX
+							td(width="25%")
+								input(name='DEXmod', type='number', value='#{character.DEX + character.DEXmod}').form-control#DEXmod
+							td #{character.DEX}
+							td#DEXroll= '-' + calculateRoll((character.DEX + character.DEXmod))
+							td.cost#DEXcost= calculateCost((character.DEX + character.DEXmod), DEXcost)
+						tr.text-center
+							td.text-right
+								strong CON
+							td(width="25%")
+								input(name='CONmod', type='number', value='#{character.CON + character.CONmod}').form-control#CONmod
+							td #{character.CON}
+							td#CONroll= '-' + calculateRoll((character.CON + character.CONmod))
+							td.cost#CONcost= calculateCost((character.CON + character.CONmod), CONcost)
+						tr.text-center
+							td.text-right
+								strong BODY
+							td(width="25%")
+								input(name='BODYmod', type='number', value='#{character.BODY + character.BODYmod}').form-control#BODYmod
+							td #{character.BODY}
+							td#BODYroll= '-' + calculateRoll((character.BODY + character.BODYmod))
+							td.cost#BODYcost= calculateCost((character.BODY + character.BODYmod), BODYcost)
+						tr.text-center
+							td.text-right
+								strong INT
+							td(width="25%")
+								input(name='INTmod', type='number', value='#{character.INT + character.INTmod}').form-control#INTmod
+							td #{character.INT}
+							td#INTroll= '-' + calculateRoll((character.INT + character.INTmod))
+							td.cost#INTcost= calculateCost((character.INT + character.INTmod), INTcost)
+						tr.text-center
+							td.text-right
+								strong EGO
+							td(width="25%")
+								input(name='EGOmod', type='number', value='#{character.EGO + character.EGOmod}').form-control#EGOmod
+							td #{character.EGO}
+							td#EGOroll= '-' + calculateRoll((character.EGO + character.EGOmod))
+							td.cost#EGOcost= calculateCost((character.EGO + character.EGOmod), EGOcost)
+						tr.text-center
+							td.text-right
+								strong PRE
+							td(width="25%")
+								input(name='PREmod', type='number', value='#{character.PRE + character.PREmod}').form-control#PREmod
+							td #{character.PRE}
+							td#PREroll= '-' + calculateRoll((character.PRE + character.PREmod))
+							td.cost#PREcost= calculateCost((character.PRE + character.PREmod), PREcost)
+						tr.text-center
+							td.text-right
+								strong COM
+							td(width="25%")
+								input(name='COMmod', type='number', value='#{character.COM + character.COMmod}').form-control#COMmod
+							td #{character.COM}
+							td#COMroll= '-' + calculateRoll((character.COM + character.COMmod))
+							td.cost#COMcost= calculateCOMCost((character.COM + character.COMmod), COMcost)
+
+			.col-sm-4
+				h2 Figured Characteristics
+				table.table
+					thead
+						tr
+							th.text-right CHAR
+							th.text-center Total Score
+							th.text-center Base Score
+							th.text-center Cost
+					tbody
+						tr.text-center
+							td.text-right
+								strong PD
+							td(width="25%")
+								input(name='PDmod', type='number', value='#{character.PD + character.PDmod}').form-control#PDmod
+							td
+								span#PDbase #{character.PD}
+								input(type='hidden', value='#{character.PD}', name='PD')#PD
+							td.cost#PDcost= calculateFiguredCost(character.PD, (character.PD + character.PDmod), PDcost)
+						tr.text-center
+							td.text-right
+								strong ED
+							td(width="25%")
+								input(name='EDmod', type='number', value='#{character.ED + character.EDmod}').form-control#EDmod
+							td
+								span#EDbase #{character.ED}
+								input(type='hidden', value='#{character.ED}', name='ED')#ED
+							td.cost#EDcost= calculateFiguredCost(character.ED, (character.ED + character.EDmod), EDcost)
+						tr.text-center
+							td.text-right
+								strong SPD
+							td(width="25%")
+								input(name='SPDmod', type='number', step='0.1', value='#{character.SPD + character.SPDmod}').form-control#SPDmod
+							td
+								span#SPDbase #{character.SPD}
+								input(type='hidden', value='#{character.SPD}', name='SPD')#SPD
+							td.cost#SPDcost= calculateFiguredCost(character.SPD, (character.SPD + character.SPDmod), SPDcost)
+						tr.text-center
+							td.text-right
+								strong REC
+							td(width="25%")
+								input(name='RECmod', type='number', value='#{character.REC + character.RECmod}').form-control#RECmod
+							td
+								span#RECbase #{character.REC}
+								input(type='hidden', value='#{character.REC}', name='REC')#REC
+							td.cost#RECcost= calculateFiguredCost(character.REC, (character.REC + character.RECmod), RECcost)
+						tr.text-center
+							td.text-right
+								strong END
+							td(width="25%")
+								input(name='ENDmod', type='number', value='#{character.END + character.ENDmod}').form-control#ENDmod
+							td
+								span#ENDbase #{character.END}
+								input(type='hidden', value='#{character.END}', name='END')#END
+							td.cost#ENDcost= calculateFiguredCost(character.END, (character.END + character.ENDmod), ENDcost)
+						tr.text-center
+							td.text-right
+								strong STUN
+							td(width="25%")
+								input(name='STUNmod', type='number', value='#{character.STUN + character.STUNmod}').form-control#STUNmod
+							td
+								span#STUNbase #{character.STUN}
+								input(type='hidden', value='#{character.STUN}', name='STUN')#STUN
+							td.cost#STUNcost= calculateFiguredCost(character.STUN, (character.STUN + character.STUNmod), STUNcost)
+			.col-sm-4
+				h2 Movement
+				table.table
+					thead
+						tr
+							th Move Type
+							th Move in "
+					tbody
+						tr
+							td 
+								strong Running
+							td#RUNbase #{character.Running}"
+						tr
+							td 
+								strong Swimming
+							td#SWIMbase #{character.Swimming}"
+						tr
+							td 
+								strong Leap
+							td
+								span#LEAPbase #{character.Leap}"
+								input(type='hidden', value='#{character.Leap}', name='Leap')#LEAP
+
+				h2 Combat Value
+				table.table
+					thead
+						tr
+							th Type
+							th Value
+					tbody
+						tr
+							td
+								strong CV
+							td
+								span#CVbase #{character.CV}
+								input(type='hidden', value='#{character.CV}', name='CV')#CV
+						tr
+							td
+								strong ECV
+							td
+								span#ECVbase #{character.ECV}
+								input(type='hidden', value='#{character.ECV}', name='ECV')#ECV
+				
+				h2 Misc.
+				table.table
+					thead
+						tr
+							th Type
+							th Value
+					tbody
+						tr
+							td
+								strong Lift
+							td
+								span#LIFT #{character.Lift} 
+								| kg
+								input(type='hidden', value='#{character.Lift}', name='Lift')#LIFT
+						tr
+							td
+								strong HTH
+							td
+								span#HTHattack #{character.HTH}
+								| d6
+								input(type='hidden', value='#{character.HTH}', name='HTH')#HTH
+						tr
+							td 
+								strong PRE Attack
+							td
+								span#PREattack #{character.PreAtt}
+								| d6
+								input(type='hidden', value='#{character.PreAtt}', name='PreAtt')#PREatt
+		
+	script(src='/js/charactersEdit.js', rel='text/javascript')

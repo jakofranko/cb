@@ -1,0 +1,223 @@
+extends ../layout
+
+block content
+	- function calculateRoll(characteristic) {
+	- 	if(characteristic >= 0) {
+	- 		return Math.round(9 + (characteristic / 5));
+	- 	} else {
+			return Math.round(9 - (characteristic / 5));
+	- 	}
+	- }
+
+	- function calculateCost(characteristic, costMod) {
+	- 	return (characteristic - 10) * costMod;
+	- }
+
+	- function calculateFiguredCost(baseFigured, characteristic, costMod) {
+	- 	return (characteristic - baseFigured) * costMod;
+	- }
+
+	- function calculateCOMCost(comeliness, comelinessCost) {
+	- 	if(comeliness < 0) {
+	- 		return ((comeliness - 10) * comelinessCost) + (-comeliness);
+	- 	} else {
+	- 		return (comeliness - 10) * comelinessCost;
+	- 	}
+	- }
+	- STRcost = 1,
+	- DEXcost = 3,
+	- INTcost = 1,
+	- CONcost = 2,
+	- EGOcost = 2,
+	- BODYcost = 2,
+	- PREcost = 1,
+	- COMcost = 0.5,
+	- PDcost = 1,
+	- EDcost = 1,
+	- SPDcost = 10,
+	- RECcost = 2,
+	- ENDcost = 0.5,
+	- STUNcost = 1,
+	- RUNcost = 2,
+	- SWIMcost = 1,
+	- LEAPcost = 1
+
+
+	a(href="/characters/" + character._id)
+		span.glyphicon.glyphicon-arrow-left
+		|  Back
+	h1 #{character.alias}'s Characteristics
+		a(href='/characters/characteristics/edit/' + character._id).btn.btn-link
+			span.glyphicon.glyphicon-edit
+			|  Edit
+	include ../_common/pointTotals
+
+	.row
+		.col-sm-4
+			h2 Primary Characteristics
+			table.table
+				thead
+					tr
+						th.text-right CHAR
+						th.text-center Total Score
+						th.text-center Base Score
+						th.text-center Roll
+						th.text-center Cost
+				tbody
+					tr.text-center
+						td.text-right
+							strong STR
+						td#STRmod #{character.STR + character.STRmod}
+						td #{character.STR}
+						td#STRroll= '-' + calculateRoll((character.STR + character.STRmod))
+						td.cost#STRcost= calculateCost((character.STR + character.STRmod), STRcost)
+					tr.text-center
+						td.text-right
+							strong DEX
+						td#DEXmod #{character.DEX + character.DEXmod}
+						td #{character.DEX}
+						td#DEXroll= '-' + calculateRoll((character.DEX + character.DEXmod))
+						td.cost#DEXcost= calculateCost((character.DEX + character.DEXmod), DEXcost)
+					tr.text-center
+						td.text-right
+							strong CON
+						td#CONmod #{character.CON + character.CONmod}
+						td #{character.CON}
+						td#CONroll= '-' + calculateRoll((character.CON + character.CONmod))
+						td.cost#CONcost= calculateCost((character.CON + character.CONmod), CONcost)
+					tr.text-center
+						td.text-right
+							strong BODY
+						td#BODYmod #{character.BODY + character.BODYmod}
+						td #{character.BODY}
+						td#BODYroll= '-' + calculateRoll((character.BODY + character.BODYmod))
+						td.cost#BODYcost= calculateCost((character.BODY + character.BODYmod), BODYcost)
+					tr.text-center
+						td.text-right
+							strong INT
+						td#INTmod #{character.INT + character.INTmod}
+						td #{character.INT}
+						td#INTroll= '-' + calculateRoll((character.INT + character.INTmod))
+						td.cost#INTcost= calculateCost((character.INT + character.INTmod), INTcost)
+					tr.text-center
+						td.text-right
+							strong EGO
+						td#EGOmod #{character.EGO + character.EGOmod}
+						td #{character.EGO}
+						td#EGOroll= '-' + calculateRoll((character.EGO + character.EGOmod))
+						td.cost#EGOcost= calculateCost((character.EGO + character.EGOmod), EGOcost)
+					tr.text-center
+						td.text-right
+							strong PRE
+						td#PREmod #{character.PRE + character.PREmod}
+						td #{character.PRE}
+						td#PREroll= '-' + calculateRoll((character.PRE + character.PREmod))
+						td.cost#PREcost= calculateCost((character.PRE + character.PREmod), PREcost)
+					tr.text-center
+						td.text-right
+							strong COM
+						td#COMmod #{character.COM + character.COMmod}
+						td #{character.COM}
+						td#COMroll= '-' + calculateRoll((character.COM + character.COMmod))
+						td.cost#COMcost= calculateCOMCost((character.COM + character.COMmod), COMcost)
+
+		.col-sm-4
+			h2 Figured Characteristics
+			table.table
+				thead
+					tr
+						th.text-right CHAR
+						th.text-center Total Score
+						th.text-center Base Score
+						th.text-center Cost
+				tbody
+					tr.text-center
+						td.text-right
+							strong PD
+						td#PDmod #{character.PD + character.PDmod}
+						td#PDbase #{character.PD}
+						td.cost#PDcost= calculateFiguredCost(character.PD, (character.PD + character.PDmod), PDcost)
+					tr.text-center
+						td.text-right
+							strong ED
+						td#EDmod #{character.ED + character.EDmod}
+						td#EDbase #{character.ED}
+						td.cost#EDcost= calculateFiguredCost(character.ED, (character.ED + character.EDmod), EDcost)
+					tr.text-center
+						td.text-right
+							strong SPD
+						td#SPDmod #{character.SPD + character.SPDmod}
+						td#SPDbase #{character.SPD}
+						td.cost#SPDcost= calculateFiguredCost(character.SPD, (character.SPD + character.SPDmod), SPDcost)
+					tr.text-center
+						td.text-right
+							strong REC
+						td#RECmod #{character.REC + character.RECmod}
+						td#RECbase #{character.REC}
+						td.cost#RECcost= calculateFiguredCost(character.REC, (character.REC + character.RECmod), RECcost)
+					tr.text-center
+						td.text-right
+							strong END
+						td#ENDmod #{character.END + character.ENDmod}
+						td#ENDbase #{character.END}
+						td.cost#ENDcost= calculateFiguredCost(character.END, (character.END + character.ENDmod), ENDcost)
+					tr.text-center
+						td.text-right
+							strong STUN
+						td#STUNmod #{character.STUN + character.STUNmod}
+						td#STUNbase #{character.STUN}
+						td.cost#STUNcost= calculateFiguredCost(character.STUN, (character.STUN + character.STUNmod), STUNcost)
+
+		.col-sm-4
+			h2 Movement
+			table.table
+				thead
+					tr
+						th Move Type
+						th Move in "
+				tbody
+					tr
+						td Running
+						td#RUNbase #{character.Running}"
+					tr
+						td Swimming
+						td#SWIMbase #{character.Swimming}"
+					tr
+						td Leap
+						td#LEAPbase #{character.Leap}"
+			
+			h2 Combat Value
+			table.table
+				thead
+					tr
+						th Type
+						th Value
+				tbody
+					tr
+						td
+							strong CV
+						td#CVbase #{character.CV}
+					tr
+						td
+							strong ECV
+						td#ECVbase #{character.ECV}
+			
+			h2 Misc.
+			table.table
+				thead
+					tr
+						th Type
+						th Value
+				tbody
+					tr
+						td
+							strong Lift
+						td#LIFT #{character.Lift} kg
+					tr
+						td
+							strong HTH
+						td#HTHattack #{character.HTH}d6
+					tr
+						td 
+							strong PRE Attack
+						td#PREattack #{character.PreAtt}d6

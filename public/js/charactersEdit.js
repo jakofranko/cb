@@ -21,22 +21,28 @@ $(document).ready(function() {
 		COM = $("#COMmod").val(),
 		COMcost = 0.5,
 		PD = $("#PDbase").text(),
-		PDmod = 0,
+		PDsum = $("#PDmod").val(),
+		PDmod = Number(PDsum) - Number(PD),
 		PDcost = 1,
 		ED = $("#EDbase").text(),
-		EDmod = 0,
+		EDsum = $("#EDmod").val(),
+		EDmod = Number(EDsum) - Number(ED),
 		EDcost = 1,
 		SPD = $("#SPDbase").text(),
-		SPDmod = 0,
+		SPDsum = $("#SPDmod").val(),
+		SPDmod = Number(SPDsum) - Number(SPD),
 		SPDcost = 10,
 		REC = $("#RECbase").text(),
-		RECmod = 0,
+		RECsum = $("#RECmod").val(),
+		RECmod = Number(RECsum) - Number(REC),
 		RECcost = 2,
 		END = $("#ENDbase").text(),
-		ENDmod = 0,
+		ENDsum = $("#ENDmod").val(),
+		ENDmod = Number(ENDsum) - Number(END),
 		ENDcost = 0.5,
 		STUN = $("#STUNbase").text(),
-		STUNmod = 0,
+		STUNsum = $("#STUNmod").val(),
+		STUNmod = Number(STUNsum) - Number(STUN),
 		STUNcost = 1,
 		Running = 6,
 		RunCost = 2,
@@ -74,12 +80,14 @@ $(document).ready(function() {
 	}
 
 	function updateSpentPoints() {
-		var pointsSpent = 0;
+		var basePoints = Number($("#base-points").text());
+		var remainingPoints = Number($("#remaining-points").text());
+		var pointsSpent = remainingPoints - basePoints;
 		$('.cost').each(function() {
 			pointsSpent += Number($(this).text());
 		});
-		console.log($(this).text(),pointsSpent);
-		$('#POINTSspent').text(pointsSpent);
+		console.log(pointsSpent);
+		$('#remaining-points').text(remainingPoints - pointsSpent);
 		$('#pointsSpent').val(pointsSpent);
 	}
 
@@ -360,7 +368,7 @@ $(document).ready(function() {
 	//--------------------------------------------------
 
 	$("#PDmod").change(function() {
-		var PDsum = $(this).val();
+		PDsum = $(this).val();
 		PDmod = Number(PDsum) - Number(PD);
 		var PDtotal = calculateFiguredCost(PD, PDsum, PDcost);
 		$("#PDcost").text(PDtotal);
@@ -370,7 +378,7 @@ $(document).ready(function() {
 
 
 	$("#EDmod").change(function() {
-		var EDsum = $(this).val();
+		EDsum = $(this).val();
 		EDmod = Number(EDsum) - Number(ED);
 		var EDtotal = calculateFiguredCost(ED, EDsum, EDcost);
 		$("#EDcost").text(EDtotal);
@@ -380,7 +388,7 @@ $(document).ready(function() {
 
 
 	$("#SPDmod").change(function() {
-		var SPDsum = $(this).val();
+		SPDsum = $(this).val();
 		SPDmod = Number(SPDsum) - Number(SPD)
 		var SPDtotal = calculateFiguredCost(SPD, SPDsum, SPDcost);
 		$("#SPDcost").text(Math.round(SPDtotal));
@@ -390,7 +398,7 @@ $(document).ready(function() {
 
 
 	$("#RECmod").change(function() {
-		var RECsum = $(this).val();
+		RECsum = $(this).val();
 		RECmod = Number(RECsum) - Number(REC);
 		var RECtotal = calculateFiguredCost(REC, RECsum, RECcost);
 		$("#RECcost").text(Math.round(RECtotal));
@@ -400,7 +408,7 @@ $(document).ready(function() {
 
 
 	$("#ENDmod").change(function() {
-		var ENDsum = $(this).val();
+		ENDsum = $(this).val();
 		ENDmod = Number(ENDsum) - Number(END);
 		var ENDtotal = calculateFiguredCost(END, ENDsum, ENDcost);
 		$("#ENDcost").text(ENDtotal);
@@ -410,7 +418,7 @@ $(document).ready(function() {
 
 
 	$("#STUNmod").change(function() {
-		var STUNsum = $(this).val();
+		STUNsum = $(this).val();
 		STUNmod = Number(STUNsum) - Number(STUN);
 		var STUNtotal = calculateFiguredCost(STUN, STUNsum, STUNcost);
 		$("#STUNcost").text(Math.round(STUNtotal));
@@ -467,6 +475,7 @@ $(document).ready(function() {
 
 	function calculateSTUN(body, strength, constitution) {
 		STUN = Number(body) + Math.round((strength/2)) + Math.round((constitution/2));
+		console.log(body, strength, constitution, STUN, STUNmod);
 		$("#STUNmod").val(STUNmod + STUN);
 		$("#STUNbase").text(STUN);
 		$("#STUN").val(STUN);
