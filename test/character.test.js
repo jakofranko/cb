@@ -45,7 +45,7 @@ describe('Character Suite:', function() {
 
   describe('characters.updateCharacter', function() {
     it('should update the character that matches the query passed to it', function(done) {
-      characters.updateCharacter({ alias: 'Superman' }, { description: 'a complete doofus' }, function(err, result) {
+      characters.updateCharacter({ alias: 'Superman' }, { description: 'a complete doofus' }, false, function(err, result) {
         should.exist(result);
         (result === null).should.not.be.true;
         should.not.exist(err);
