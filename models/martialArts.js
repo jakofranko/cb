@@ -10,7 +10,9 @@ var maneuverSchema = mongoose.Schema({
 var martialArtSchema = mongoose.Schema({
 	name: String,
 	characterID: String,
-	maneuvers: [maneuverSchema]
+	maneuvers: [maneuverSchema],
+	additionalDCs: Number,
+	weaponElement: Array
 });
 
 
@@ -23,7 +25,9 @@ module.exports = {
 		var martialArt = new MartialArt({
 			characterID: characterID,
 			name: name,
-			maneuvers: maneuvers
+			maneuvers: maneuvers,
+			additionalDCs: 0,
+			weaponElement: []
 		});
 
 		// Save. On success, update the character's point total.

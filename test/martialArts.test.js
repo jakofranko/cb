@@ -48,6 +48,9 @@ describe('Martial Arts Test Suite', function() {
 			martialArts.createMartialArt('Fencing', testCharacter._id, maneuvers, function(err, ma) {
 				should.not.exist(err);
 				should.exist(ma);
+				ma.should.have.properties(['name', 'characterID', 'maneuvers', 'additionalDCs', 'weaponElement']);
+				(ma.maneuvers).should.be.Array;
+				(ma.weaponElement).should.be.Array;
 				testMartialArt = ma;
 				done();
 			});
@@ -76,7 +79,7 @@ describe('Martial Arts Test Suite', function() {
 
 	describe('updateMartialArt', function() {
 		it('should update the specified art according the updates object', function(done) {
-			martialArts.updateMartialArt({ _id: testMartialArt._id }, { name: 'Blah Blah Bar', maneuvers: [{ name: 'Stupid maneuver', type: testManeuver }]}, function(err, newMa) {
+			martialArts.updateMartialArt({ _id: testMartialArt._id }, { name: 'Blah Blah Bar', maneuvers: [{ name: 'Stupid maneuver', type: testManeuver }], additionalDCs: 3, weaponElement: ['Swords', 'Knunchucks']}, function(err, newMa) {
 				should.not.exist(err);
 				should.exist(newMa);
 				testMartialArt = newMa;
