@@ -14,11 +14,11 @@ var martialManeuvers = require('../models/martialManeuvers');
 // Characteristics
 router.get('/characteristics/edit/:characterID', function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
-		// if(character.userID == req.session._id) {
+		if(character.userID == req.session._id) {
 			res.render('characteristics/edit', { title: character.alias + ' Characteristics', character: character, username: req.session.username });
-		// } else {
-			// res.redirect('/');
-		// }
+		} else {
+			res.redirect('/');
+		}
 	});
 });
 
