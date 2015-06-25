@@ -14,11 +14,11 @@ var martialManeuvers = require('../models/martialManeuvers');
 // Characteristics
 router.get('/characteristics/edit/:characterID', function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
-		if(character.userID == req.session._id) {
+		// if(character.userID == req.session._id) {
 			res.render('characteristics/edit', { title: character.alias + ' Characteristics', character: character, username: req.session.username });
-		} else {
-			res.redirect('/');
-		}
+		// } else {
+			// res.redirect('/');
+		// }
 	});
 });
 
@@ -181,7 +181,7 @@ router.post('/updateCharacter', function(req, res) {
 		name: req.body.name,
 		description: req.body.description,
 		basePool: req.body.basePool,
-	}, function(err, result) {
+	}, false, function(err, result) {
 		res.redirect('/characters/' + req.body._id);
 	});
 });
@@ -264,9 +264,8 @@ router.post('/updateCharacteristics', function(req, res) {
 		ECV: Number(req.body.ECV),
 		Lift: Number(req.body.Lift),
 		HTH: Number(req.body.HTH),
-		PreAtt: Number(req.body.PreAtt),
-		pointsSpent: Number(req.body.pointsSpent)
-	}, function(err, result) {
+		PreAtt: Number(req.body.PreAtt)
+	}, req.body.spent, function(err, result) {
 		if(err) throw new Error(err);
 		else res.redirect('/characters/' + req.body.characterID);
 	});

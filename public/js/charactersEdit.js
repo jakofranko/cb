@@ -53,6 +53,7 @@ $(document).ready(function() {
 
 	// The initial value is needed for use in the updateSpentPoints function
 	var remainingPoints = Number($("#remaining-points").text());
+	console.log(remainingPoints);
 
 	// This is to get the total amount spent so far on characteristics. This is the number that will be compared against when determining the cost (or gain) of an update to characteristics.
 	var initialCost = getTotalCost();
@@ -96,11 +97,11 @@ $(document).ready(function() {
 	}
 
 	function updateSpentPoints() {
-		var pointsSpent = getTotalCost();
-		var difference = initialCost - pointsSpent;
+		var spent = getTotalCost();
+		var difference = initialCost - spent;
 		$('#remaining-points').text(remainingPoints + difference);
 		// The difference variable ends up being the inverse of the cost we want to post to our updateCharacter form.	
-		$('#pointsSpent').val(-difference);
+		$('#spent').val(-difference);
 	}
 
 	// updateSpentPoints();
@@ -403,7 +404,7 @@ $(document).ready(function() {
 		SPDsum = $(this).val();
 		SPDmod = Number(SPDsum) - Number(SPD)
 		var SPDtotal = calculateFiguredCost(SPD, SPDsum, SPDcost);
-		$("#SPDcost").text(Math.round(SPDtotal));
+		$("#SPDcost").text(Math.round((SPDtotal * 10)/10));
 		updateSpentPoints();
 		console.log("SPDtotal: " + SPDtotal);
 	});

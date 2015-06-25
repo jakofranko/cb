@@ -107,6 +107,7 @@ module.exports = {
 			alias: alias, 
 			description: description,
 			basePool: basePool,
+			pointsSpent: 0,
 			userID: userID,
 			STR: baseChar,
 			DEX: baseChar,
@@ -218,13 +219,12 @@ module.exports = {
 		});
 	},
 
-	updateCharacter: function(query, updates, callback) {
-		console.log(updates);
+	updateCharacter: function(query, updates, totalCost, callback) {
 		Character.findOneAndUpdate(query, updates, function(err, result) {
 			if(err) callback(err);
 			else {
-				if(updates.pointsSpent && updates.characterID) {
-					module.exports.updateSpentPoints(updates.characterID, -updates.pointsSpent, function(err, success) {
+				if(totalCost && query._id) {
+					module.exports.updateSpentPoints(query._id, -totalCost, function(error, success) {
 						callback(err, result);
 					});
 				} else {
@@ -258,6 +258,8 @@ module.exports = {
 	},
 
 	updateSpentPoints: function(characterID, points, callback) {
+		// The a positive number of points represents points sold back. Negative number represents points purchased.
+		// TODO: invert this?
 		Character.findOne({ _id: characterID}, function(err, result) {
 			if(err) callback(err);
 			else if(result.pointsSpent) {
@@ -268,8 +270,8 @@ module.exports = {
 					else callback(err, result);
 				});
 			} else {
-			// Otherwise, create the field by adding the points to the base pool. If the points number is negative, then it will subtract the number from the base pool
-				result.pointsSpent = result.basePool + points;
+			// Otherwise, create the field with the inverse number of points
+				result.pointsSpent = -points;
 				result.save(function(err) {
 					if(err) callback(err);
 					else callback(err, result);

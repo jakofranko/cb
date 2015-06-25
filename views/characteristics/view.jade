@@ -5,7 +5,7 @@ block content
 	- 	if(characteristic >= 0) {
 	- 		return Math.round(9 + (characteristic / 5));
 	- 	} else {
-			return Math.round(9 - (characteristic / 5));
+	-		return Math.round(9 - (characteristic / 5));
 	- 	}
 	- }
 
@@ -14,7 +14,7 @@ block content
 	- }
 
 	- function calculateFiguredCost(baseFigured, characteristic, costMod) {
-	- 	return (characteristic - baseFigured) * costMod;
+	- 	return Math.round((((characteristic - baseFigured) * costMod)*10)/10);
 	- }
 
 	- function calculateCOMCost(comeliness, comelinessCost) {
