@@ -46,11 +46,26 @@ block content
 	form(method="post", action="/characters/updateMartialArt/")
 		input(type="hidden", name="maID", value=ma._id)
 		.row
-			.col-sm-5
+			.col-sm-4
 				.form-group
 					label.control-label(for="maName") Martial Art Name
 					input.form-control(type="text" name="maName" placeholder="E.G. Karate, Fencing etc." value=ma.name required)#maName
 					input(type="hidden", name="characterID", value=character._id)
+			.col-sm-4
+				.form-group
+					label.control-label(for="maDCs") Additional Damage Classes
+					input.form-control(type="number", min="0", name="maDCs", value=ma.additionalDCs)
+			.col-sm-4
+				label.control-label Weapon Element
+				#weaponElement
+					each weapon, i in ma.weaponElement
+						.form-group.weapon
+							input.form-control(type="text", name="weaponElement[#{i}]", value=weapon, placeholder="Weapon e.g., \'Swords\'")
+							button(type="button").btn.btn-link.btn-sm.remove-weapon Remove
+				button(type="button" class="add-weapon").btn.btn-primary
+					span.glyphicon.glyphicon-plus
+					| &nbsp;Add Weapon Element
+		hr
 		#newArt
 			-var selectedManeuvers = ma.maneuvers
 			include ../martialManeuvers/newArt
