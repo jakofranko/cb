@@ -38,11 +38,21 @@ block content
 	
 	form(method="post", action="/characters/addMartialArt/")
 		.row
-			.col-sm-5
+			.col-sm-4
 				.form-group
-					label.control-label(for="maName") Martial Art Name
+					label.control-label(for="maName") Martial Art Name*
 					input.form-control(type="text" name="maName" placeholder="E.G. Karate, Fencing etc." required)#maName
 					input(type="hidden", name="characterID", value=character._id)
+			.col-sm-4
+				.form-group
+					label.control-label(for="maDCs") Additional Damage Classes
+					input.form-control(type="number", min="0", name="maDCs", value="0")
+			.col-sm-4
+				label.control-label Weapon Element
+				#weaponElement
+				button(type="button" class="add-weapon").btn.btn-primary
+					span.glyphicon.glyphicon-plus
+					| &nbsp;Add Weapon Element
 		#newArt
 		button(type="submit").btn.btn-primary.btn-lg
 			span.glyphicon.glyphicon-plus

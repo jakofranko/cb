@@ -25,6 +25,12 @@ $(document).ready(function() {
 		updateSpentPoints(-points);
 		scafoldMartialArt();
 	});
+
+	$('.add-weapon').click(function() {
+		var numWeapons = $('.weapon').length;
+		var html = '<div class="form-group weapon"><input type="text" class="form-control" name="weaponElement[' + numWeapons + ']" placeholder="Weapon e.g., \'Swords\'"/></div>'
+		$('#weaponElement').append(html);
+	})
 });
 
 function scafoldMartialArt() {

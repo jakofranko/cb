@@ -18,6 +18,7 @@ block content
 					|  Add Martial Art
 
 	if ma.length > 0
+		-console.log(ma);
 		each art, i in ma
 			h3 #{art.name}
 				a(href='/characters/martialArts/edit/' + art._id).btn.btn-link
@@ -42,6 +43,26 @@ block content
 								td #{m.type.dcv}
 								td #{m.type.cost}
 								td #{m.type.effects}
+					if art.additionalDCs > 0
+						tr
+							td Bonus to DC
+							td
+							td
+							td
+							td
+							td + #{art.additionalDCs} to Damage Class
+					if art.weaponElement.length > 0
+						tr
+							td Weapon Element
+							td
+							td
+							td
+							td
+							td 
+								each weapon, i in art.weaponElement
+									| #{weapon}
+									if (i + 1) < art.weaponElement.length
+										| , 
 			
 	if character.Skills.length > 0
 		table.table
