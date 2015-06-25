@@ -322,7 +322,7 @@ router.post('/updateMartialArt', function(req, res) {
 
 					// Once all the maneuvers have been looped through, create the custom martial art
 					if((Number(key) + 1) == maneuvers.length) {
-						martialArts.updateMartialArt({ _id: req.body.maID }, { name: req.body.maName, maneuvers: maneuvers }, function(err, result) {
+						martialArts.updateMartialArt({ _id: req.body.maID }, { name: req.body.maName, maneuvers: maneuvers, additionalDCs: req.body.maDCs, weaponElement: req.body.weaponElement }, function(err, result) {
 							if(err) throw new Error(err);
 							else {
 								res.redirect('/characters/skills/' + req.body.characterID);
