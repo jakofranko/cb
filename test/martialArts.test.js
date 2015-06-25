@@ -45,7 +45,7 @@ describe('Martial Arts Test Suite', function() {
 					type: testManeuver
 				}
 			];
-			martialArts.createMartialArt('Fencing', testCharacter._id, maneuvers, function(err, ma) {
+			martialArts.createMartialArt('Fencing', testCharacter._id, maneuvers, 0, ['kareoke machine'], function(err, ma) {
 				should.not.exist(err);
 				should.exist(ma);
 				ma.should.have.properties(['name', 'characterID', 'maneuvers', 'additionalDCs', 'weaponElement']);

@@ -21,13 +21,13 @@ var MartialArt = mongoose.model('MartialArt', martialArtSchema);
 
 
 module.exports = {
-	createMartialArt: function(name, characterID, maneuvers, callback) {
+	createMartialArt: function(name, characterID, maneuvers, additionalDCs, weaponElement, callback) {
 		var martialArt = new MartialArt({
 			characterID: characterID,
 			name: name,
 			maneuvers: maneuvers,
-			additionalDCs: 0,
-			weaponElement: []
+			additionalDCs: additionalDCs,
+			weaponElement: weaponElement
 		});
 
 		// Save. On success, update the character's point total.
