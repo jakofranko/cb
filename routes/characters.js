@@ -152,8 +152,13 @@ router.get('/remove/:characterID', function(req, res) {
 });
 
 router.get('/:characterID', function(req, res) {
-	characters.findCharacterById(req.params.characterID, function(err, character) {
-		res.render('characters/view', { title: character.alias, character: character, username: req.session.username });
+	martialArts.listMartialArts(req.params.characterID, function(err, martialArts) {
+		if(err) throw new Error(err);
+		else {
+			characters.findCharacterById(req.params.characterID, function(err, character) {
+				res.render('characters/view', { title: character.alias, character: character, ma: martialArts, username: req.session.username });
+			});
+		}
 	});
 });
 

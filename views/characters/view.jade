@@ -24,42 +24,9 @@ block content
 				if character.name
 					small aka, #{character.name}
 			include ../_common/pointTotals
-			
+
 	.row
-		.col-sm-6
-			h2 Combat
-			.row
-				.col-xs-2: abbr(title='Hand-to-Hand') HTH
-				.col-xs-6 #{character.HTH}d6
-			.row
-				.col-xs-2: abbr(title='What the character can just lift, carry a couple paces, then drop') Lift
-				.col-xs-6 #{character.Lift}kg
-			.row
-				.col-xs-2: abbr(title='Offensive Combat Value')  OCV
-				.col-xs-6 #{character.CV}
-			.row
-				.col-xs-2: abbr(title='Defensive Combat Value')  DCV
-				.col-xs-6 #{character.CV}
-			.row
-				.col-xs-2: abbr(title='Offensive Ego Combat Value')  OECV
-				.col-xs-6 #{character.ECV}
-			.row
-				.col-xs-2: abbr(title='Defensive Ego Combat Value')  DECV
-				.col-xs-6 #{character.ECV}
-		.col-sm-6
-			h2 Movement
-			.row
-				.col-xs-4 Running
-				.col-xs-4 #{character.Running}"
-			.row
-				.col-xs-4 Swimming
-				.col-xs-4 #{character.Swimming}"
-			.row
-				.col-xs-4 Leap
-				.col-xs-4 #{character.Leap}"
-	
-	.row
-		.col-sm-6
+		.col-sm-4
 			h2 Primary Characteristics
 			.row
 				.col-xs-4.col-sm-3.text-right
@@ -125,7 +92,7 @@ block content
 				.col-xs-4 
 					p= character.COM + character.COMmod
 
-		.col-sm-6
+		.col-sm-4
 			h2 Figured Characteristics
 			.row
 				.col-xs-4.text-right
@@ -157,6 +124,57 @@ block content
 					strong STUN
 				.col-xs-4
 					p= character.STUN + character.STUNmod
+		.col-sm-4
+			if ma && ma.length > 0
+				each art, i in ma
+					h2 #{art.name}
+					table.table
+						thead
+							tr
+								th Name
+								th OCV
+								th DCV
+								th Phase
+								th Effect
+						each m, i in art.maneuvers
+							tr
+								td #{m.name}
+								td #{m.type.ocv}
+								td #{m.type.dcv}
+								td #{m.type.phase}
+								td #{m.type.effects}
+			h2 Combat
+			.row
+				.col-xs-2: abbr(title='Hand-to-Hand') HTH
+				.col-xs-6 #{character.HTH}d6
+			.row
+				.col-xs-2: abbr(title='What the character can just lift, carry a couple paces, then drop') Lift
+				.col-xs-6 #{character.Lift}kg
+			.row
+				.col-xs-2: abbr(title='Offensive Combat Value')  OCV
+				.col-xs-6 #{character.CV}
+			.row
+				.col-xs-2: abbr(title='Defensive Combat Value')  DCV
+				.col-xs-6 #{character.CV}
+			.row
+				.col-xs-2: abbr(title='Offensive Ego Combat Value')  OECV
+				.col-xs-6 #{character.ECV}
+			.row
+				.col-xs-2: abbr(title='Defensive Ego Combat Value')  DECV
+				.col-xs-6 #{character.ECV}
+
+			h2 Movement
+			.row
+				.col-xs-4 Running
+				.col-xs-4 #{character.Running}"
+			.row
+				.col-xs-4 Swimming
+				.col-xs-4 #{character.Swimming}"
+			.row
+				.col-xs-4 Leap
+				.col-xs-4 #{character.Leap}"
+	
+	
 
 	.row
 		.col-sm-6#skills
@@ -178,7 +196,7 @@ block content
 			- }
 			- character.Skills.sort(sortAlphabetically);
 			each skill, i in character.Skills
-				= console.log(skill)
+				//- = console.log(skill)
 				if skill.skillType.name == 'Transport Familiarity'
 					if skill.subcategories && skill.subcategories.length > 0
 						each subcategory, i in skill.subcategories
