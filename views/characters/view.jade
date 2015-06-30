@@ -136,13 +136,14 @@ block content
 								th DCV
 								th Phase
 								th Effect
-						each m, i in art.maneuvers
-							tr
-								td #{m.name}
-								td #{m.type.ocv}
-								td #{m.type.dcv}
-								td #{m.type.phase}
-								td #{m.type.effects}
+						tbody
+							each m, i in art.maneuvers
+								tr
+									td #{m.name}
+									td #{m.type.ocv}
+									td #{m.type.dcv}
+									td #{m.type.phase}
+									td #{m.type.effects}
 			h2 Combat
 			.row
 				.col-xs-2: abbr(title='Hand-to-Hand') HTH
