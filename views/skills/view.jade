@@ -6,9 +6,8 @@ block content
 		| &nbsp;back to Dashboard
 	.row
 		.col-sm-6
-			h1 #{character.alias} &nbsp;
+			h1 #{character.alias}'s Skills
 			include ../_common/pointTotals
-			h2 Skill List 
 			a(href="/characters/skills/add/" + character._id).btn.btn-primary
 					span.glyphicon.glyphicon-plus
 					|  Add Skill
@@ -20,7 +19,7 @@ block content
 	if ma.length > 0
 		-console.log(ma);
 		each art, i in ma
-			h3 #{art.name}
+			h2 Martial Art: #{art.name}
 				a(href='/characters/martialArts/edit/' + art._id).btn.btn-link
 					span.glyphicon.glyphicon-edit 
 					|  Edit
@@ -65,6 +64,7 @@ block content
 										| , 
 			
 	if character.Skills.length > 0
+		h2 Skills
 		table.table
 			thead
 				tr
