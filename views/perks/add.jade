@@ -1,0 +1,22 @@
+extends ../layout
+
+block content
+	a(href="/perks")
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;back to Perks
+	.row
+		.col-sm-4.col-sm-offset-4
+			h1 Add New Perk
+			form(action="/perks/addPerk" method="post")
+				.form-group
+					label.control-label(for="name") Perk Name
+					input.form-control(type="text" name="name" id="name" placeholder="Perk Name e.g., 'Follower'" autofocus)
+				.form-group
+					label.control-label(for="minCost") Minimum Cost
+					input.form-control(type="number" name="minCost" id="minCost" placeholder="Minimum perk cost")
+				.form-group
+					label.control-label(for="maxCost") Maximum Cost
+					input.form-control(type="number" name="maxCost" id="maxCost" placeholder="Maximum perk cost")
+				button.btn.btn-primary(type="submit")
+					span.glyphicon.glyphicon-plus
+					| &nbsp;Add Perk

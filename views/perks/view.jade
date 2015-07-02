@@ -1,0 +1,24 @@
+extends ../layout
+
+block content
+	a(href="/dashboard/" + session.username)
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;back to Dashboard
+	h1 Perks
+		a(href="/perks/add").btn.btn-link
+			span.glyphicon.glyphicon-plus
+			|  Add New
+	.row
+		.col-sm-12
+			table.table
+				thead
+					tr
+						th Perk
+						th Minimum Cost
+						th Maximum Cost
+				tbody
+					each perk, i in perks
+						tr
+							td #{perk.name}
+							td #{perk.minCost}
+							td #{perk.maxCost}
