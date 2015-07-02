@@ -16,9 +16,14 @@ block content
 						th Perk
 						th Minimum Cost
 						th Maximum Cost
+						th
 				tbody
 					each perk, i in perks
 						tr
 							td #{perk.name}
 							td #{perk.minCost}
 							td #{perk.maxCost}
+							td
+								a(href="/perks/edit/" + perk._id).btn.btn-link
+									span.glyphicon.glyphicon-edit
+									| &nbsp;Edit

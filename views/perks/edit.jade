@@ -1,0 +1,42 @@
+extends ../layout
+
+block content
+	a(href="/perks")
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;back to Perks
+	.row
+		.col-sm-4.col-sm-offset-4
+			h1 Edit Perk: #{perk.name}
+			form(action="/perks/updatePerk" method="post")
+				input(type="hidden", name="perkID", value=perk._id)
+				.form-group
+					label.control-label(for="name") Perk Name
+					input.form-control(type="text" name="name" id="name" placeholder="Perk Name e.g., 'Follower'" value=perk.name autofocus)
+				.form-group
+					label.control-label(for="minCost") Minimum Cost
+					input.form-control(type="number" name="minCost" id="minCost" placeholder="Minimum perk cost" value=perk.minCost)
+				.form-group
+					label.control-label(for="maxCost") Maximum Cost
+					input.form-control(type="number" name="maxCost" id="maxCost" placeholder="Maximum perk cost" value=perk.maxCost)
+				button.btn.btn-primary(type="submit")
+					span.glyphicon.glyphicon-edit
+					| &nbsp;Update Perk
+				button.btn.btn-link(type="button" data-target="#deleteModal" data-toggle="modal")
+					span.glyphicon.glyphicon-trash
+					| &nbsp;Delete Perk
+
+	.modal.fade#deleteModal
+		.modal-dialog.modal-sm
+			.modal-content
+				.modal-header
+					button.close(data-dismiss="modal") &times;
+					h4 Delete #{perk.name}?
+				.modal-body
+					p Are you really sure that you want to delete #{perk.name}?
+				.modal-footer
+					form(action="/perks/deletePerk" method="post")
+						input(type="hidden", name="perkID", value=perk._id)
+						button(type="submit").btn.btn-danger
+							span.glyphicon.glyphicon-trash
+							| &nbsp;Delete
+						button(data-dismiss="modal").btn.btn-default Cancel

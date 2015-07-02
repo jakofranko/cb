@@ -25,10 +25,29 @@ router.get('/add', function(req, res) {
 	res.render('perks/add', { title: 'New Perk', session: req.session });
 });
 
+router.get('/edit/:perkID', function(req, res) {
+	perks.getPerk({ _id: req.params.perkID }, function(err, perk) {
+		res.render('perks/edit', { title: 'Edit Perk: ' + perk.name, session: req.session, perk: perk });
+	});
+});
+
 // Gets -------------------------------
 router.post('/addPerk', function(req, res) {
 	perks.createPerk(req.body.name, { minCost: Number(req.body.minCost), maxCost: Number(req.body.maxCost) }, function(err, result) {
-		console.log(err, result);
+		if(err) throw new Error(err);
+		else res.redirect('/perks');
+	});
+});
+
+router.post('/updatePerk', function(req, res) {
+	perks.updatePerk({ _id: req.body.perkID }, { name: req.body.name, minCost: Number(req.body.minCost), maxCost: Number(req.body.maxCost) }, function(err, result) {
+		if(err) throw new Error(err);
+		else res.redirect('/perks');
+	});
+});
+
+router.post('/deletePerk', function(req, res) {
+	perks.deletePerk(req.body.perkID, function(err, result) {
 		if(err) throw new Error(err);
 		else res.redirect('/perks');
 	});
