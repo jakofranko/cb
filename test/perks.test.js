@@ -42,6 +42,17 @@ describe('Perks Test Suite', function() {
     	});
 	});
 
+	describe('getPerk', function() {
+		it('should fetch one perk according to the query', function(done) {
+			perks.getPerk({ name: 'Test Perk' }, function(err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				(result.name).should.eql('Test Perk');
+				done();
+			})
+		})
+	})
+
 	describe('listPerks', function() {
 		it('should list all perks in db', function(done) {
 			perks.listPerks(function(err, perks) {

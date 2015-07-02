@@ -22,6 +22,13 @@ module.exports = {
 		});
 	},
 
+	getPerk: function(query, callback) {
+		Perk.findOne(query, function(err, result) {
+			if(err) callback(err);
+			else callback(err, result);
+		})
+	},
+
 	listPerks: function(callback) {
 		Perk.find({}, function(err, results) {
 			if(err) callback(err);
