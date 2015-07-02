@@ -17,6 +17,7 @@ var characters       = require('./routes/characters');
 var dashboard        = require('./routes/dashboard');
 var index            = require('./routes/index');
 var martialManeuvers = require('./routes/martialManeuvers');
+var perks            = require('./routes/perks');
 var skills           = require('./routes/skills');
 var users            = require('./routes/users');
 
@@ -50,6 +51,7 @@ app.use('/characters', characters);
 app.use('/dashboard', dashboard);
 app.use('/skills', skills);
 app.use('/martialManeuvers', martialManeuvers);
+app.use('/perks', perks);
 
 
 /// catch 404 and forward to error handler

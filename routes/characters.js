@@ -9,7 +9,6 @@ var martialManeuvers = require('../models/martialManeuvers');
 // CHARACTERS
 // ------------------------------------
 
-
 // Gets -------------------------------
 // Characteristics
 router.get('/characteristics/edit/:characterID', function(req, res) {
