@@ -12,6 +12,13 @@ var skillSchema = mongoose.Schema({
 	cost: Number
 });
 
+var perkSchema = mongoose.Schema({
+	name: String,
+	type: Object,
+	cost: Number,
+	perkOptions: Object
+});
+
 // Notes
 //---------------------------
 // The normal value of the base characteristics should almost always only be 10. Users will only edit the modifiers.
@@ -67,6 +74,7 @@ var	characterSchema = mongoose.Schema({
 	Leap: Number,
 	Skills: [skillSchema],
 	skillEnhancers: Array,
+	Perks: [perkSchema],
 	basePool: Number,
 	pointsSpent: Number
 });
@@ -95,6 +103,24 @@ module.exports = {
 						else callback(err, character);
 					});
 				});
+			}
+		});
+	},
+
+	addPerk: function(characterID, perk, callback) {
+		Character.findCharacterById(characterID, function(err, character) {
+			if(err) callback(err);
+			else {
+				character.Perks.push(perk);
+				character.save(function(errTwo) {
+					if(errTwo) callback(errTwo);
+					else {
+						module.exports.updateSpentPoints(characterID, -(perk.cost), function(errThree) {
+							if(errThree) callback(errThree);
+							else callback(errThree, character);
+						})
+					}
+				})
 			}
 		});
 	},
