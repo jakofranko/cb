@@ -140,6 +140,21 @@ describe('Character Suite:', function() {
     });
   });
 
+  describe('characters.removePerk', function() {
+    it('should remove the specified perk from the specified character', function(done) {
+      (testCharacter.pointsSpent).should.eql(5);
+      characters.removePerk(testCharacter._id, testPerk._id, function(err, success) {
+        should.not.exist(err);
+        should.exist(success);
+        characters.findCharacterById(testCharacter._id, function(error, newCharacter) {
+          testCharacter = newCharacter;
+          (testCharacter.pointsSpent).should.eql(0);
+          done();
+        });
+      })
+    })
+  })
+
   // Update points
   describe('characters.updateSpentPoints', function() {
     it('should add or subtract the passed number from the character object', function(done) {

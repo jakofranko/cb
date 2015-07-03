@@ -223,6 +223,25 @@ module.exports = {
 		Character.remove(condition, callback);
 	},
 
+	removePerk: function(characterID, perkID, callback) {
+		Character.findById(characterID, function(err, character) {
+			if(err) callback(err);
+			else {
+				var perk = character.Perks.id(perkID);
+				perk.remove();
+				character.save(function(errTwo) {
+					if(errTwo) callback(errTwo);
+					else {
+						module.exports.updateSpentPoints(characterID, perk.cost, function(errThree, success) {
+							if(errThree) callback(errThree);
+							else callback(errThree, success);
+						})
+					} 
+				})
+			}
+		})
+	},
+
 	removeSkill: function(charID, skillID, callback) {
 		module.exports.findCharacterById(charID, function(err, character) {
 			if(err) callback(err);
