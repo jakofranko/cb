@@ -43,9 +43,9 @@ block content
 	- LEAPcost = 1
 
 
-	a(href="/characters/" + character._id)
+	a(href="/dashboard/" + username)
 		span.glyphicon.glyphicon-arrow-left
-		|  Back
+		|  Back to Dashboard
 	h1 #{character.alias}'s Characteristics
 		a(href='/characters/characteristics/edit/' + character._id).btn.btn-link
 			span.glyphicon.glyphicon-edit
