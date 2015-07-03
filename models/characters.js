@@ -97,9 +97,10 @@ module.exports = {
 					skillOptions: skillOptions,
 					cost: cost
 				});
+
 				character.save(function(err) {
 					module.exports.updateSpentPoints(characterID, -cost, function(err, character) {
-						if(err) throw new Error(err);
+						if(err) callback(err);
 						else callback(err, character);
 					});
 				});
@@ -108,16 +109,19 @@ module.exports = {
 	},
 
 	addPerk: function(characterID, perk, callback) {
-		Character.findCharacterById(characterID, function(err, character) {
+		Character.findById(characterID, function(err, character) {
 			if(err) callback(err);
 			else {
-				character.Perks.push(perk);
+				// Fetch the new length in order to determin the index of the new perk
+				// which is returned (with _id) after the character points are updated
+				var newLength = character.Perks.push(perk);
+				var i = newLength - 1;
 				character.save(function(errTwo) {
 					if(errTwo) callback(errTwo);
 					else {
 						module.exports.updateSpentPoints(characterID, -(perk.cost), function(errThree) {
 							if(errThree) callback(errThree);
-							else callback(errThree, character);
+							else callback(errThree, character.Perks[i]);
 						})
 					}
 				})
@@ -256,6 +260,34 @@ module.exports = {
 				} else {
 					callback(err, result);
 				}
+			}
+		});
+	},
+
+	updatePerk: function(characterID, perkID, updates, callback) {
+		Character.findById(characterID, function(err, character) {
+			if(err) callback(err)
+			else {
+				var perk = character.Perks.id(perkID);
+				var oldCost = perk.cost;
+				for(var key in updates) {
+					perk[key] = updates[key];
+				}
+
+				var newCost = 0
+				if(updates.cost) {
+					newCost = updates.cost - oldCost;
+				}
+
+				character.save(function(errTwo) {
+					if(errTwo) callback(errTwo);
+					else {
+						module.exports.updateSpentPoints(characterID, -newCost, function(errThree, updatedCharacter) {
+							if(errThree) callback(errThree);
+							else callback(err, perk);
+						});
+					}
+				});
 			}
 		});
 	},

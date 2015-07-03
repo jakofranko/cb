@@ -99,7 +99,10 @@ describe('Character Suite:', function() {
         (newPerk.cost).should.eql(3);
         newPerk.should.have.property('perkOptions');
         testPerk = newPerk;
-        done();
+        characters.findCharacterById(testCharacter._id, function(error, newCharacter) {
+          testCharacter = newCharacter;
+          done();
+        });
       });
     });
   });
@@ -109,8 +112,10 @@ describe('Character Suite:', function() {
       var update = {
         name: 'Master Spy',
         cost: 5,
-        option: { gmOffset: 1, base11Contact: true, rollBonus: 3 }
+        perkOptions: { gmOffset: 1, base11Contact: true, rollBonus: 3 }
       };
+
+      (testCharacter.pointsSpent).should.eql(3);
 
       characters.updatePerk(testCharacter._id, testPerk._id, update, function(err, updatedPerk) {
         should.not.exist(err);
@@ -126,7 +131,11 @@ describe('Character Suite:', function() {
         (updatedPerk.perkOptions).should.have.property('base11Contact');
         (updatedPerk.perkOptions).should.have.property('rollBonus');
         (updatedPerk.perkOptions.rollBonus).should.eql(3);
-        done();
+        characters.findCharacterById(testCharacter._id, function(error, newCharacter) {
+          testCharacter = newCharacter;
+          (testCharacter.pointsSpent).should.eql(5);
+          done();
+        });
       });
     });
   });
