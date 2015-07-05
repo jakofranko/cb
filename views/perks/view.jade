@@ -1,29 +1,30 @@
 extends ../layout
 
 block content
-	a(href="/dashboard/" + session.username)
+	a(href="/dashboard/" + username)
 		span.glyphicon.glyphicon-arrow-left
-		| &nbsp;back to Dashboard
-	h1 Perks
-		a(href="/perks/add").btn.btn-link
-			span.glyphicon.glyphicon-plus
-			|  Add New
+		| &nbsp;Back to Dashboard
+
+	h1 #{character.alias}'s Perks
+	include ../_common/pointTotals
+	a(href="/characters/perks/add/" + character._id).btn.btn-primary
+		span.glyphicon.glyphicon-plus
+		| &nbsp;Add Perk
 	.row
 		.col-sm-12
 			table.table
 				thead
 					tr
-						th Perk
-						th Minimum Cost
-						th Maximum Cost
-						th
+						th Name/Description
+						th Perk Type
+						th Cost
+						th Options
 				tbody
-					each perk, i in perks
+					each perk, i in character.Perks
 						tr
 							td #{perk.name}
-							td #{perk.minCost}
-							td #{perk.maxCost}
+							td #{perk.type}
+							td #{perk.cost}
 							td
-								a(href="/perks/edit/" + perk._id).btn.btn-link
-									span.glyphicon.glyphicon-edit
-									| &nbsp;Edit
+								//- each po, in in perk.perkOptions
+								//- 	| #{po}, 
