@@ -166,8 +166,6 @@ describe('Character Suite:', function() {
     });
   });
 
-  
-
   // After test suite
   after(function(done) {
     characters.removeCharacter({ _id: testCharacter._id }, function(err, results) {
