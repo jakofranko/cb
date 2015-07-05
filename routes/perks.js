@@ -17,17 +17,17 @@ router.use(function(req, res, next) {
 router.get('/', function(req, res) {
 	perks.listPerks(function(err, results) {
 		if(err) throw new Error(err);
-		else res.render('perks/view', { title: 'Perks', perks: results, session: req.session });
+		else res.render('perkTypes/view', { title: 'Perks', perks: results, session: req.session });
 	});
 });
 
 router.get('/add', function(req, res) {
-	res.render('perks/add', { title: 'New Perk', session: req.session });
+	res.render('perkTypes/add', { title: 'New Perk', session: req.session });
 });
 
 router.get('/edit/:perkID', function(req, res) {
 	perks.getPerk({ _id: req.params.perkID }, function(err, perk) {
-		res.render('perks/edit', { title: 'Edit Perk: ' + perk.name, session: req.session, perk: perk });
+		res.render('perkTypes/edit', { title: 'Edit Perk: ' + perk.name, session: req.session, perk: perk });
 	});
 });
 

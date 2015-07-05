@@ -5,6 +5,17 @@ var characters = require('../models/characters');
 var skillTypes = require('../models/skillType');
 var martialArts = require('../models/martialArts');
 var martialManeuvers = require('../models/martialManeuvers');
+var perks = require('../models/perks')
+
+var canEdit = function(req, res, next) {
+	characters.findCharacterById(req.params.characterID, function(err, character) {
+		if(character.userID == req.session._id) {
+			next();
+		} else {
+			res.redirect('/');
+		}
+	})
+}
 
 // CHARACTERS
 // ------------------------------------
@@ -79,6 +90,36 @@ router.get('/martialArts/:characterID', function(req, res) {
 			res.redirect('/');
 		}
 	});
+});
+
+// Perks
+router.get('/perks/add/:characterID', canEdit, function(req, res) {
+	characters.findCharacterById(req.params.characterID, function(err, character) {
+		if(err) throw new Error(err);
+		else {
+			perks.listPerks(function(err, perks) {
+				res.render('perks/add', { title: 'Perks', character: character, perks: perks, username: req.session.username });
+			});
+		}
+	});
+});
+
+router.get('/perks/edit/:characterID', canEdit, function(req, res) {
+	characters.findCharacterById(req.params.characterID, function(err, character) {
+		if(err) throw new Error(err);
+		else {
+			res.render('perks/edit', { title: 'Perks', character: character, username: req.session.username });
+		}
+	})
+});
+
+router.get('/perks/:characterID', function(req, res) {
+	characters.findCharacterById(req.params.characterID, function(err, character) {
+		if(err) throw new Error(err);
+		else {
+			res.render('perks/view', { title: 'Perks', character: character, username: req.session.username });
+		}
+	})
 });
 
 // Skills
