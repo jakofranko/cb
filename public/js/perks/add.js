@@ -2,6 +2,8 @@
 // http://demosthenes.info/blog/864/Auto-Generate-Marks-on-HTML5-Range-Sliders-with-JavaScript
 function ticks(element) {
 	if (element.hasAttribute('list') && element.hasAttribute('min') && element.hasAttribute('max') && element.hasAttribute('step')) {
+		var dataListId = element.getAttribute('list');
+		$('#' + dataListId).remove();
 		var datalist = document.createElement('datalist'),
 		minimum = parseInt(element.getAttribute('min')),
 		step = parseInt(element.getAttribute('step')),
@@ -35,6 +37,15 @@ $(document).ready(function() {
 	$('#perk-type').change(function() {
 		handleInput($(this).find(':selected').data());
 		$('#perk-cost').trigger('change');
+		if($(this).find(':selected').text() == 'Contact') {
+			$("#perk-cost").parent().fadeOut(function() {
+				$("#contactBonusToRoll").add("#contact-options").fadeIn();
+			});
+		} else {
+			$("#contactBonusToRoll").add("#contact-options").fadeOut(function() {
+				$("#perk-cost").parent().fadeIn();
+			});
+		}
 	});
 	$('#perk-cost').change(function() {
 		$('#perk-total').text(this.value);

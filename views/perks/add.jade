@@ -26,8 +26,78 @@ block content
 					input(type="range", name="perk-cost", step="1" list="perk-cost-ticks", min="1", max="10")#perk-cost
 					span.pull-left#min-cost
 					span.pull-right#max-cost
+				.form-group(style="display:none;")#contactBonusToRoll
+					label.control-label Contact Bonus to Roll
+					input(type="number" name="perkOptions[contactBonusToRoll]" min="0" value="0").form-control
 				br
 				button(type="submit").btn.btn-primary.btn-lg
 					span.glyphicon.glyphicon-plus
 					| &nbsp;Add Perk
+
+			.col-sm-6
+				#contact-options(style="display:none;")
+					.form-group
+						label.control-label Contact Options
+						.radio
+							label
+								input(type="radio", name="perkOptions[contactBaseRoll]", value="8-" data-cost="1" checked) 
+								| Base 8- Contact (1 pt.)
+						.radio
+							label
+								input(type="radio", name="perkOptions[contactBaseRoll]", value="11-" data-cost="2") 
+								| Base 11- Contact (2 pts.)
+					.form-group
+						label.control-label Contact's Resources and Skills
+						.radio
+							label
+								input(type="radio", name="perkOptions[contactUsefulness]" data-cost="0" checked) 
+								| Default (Useful Skills and Resources)
+						.radio
+							label
+								input(type="radio", name="perkOptions[contactUsefulness]", data-cost="1" value="Very Useful (+1)") 
+								| Very Useful Skills and Resources (+1)
+						.radio
+							label
+								input(type="radio", name="perkOptions[contactUsefulness]", data-cost="2" value="Very Useful (+2)") 
+								| Very Useful Skills and Resources (+2)
+						.radio
+							label
+								input(type="radio", name="perkOptions[contactUsefulness]", data-cost="3" value="Extremely Useful")
+								| Extremely Useful Skills and Resources (+3)
+					.form-group
+						label.control-label Contact's Relationship to Character
+						.radio
+							label
+								input(type="radio", name="perkOptions[contactRelationship]", value="Good", data-cost="+1")
+								| Good Relationship (+1)
+						.radio
+							label
+								input(type="radio", name="perkOptions[contactRelationship]", value="Very Good", data-cost="+2")
+								| Very Good Relationship (+2)
+					.form-group
+						label.control-label Contact Options
+						.checkbox
+							label
+								input(type="checkbox", name="perkOptions[limitedByIdentity]", value="true", data-cost="-1")
+								| Limited By Identity (-1)
+						.checkbox
+							label
+								input(type="checkbox", name="perkOptions[accessToMajorInstitutions]", value="true", data-cost="+1")
+								| Has Access to Major Instituitions (+1)
+						.checkbox
+							label
+								input(type="checkbox", name="perkOptions[hasSignificantContacts]", value="true", data-cost="+1")
+								| Has Significant Contacts of Their Own (+1)
+						.checkbox
+							label
+								input(type="checkbox", name="perkOptions[slavishlyLoyal]", value="true", data-cost="+3")
+								| Is Slavishly Loyal to Character (+3)
+						.checkbox
+							label
+								input(type="checkbox", name="perkOptions[unfriendly]", value="true", data-cost="-2")
+								| Is Unfriendly to Character (-2)
+						.checkbox
+							label
+								input(type="checkbox", name="perkOptions[organization]", value="true", data-cost="x3")
+								| Organization Contact (x3)
 	script(src="/js/perks/add.js")
