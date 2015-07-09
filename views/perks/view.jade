@@ -10,6 +10,8 @@ block content
 	a(href="/characters/perks/add/" + character._id).btn.btn-primary
 		span.glyphicon.glyphicon-plus
 		| &nbsp;Add Perk
+
+	-console.log(character.Perks);
 	.row
 		.col-sm-12
 			table.table
@@ -22,9 +24,18 @@ block content
 				tbody
 					each perk, i in character.Perks
 						tr
-							td #{perk.name}
+							td 
+								| #{perk.name}
+								a(href="/characters/perks/edit/" + character._id + "," + perk._id).pull-right
+									span.glyphicon.glyphicon-edit
 							td #{perk.type}
 							td #{perk.cost}
 							td
-								//- each po, in in perk.perkOptions
-								//- 	| #{po}, 
+								if perk.perkOptions
+									each perkOption, key in perk.perkOptions
+										//- convert camelCase to regularly spaced words
+										= key.replace(/([A-Z])/g, ' $1').replace(/^./, function(str) { return str.toUpperCase(); }) 
+										//- Don't display the value of checked options
+										if perkOption !== 'true' && perkOption !== 'on' 
+											| : #{perkOption}
+										br

@@ -378,6 +378,22 @@ router.post('/updateMartialArt', function(req, res) {
 			});
 		})(key);
 	}
-})
+});
+
+// Perks
+router.post('/addPerk', function(req, res) {
+	console.log(req.body);
+	var perk = {
+		name: req.body['perk-name'],
+		type: req.body['perk-type'],
+		cost: Number(req.body['perk-cost']),
+		perkOptions: req.body.perkOptions
+	};
+	console.log(perk);
+	characters.addPerk(req.body.characterID, perk, function(err, success) {
+		if(err) throw new Error(err);
+		else res.redirect('/characters/perks/' + req.body.characterID);
+	})
+});
 
 module.exports = router;
