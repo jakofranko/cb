@@ -34,8 +34,8 @@ function handleInput(optionData) {
 	ticks(input[0]);
 }
 
-// Built such that the other option can be toggled on if passed in as the callback
-function toggleContactOptions(state, callback) {
+// Used mainly to toggle one set of options off, and then pass in the function to toggle the other set on. Will calculate the cost only once a callback isn't passed, indicating that there are no more options that need to be faded in and out.
+function toggleContactOptions(state, callback, callbackParam) {
 	var state = (state) ? true : false;
 	console.log("contact state: ", state, callback);
 	if(state === true) {
@@ -43,7 +43,7 @@ function toggleContactOptions(state, callback) {
 		$("#contact-options").fadeIn(function() {
 			$('.contact-control').prop('disabled', false);
 			if(typeof callback === "function") {
-				callback();
+				callback(callbackParam);
 			} else {
 				calculateCost();
 			}
@@ -53,7 +53,7 @@ function toggleContactOptions(state, callback) {
 		$("#contact-options").fadeOut(function() {
 			$('.contact-control').prop('disabled', true);
 			if(typeof callback === "function") {
-				callback(true);
+				callback(callbackParam);
 			} else {
 				calculateCost();
 			}
@@ -63,7 +63,7 @@ function toggleContactOptions(state, callback) {
 	
 }
 
-function toggleReputationOptions(state, callback) {
+function toggleReputationOptions(state, callback, callbackParam) {
 	var state = (state) ? true : false;
 	console.log("reputation state: ", state, callback);
 	if(state === true) {
@@ -71,7 +71,7 @@ function toggleReputationOptions(state, callback) {
 		$("#reputation-options").fadeIn(function() {
 			$('.reputation-control').prop('disabled', false);
 			if(typeof callback === "function") {
-				callback();
+				callback(callbackParam);
 			} else {
 				calculateCost();
 			}
@@ -81,7 +81,7 @@ function toggleReputationOptions(state, callback) {
 		$("#reputation-options").fadeOut(function() {
 			$('.reputation-control').prop('disabled', true);
 			if(typeof callback === "function") {
-				callback(true);
+				callback(callbackParam);
 			} else {
 				calculateCost();
 			}
@@ -100,16 +100,19 @@ $(document).ready(function() {
 		var perkSelection = $(this).find(':selected').text();
 		if(perkSelection == 'Contact') {
 			$("#perk-cost").parent().fadeOut(function() {
-				toggleReputationOptions(false, toggleContactOptions);
+				toggleReputationOptions(false, toggleContactOptions, true);
 			});
 		} else if(perkSelection == 'Reputation') {
 			$("#perk-cost").parent().fadeOut(function() {
-				toggleContactOptions(false, toggleReputationOptions);
+				toggleContactOptions(false, toggleReputationOptions, true);
 			});
 		} else {
-			toggleContactOptions(false);
 			toggleReputationOptions(false, function() {
-				$("#perk-cost").parent().fadeIn();
+				toggleContactOptions(false, function() {
+					$("#perk-cost").parent().fadeIn(function() {
+						calculateCost();
+					});	
+				});
 			});
 		}
 		handleInput($(this).find(':selected').data());
