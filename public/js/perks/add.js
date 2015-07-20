@@ -17,7 +17,7 @@ function ticks(element) {
 }
 
 function handleInput(optionData) {
-	var input = $('#perk-cost');
+	var input = $('#perk-value');
 	if(optionData.mincost < optionData.maxcost) {
 		input.attr('type', 'range').attr('min', optionData.mincost).attr('max', optionData.maxcost).val(optionData.mincost).removeClass('form-control').prop('readonly', false);
 		$('#min-cost').text(optionData.mincost);
@@ -32,12 +32,12 @@ function handleInput(optionData) {
 		$('#max-cost').text(null);
 	}
 	ticks(input[0]);
+	calculateCost();
 }
 
 // Used mainly to toggle one set of options off, and then pass in the function to toggle the other set on. Will calculate the cost only once a callback isn't passed, indicating that there are no more options that need to be faded in and out.
 function toggleContactOptions(state, callback, callbackParam) {
 	var state = (state) ? true : false;
-	console.log("contact state: ", state, callback);
 	if(state === true) {
 		$("#contactBonusToRoll").fadeIn();
 		$("#contact-options").fadeIn(function() {
@@ -65,7 +65,6 @@ function toggleContactOptions(state, callback, callbackParam) {
 
 function toggleReputationOptions(state, callback, callbackParam) {
 	var state = (state) ? true : false;
-	console.log("reputation state: ", state, callback);
 	if(state === true) {
 		$("#reputationLevels").fadeIn();
 		$("#reputation-options").fadeIn(function() {
@@ -92,34 +91,68 @@ function toggleReputationOptions(state, callback, callbackParam) {
 }
 
 function calculateCost() {
-	console.log($('#perk-cost').add('[data-cost]').add('#contactBonusToRoll').add('#reputationLevels').filter(':visible'));
+	var totalCost = 0;
+	var perkValue = $('#perk-value:visible').val();
+	var contactBonusToRoll = $("#contactBonusToRoll input:visible").val();
+	var reputationLevels = $("#reputationLevels input:visible").val();
+
+	$('[data-cost]').filter(':visible').each(function(i, el) {
+		var costMod = $(el).attr("data-cost");
+		if($(el).prop("checked") === true) {
+			if(match = costMod.match(/([x+-])(\d)/)) {
+				switch(match[1]) {
+					case "+":
+						totalCost += Number(match[2]);
+						break;
+					case "-":
+						totalCost -= Number(match[2]);
+						break;
+					case "x":
+						totalCost *= Number(match[2]);
+						break;
+					default:
+						return false;
+				}
+			} else {
+				totalCost += Number(costMod);
+			}
+		}	
+	});
+	if(perkValue != undefined) totalCost += Number(perkValue);
+	if(contactBonusToRoll != undefined) totalCost += Number(contactBonusToRoll);
+	if(reputationLevels != undefined) totalCost += Number(reputationLevels);
+
+	// Minimum cost of a perk is 1 pt.
+	if(totalCost <= 0) totalCost = 1;
+	$("#perk-total").text(totalCost);
+	$("[name=perk-cost]").val(totalCost);
 }
 
 $(document).ready(function() {
 	$('#perk-type').change(function() {
 		var perkSelection = $(this).find(':selected').text();
 		if(perkSelection == 'Contact') {
-			$("#perk-cost").parent().fadeOut(function() {
+			$("#perk-value").parent().fadeOut(function() {
 				toggleReputationOptions(false, toggleContactOptions, true);
 			});
 		} else if(perkSelection == 'Reputation') {
-			$("#perk-cost").parent().fadeOut(function() {
+			$("#perk-value").parent().fadeOut(function() {
 				toggleContactOptions(false, toggleReputationOptions, true);
 			});
 		} else {
 			toggleReputationOptions(false, function() {
 				toggleContactOptions(false, function() {
-					$("#perk-cost").parent().fadeIn(function() {
+					$("#perk-value").parent().fadeIn(function() {
 						calculateCost();
 					});	
 				});
 			});
 		}
 		handleInput($(this).find(':selected').data());
-		$('#perk-cost').trigger('change');
+		// $('#perk-value').trigger('change');
 	});
 
-	$('#perk-cost').change(function() {
-		$('#perk-total').text(this.value);
+	$('#perk-value').add("#contactBonusToRoll").add("#reputationLevels").add("[data-cost]").change(function() {
+		calculateCost();
 	});
 });

@@ -104,7 +104,7 @@ router.get('/perks/add/:characterID', canEdit, function(req, res) {
 	});
 });
 
-router.get('/perks/edit/:characterID', canEdit, function(req, res) {
+router.get('/perks/edit/:characterID,:perkID', canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(err) throw new Error(err);
 		else {

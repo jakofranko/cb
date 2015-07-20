@@ -11,6 +11,7 @@ block content
 		| &nbsp;pts.
 	form(method="post", action="/characters/addPerk")
 		input(type="hidden", name="characterID", value=character._id)
+		input(type="hidden", name="perk-cost" value="0")
 		.row
 			.col-sm-6
 				.form-group
@@ -23,8 +24,8 @@ block content
 					label(for="perk-name").control-label Perk Name/Description
 					input(type="text" name="perk-name" placeholder="Name of contact, nature of cover etc." required).form-control#perk-name
 				.form-group
-					label(for="perk-cost").control-label Perk value
-					input(type="range", name="perk-cost", step="1" list="perk-cost-ticks", min="1", max="10")#perk-cost
+					label(for="perk-value").control-label Perk value
+					input(type="range", name="perk-value", step="1" list="perk-value-ticks", min="1", max="10")#perk-value
 					span.pull-left#min-cost
 					span.pull-right#max-cost
 				.form-group(style="display:none;")#contactBonusToRoll
@@ -32,7 +33,7 @@ block content
 					input(type="number" name="perkOptions[contactBonusToRoll]" min="0" value="0" disabled).form-control.contact-control
 				.form-group(style="display:none;")#reputationLevels
 					label.control-label Reputation Level/Bonus to Associated Skill Rolls and Presence Attacks
-					input(type="number" name="perkOptions[reputationLevels]" min="1" value="1" required disabled).form-control.reputation-control
+					input(type="number" name="perkOptions[reputationLevels]" min="0" value="0" required disabled).form-control.reputation-control
 					small Note: minimum cost of reputation level is 1 point, regardless of options or modifiers
 				br
 				button(type="submit").btn.btn-primary.btn-lg
@@ -111,29 +112,29 @@ block content
 						label.control-label How Widely Known
 						.radio
 							label
-								input(type="radio", name="perkOptions[howWidelyKnown]", value="A small to medium sized group or a limited geographic area" checked disabled).reputation-control
+								input(type="radio", name="perkOptions[howWidelyKnown]", value="A small to medium sized group or a limited geographic area" data-cost="0" checked disabled).reputation-control
 								| A small to medium sized group (close neighbors) or a limited geographic area (a neighborhood)
 						.radio
 							label
-								input(type="radio", name="perkOptions[howWidelyKnown]", value="Medium-sized group or a large geographic area" disabled).reputation-control
+								input(type="radio", name="perkOptions[howWidelyKnown]", value="Medium-sized group or a large geographic area" data-cost="1" disabled).reputation-control
 								| A medium-sized group (everyone in a small area, all doctors) or a large geographic area (a city, state, or region)
 						.radio
 							label
-								input(type="radio", name="perkOptions[howWidelyKnown]", value="A large group or a huge geographic area" disabled).reputation-control
+								input(type="radio", name="perkOptions[howWidelyKnown]", value="A large group or a huge geographic area" data-cost="2" disabled).reputation-control
 								| A large group (all the citizens of a country, world, or interstellar region) or a huge geographic area (a nation, internationally, intergalactically)
 					.form-group
 						label.control-label How Well Known
 						.radio
 							label
-								input(type="radio", name="perkOptions[howWellKnown]", value="8-" checked disabled).reputation-control
+								input(type="radio", name="perkOptions[howWellKnown]", value="8-" data-cost="-1" checked disabled).reputation-control
 								| 8-
 						.radio
 							label
-								input(type="radio", name="perkOptions[howWellKnown]", value="11-" disabled).reputation-control
+								input(type="radio", name="perkOptions[howWellKnown]", value="11-" data-cost="0" disabled).reputation-control
 								| 11-
 						.radio
 							label
-								input(type="radio", name="perkOptions[howWellKnown]", value="14-" disabled).reputation-control
+								input(type="radio", name="perkOptions[howWellKnown]", value="14-" data-cost="+1" disabled).reputation-control
 								| 14-
 
 	script(src="/js/perks/add.js")
