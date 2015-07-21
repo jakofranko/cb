@@ -204,6 +204,16 @@ module.exports = {
 		});
 	},
 
+	findPerk: function(charID, perkID, callback) {
+		module.exports.findCharacterById(charID, function(err, character) {
+			if(err) callback(err);
+			else {
+				var perk = character.Perks.id(perkID);
+				callback(err, perk);
+			}
+		})
+	},
+
 	findSkill: function(charID, skillID, callback) {
 		module.exports.findCharacterById(charID, function(err, character) {
 			if(err) callback(err);
@@ -289,14 +299,12 @@ module.exports = {
 			else {
 				var perk = character.Perks.id(perkID);
 				var oldCost = perk.cost;
-				for(var key in updates) {
+				for(var key in updates)
 					perk[key] = updates[key];
-				}
 
 				var newCost = 0
-				if(updates.cost) {
+				if(updates.cost)
 					newCost = updates.cost - oldCost;
-				}
 
 				character.save(function(errTwo) {
 					if(errTwo) callback(errTwo);
