@@ -108,9 +108,26 @@ router.get('/perks/edit/:characterID,:perkID', canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(err) throw new Error(err);
 		else {
-			res.render('perks/edit', { title: 'Perks', character: character, username: req.session.username });
+			characters.findPerk(req.params.characterID, req.params.perkID, function(err, perk) {
+				if(err) throw new Error(err);
+				else {
+					perks.getPerk({name: perk.type}, function(err, perkType) {
+						if(err) throw new Error(err);
+						else {
+							res.render('perks/edit', { title: 'Perks', character: character, perk: perk, perkType: perkType, username: req.session.username });
+						}
+					});
+				}
+			});
 		}
-	})
+	});
+});
+
+router.get('/perks/delete/:characterID,:perkID', function(req, res) {
+	characters.removePerk(req.params.characterID, req.params.perkID, function(err, success) {
+		if(err) throw new Error(err);
+		else res.redirect('/characters/perks/' + req.params.characterID);
+	});
 });
 
 router.get('/perks/:characterID', function(req, res) {
@@ -119,7 +136,7 @@ router.get('/perks/:characterID', function(req, res) {
 		else {
 			res.render('perks/view', { title: 'Perks', character: character, username: req.session.username });
 		}
-	})
+	});
 });
 
 // Skills
@@ -382,15 +399,26 @@ router.post('/updateMartialArt', function(req, res) {
 
 // Perks
 router.post('/addPerk', function(req, res) {
-	console.log(req.body);
 	var perk = {
 		name: req.body['perk-name'],
 		type: req.body['perk-type'],
 		cost: Number(req.body['perk-cost']),
 		perkOptions: req.body.perkOptions
 	};
-	console.log(perk);
 	characters.addPerk(req.body.characterID, perk, function(err, success) {
+		if(err) throw new Error(err);
+		else res.redirect('/characters/perks/' + req.body.characterID);
+	})
+});
+
+router.post('/updatePerk', function(req, res) {
+	var perk = {
+		name: req.body['perk-name'],
+		type: req.body['perk-type'],
+		cost: Number(req.body['perk-cost']),
+		perkOptions: req.body.perkOptions
+	};
+	characters.updatePerk(req.body.characterID, req.body.perkID, perk, function(err, success) {
 		if(err) throw new Error(err);
 		else res.redirect('/characters/perks/' + req.body.characterID);
 	})
