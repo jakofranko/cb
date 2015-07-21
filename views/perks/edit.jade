@@ -1,0 +1,167 @@
+extends ../layout
+
+block content
+	a(href="/characters/perks/" + character._id)
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;Back to Dashboard
+	h1 Editing #{perk.type} Perk for #{character.alias}
+	include ../_common/pointTotals
+	p.lead Perk Cost: 
+		span#perk-total #{perk.cost}
+		| &nbsp;pts.
+	form(method="post", action="/characters/updatePerk")
+		input(type="hidden", name="characterID", value=character._id)
+		input(type="hidden", value=perk._id, name="perkID")
+		input(type="hidden", value=perk.type, name="perk-type")
+		input(type="hidden", name="perk-cost" value="0")
+		.row
+			.col-sm-6
+				.form-group
+					label(for="perk-name").control-label Perk Name/Description
+					input(type="text" name="perk-name" placeholder="Name of contact, nature of cover etc." value=perk.name required).form-control#perk-name
+				if perk.type != "Contact" && perk.type != "Reputation"
+					-var isRange = perkType.minCost < perkType.maxCost
+					.form-group
+						label(for="perk-value").control-label Perk value
+						input(type=(isRange) ? "range" : "number", class=(!isRange) ? "form-control" : false, name="perk-value", step="1" list="perk-value-ticks", min=(perkType.minCost) ? perkType.minCost : false, max=(perkType.maxCost) ? perkType.maxCost : false, value=perk.cost readonly=(perkType.minCost == perkType.maxCost) ? true : false)#perk-value
+						if isRange
+							datalist#perk-value-ticks
+								-for(i = perkType.minCost; i < perkType.maxCost; i++)
+									option(value=i)
+							span.pull-left#min-cost #{perkType.minCost}
+							span.pull-right#max-cost #{perkType.maxCost}
+				if perk.type == "Contact"
+					.form-group#contactBonusToRoll
+						label.control-label Contact Bonus to Roll
+						input(type="number" name="perkOptions[contactBonusToRoll]" min="0" value=perk.perkOptions.contactBonusToRoll).form-control.contact-control
+				if perk.type == "Reputation"
+					.form-group#reputationLevels
+						label.control-label Reputation Level/Bonus to Associated Skill Rolls and Presence Attacks
+						input(type="number" name="perkOptions[reputationLevels]" min="0" value=perk.perkOptions.reputationLevels required).form-control.reputation-control
+						small Note: minimum cost of reputation level is 1 point, regardless of options or modifiers
+				br
+				button(type="submit").btn.btn-primary.btn-lg
+					span.glyphicon.glyphicon-edit
+					| &nbsp;Update Perk
+				a(href="#deleteModal", data-toggle="modal").btn.btn-link
+					span.glyphicon.glyphicon-trash
+					| &nbsp;Delete Perk
+
+			.col-sm-6
+				if perk.type == "Contact"
+					#contact-options
+						.form-group
+							label.control-label Contact Options
+							.radio
+								label
+									input(type="radio", name="perkOptions[contactBase]", value="8-" data-cost="1" checked=(perk.perkOptions.contactBase == "8-" ? true : false)).contact-control
+									| Base 8- Contact (1 pt.)
+							.radio
+								label
+									input(type="radio", name="perkOptions[contactBase]", value="11-" data-cost="2" checked=(perk.perkOptions.contactBase == "11-") ? true : false).contact-control
+									| Base 11- Contact (2 pts.)
+						.form-group
+							label.control-label Contact's Resources and Skills
+							.radio
+								label
+									input(type="radio", name="perkOptions[contactUsefulness]" data-cost="0"  checked=(!perk.perkOptions.contactUsefulness || perk.perkOptions.contactUsefulness == "") ? true : false).contact-control
+									| Default (Useful Skills and Resources)
+							.radio
+								label
+									input(type="radio", name="perkOptions[contactUsefulness]", data-cost="1" value="Very Useful (+1)" checked=(perk.perkOptions.contactUsefulness == "Very Useful (+1)") ? true : false).contact-control
+									| Very Useful Skills and Resources (+1)
+							.radio
+								label
+									input(type="radio", name="perkOptions[contactUsefulness]", data-cost="2" value="Very Useful (+2)" checked=(perk.perkOptions.contactUsefulness == "Very Useful (+2)") ? true : false).contact-control
+									| Very Useful Skills and Resources (+2)
+							.radio
+								label
+									input(type="radio", name="perkOptions[contactUsefulness]", data-cost="3" value="Extremely Useful" checked=(perk.perkOptions.contactUsefulness == "Extremely Useful") ? true : false).contact-control
+									| Extremely Useful Skills and Resources (+3)
+						.form-group
+							label.control-label Contact's Relationship to Character
+							.radio
+								label
+									input(type="radio", name="perkOptions[contactRelationship]", value="", data-cost="0" checked=(!perk.perkOptions.contactRelationship || perk.perkOptions.contactRelationship == "") ? true : false).contact-control
+									| Neutral
+							.radio
+								label
+									input(type="radio", name="perkOptions[contactRelationship]", value="Good", data-cost="+1" checked=(perk.perkOptions.contactRelationship == "Good") ? true : false).contact-control
+									| Good Relationship (+1)
+							.radio
+								label
+									input(type="radio", name="perkOptions[contactRelationship]", value="Very Good", data-cost="+2" checked=(perk.perkOptions.contactRelationship == "Very Good") ? true : false).contact-control
+									| Very Good Relationship (+2)
+						.form-group
+							label.control-label Contact Options
+							.checkbox
+								label
+									input(type="checkbox", name="perkOptions[limitedByIdentity]", value="true", data-cost="-1" checked=(perk.perkOptions.limitedByIdentity == "true") ? true : false).contact-control
+									| Limited By Identity (-1)
+							.checkbox
+								label
+									input(type="checkbox", name="perkOptions[accessToMajorInstitutions]", value="true", data-cost="+1" checked=(perk.perkOptions.accessToMajorInstitutions == "true") ? true : false).contact-control
+									| Has Access to Major Instituitions (+1)
+							.checkbox
+								label
+									input(type="checkbox", name="perkOptions[hasSignificantContacts]", value="true", data-cost="+1" checked=(perk.perkOptions.hasSignificantContacts == "true") ? true : false).contact-control
+									| Has Significant Contacts of Their Own (+1)
+							.checkbox
+								label
+									input(type="checkbox", name="perkOptions[slavishlyLoyal]", value="true", data-cost="+3" checked=(perk.perkOptions.slavishlyLoyal == "true") ? true : false).contact-control
+									| Is Slavishly Loyal to Character (+3)
+							.checkbox
+								label
+									input(type="checkbox", name="perkOptions[unfriendly]", value="true", data-cost="-2" checked=(perk.perkOptions.unfriendly == "true") ? true : false).contact-control
+									| Is Unfriendly to Character (-2)
+							.checkbox
+								label
+									input(type="checkbox", name="perkOptions[organization]", value="true", data-cost="x3" checked=(perk.perkOptions.organization == "true") ? true : false).contact-control
+									| Organization Contact (x3)
+				if perk.type == "Reputation"
+					#reputation-options
+						.form-group
+							label.control-label How Widely Known
+							.radio
+								label
+									input(type="radio", name="perkOptions[howWidelyKnown]", value="A small to medium sized group or a limited geographic area" data-cost="0" checked=(perk.perkOptions.howWidelyKnown == "A small to medium sized group or a limited geographic area") ? true : false).reputation-control
+									| A small to medium sized group (close neighbors) or a limited geographic area (a neighborhood)
+							.radio
+								label
+									input(type="radio", name="perkOptions[howWidelyKnown]", value="Medium-sized group or a large geographic area" data-cost="1" checked=(perk.perkOptions.howWidelyKnown == "Medium-sized group or a large geographic area") ? true : false).reputation-control
+									| A medium-sized group (everyone in a small area, all doctors) or a large geographic area (a city, state, or region)
+							.radio
+								label
+									input(type="radio", name="perkOptions[howWidelyKnown]", value="A large group or a huge geographic area" data-cost="2" checked=(perk.perkOptions.howWidelyKnown == "A large group or a huge geographic area") ? true : false).reputation-control
+									| A large group (all the citizens of a country, world, or interstellar region) or a huge geographic area (a nation, internationally, intergalactically)
+						.form-group
+							label.control-label How Well Known
+							.radio
+								label
+									input(type="radio", name="perkOptions[howWellKnown]", value="8-" data-cost="-1" checked=(perk.perkOptions.howWellKnown == "8-") ? true : false).reputation-control
+									| 8-
+							.radio
+								label
+									input(type="radio", name="perkOptions[howWellKnown]", value="11-" data-cost="0" checked=(perk.perkOptions.howWellKnown == "11-") ? true : false).reputation-control
+									| 11-
+							.radio
+								label
+									input(type="radio", name="perkOptions[howWellKnown]", value="14-" data-cost="+1" checked=(perk.perkOptions.howWellKnown == "14-") ? true : false).reputation-control
+									| 14-
+	.modal.fade#deleteModal
+		.modal-dialog
+			.modal-content
+				.modal-header
+					button(type='button', data-dismiss='modal').close
+						span(aria-hidden='true') &times;
+						span.sr-only Close
+					h4.modal-title Delete #{perk.type} - #{perk.name}
+				.modal-body
+					p Are you sure you want to delete #{perk.type} - #{perk.name}?
+				.modal-footer.text-center
+					a(href='/characters/perks/delete/' + character._id + ',' + perk._id).btn.btn-danger
+						span.glyphicon.glyphicon-trash
+						|  Delete Perk
+					button(type='button', data-dismiss='modal').btn.btn-default Cancel
+
+	script(src="/js/perks/edit.js")

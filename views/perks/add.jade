@@ -74,6 +74,10 @@ block content
 						label.control-label Contact's Relationship to Character
 						.radio
 							label
+								input(type="radio", name="perkOptions[contactRelationship]", value="", data-cost="0" checked disabled).contact-control
+								| Neutral
+						.radio
+							label
 								input(type="radio", name="perkOptions[contactRelationship]", value="Good", data-cost="+1" disabled).contact-control
 								| Good Relationship (+1)
 						.radio
