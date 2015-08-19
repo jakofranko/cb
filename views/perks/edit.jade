@@ -19,7 +19,7 @@ block content
 				.form-group
 					label(for="perk-name").control-label Perk Name/Description
 					input(type="text" name="perk-name" placeholder="Name of contact, nature of cover etc." value=perk.name required).form-control#perk-name
-				if perk.type != "Contact" && perk.type != "Reputation"
+				if perk.type != "Contact" && perk.type != "Reputation" && perk.type != "Follower" && perk.type != "Vehicle" && perk.type != "Base"
 					-var isRange = perkType.minCost < perkType.maxCost
 					.form-group
 						label(for="perk-value").control-label Perk value
@@ -39,6 +39,26 @@ block content
 						label.control-label Reputation Level/Bonus to Associated Skill Rolls and Presence Attacks
 						input(type="number" name="perkOptions[reputationLevels]" min="0" value=perk.perkOptions.reputationLevels required).form-control.reputation-control
 						small Note: minimum cost of reputation level is 1 point, regardless of options or modifiers
+				if perk.type == "Follower" || perk.type == "Vehicle" || perk.type == "Base"
+					-var num = 1, times = Number(perk.perkOptions.x2Multiplier);
+					-console.log(times);
+					-for(var i = 0; i < times; i++) {
+					- 	num *= 2;
+					-}
+					.form-group#x2Multiplier
+						label.control-label
+							| x2 Multiplier (
+							span#numMultiplier #{num}
+							| &nbsp;
+							span#typeMultiplier #{perk.type}
+							span#pluralType
+								if num > 1
+									| s
+							| )
+						input(type="number" name="perkOptions[x2Multiplier]" data-cost="+5" min="0" value=perk.perkOptions.x2Multiplier required).form-control.x2-control
+					.form-group#basePoints
+						label(for="perkOptions[basePoints]").control-label Base Points
+						input(type="number", name="perkOptions[basePoints]", min="0", id="perkOptions[basePoints]" value=perk.perkOptions.basePoints).form-control
 				br
 				button(type="submit").btn.btn-primary.btn-lg
 					span.glyphicon.glyphicon-edit

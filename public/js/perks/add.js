@@ -58,9 +58,7 @@ function toggleContactOptions(state, callback, callbackParam) {
 				calculateCost();
 			}
 		});
-	}
-
-	
+	}	
 }
 
 function toggleReputationOptions(state, callback, callbackParam) {
@@ -86,8 +84,6 @@ function toggleReputationOptions(state, callback, callbackParam) {
 			}
 		});
 	}
-
-	
 }
 
 function calculateCost() {
@@ -95,6 +91,8 @@ function calculateCost() {
 	var perkValue = $('#perk-value:visible').val();
 	var contactBonusToRoll = $("#contactBonusToRoll input:visible").val();
 	var reputationLevels = $("#reputationLevels input:visible").val();
+	var x2Multiplier = $("#x2Multiplier input:visible").val();
+	var basePoints = $("#basePoints input:visible").val();
 
 	$('[data-cost]').filter(':visible').each(function(i, el) {
 		var costMod = $(el).attr("data-cost");
@@ -121,6 +119,8 @@ function calculateCost() {
 	if(perkValue != undefined) totalCost += Number(perkValue);
 	if(contactBonusToRoll != undefined) totalCost += Number(contactBonusToRoll);
 	if(reputationLevels != undefined) totalCost += Number(reputationLevels);
+	if(x2Multiplier != undefined) totalCost += x2Multiplier * 5;
+	if(basePoints != undefined) totalCost += Math.round(basePoints / 5);
 
 	// Minimum cost of a perk is 1 pt.
 	if(totalCost <= 0) totalCost = 1;
@@ -134,22 +134,55 @@ $(document).ready(function() {
 		if(perkSelection == 'Contact') {
 			$("#perk-value").parent().fadeOut(function() {
 				toggleReputationOptions(false, toggleContactOptions, true);
+				$("#x2Multiplier input").add("#basePoints input").prop("disabled", true);
+				$("#x2Multiplier").add("#basePoints").fadeOut();
 			});
 		} else if(perkSelection == 'Reputation') {
 			$("#perk-value").parent().fadeOut(function() {
 				toggleContactOptions(false, toggleReputationOptions, true);
+				$("#x2Multiplier input").add("#basePoints input").prop("disabled", true);
+				$("#x2Multiplier").add("#basePoints").fadeOut();
 			});
 		} else {
 			toggleReputationOptions(false, function() {
 				toggleContactOptions(false, function() {
-					$("#perk-value").parent().fadeIn(function() {
-						calculateCost();
-					});	
+					if(perkSelection == "Follower" || perkSelection == "Vehicle") {
+						$("#perk-value").parent().fadeOut(function() {
+							$("#x2Multiplier input").add("#basePoints input").prop("disabled", false);
+							$("#x2Multiplier").add("#basePoints").fadeIn();
+							$("#typeMultiplier").text(perkSelection)	
+						});
+					} else {
+						$("#x2Multiplier input").add("#basePoints input").prop("disabled", true);
+						$("#x2Multiplier").add("#basePoints").fadeOut();
+						$("#perk-value").parent().fadeIn();
+					}
+					calculateCost();
 				});
 			});
 		}
 		handleInput($(this).find(':selected').data());
 		// $('#perk-value').trigger('change');
+	});
+
+	$("#x2Multiplier input").change(function() {
+		var multiplier = $(this).val();
+		var current = Number($("#numMultiplier").text());
+		if(current == 0 || multiplier == 0) {
+			$("#numMultiplier").text(1);
+			$("#pluralType").text(null);
+		} else {
+			var total = 1;
+			for(i = 0; i < multiplier; i++)
+				total *= 2;
+			$("#numMultiplier").text(total);
+			$("#pluralType").text("s");
+		}
+		calculateCost();
+	});
+
+	$("#basePoints input").change(function() {
+		calculateCost();
 	});
 
 	$('#perk-value').add("#contactBonusToRoll").add("#reputationLevels").add("[data-cost]").change(function() {

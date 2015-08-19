@@ -35,6 +35,18 @@ block content
 					label.control-label Reputation Level/Bonus to Associated Skill Rolls and Presence Attacks
 					input(type="number" name="perkOptions[reputationLevels]" min="0" value="0" required disabled).form-control.reputation-control
 					small Note: minimum cost of reputation level is 1 point, regardless of options or modifiers
+				.form-group(style="display:none;")#x2Multiplier
+					label.control-label
+						| x2 Multiplier (
+						span#numMultiplier 1
+						| &nbsp;
+						span#typeMultiplier
+						span#pluralType
+						| )
+					input(type="number" name="perkOptions[x2Multiplier]" data-cost="+5" min="0" value="0" required disabled).form-control.x2-control
+				.form-group(style="display:none;")#basePoints
+					label(for="perkOptions[basePoints]").control-label Base Points
+					input(type="number", name="perkOptions[basePoints]", min="0", id="perkOptions[basePoints]" value="0" disabled).form-control
 				br
 				button(type="submit").btn.btn-primary.btn-lg
 					span.glyphicon.glyphicon-plus
