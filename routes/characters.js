@@ -14,7 +14,7 @@ var canEdit = function(req, res, next) {
 		} else {
 			res.redirect('/');
 		}
-	})
+	});
 }
 
 // CHARACTERS
@@ -175,6 +175,13 @@ router.get('/skills/deleteSkill/:charID,:skillID', function(req, res) {
 	});
 });
 
+router.get('/skills/skillEnhancers/:characterID', canEdit, function(req, res) {
+	characters.findCharacterById(req.params.characterID, function(err, character) {
+		if(err) throw new Error(err);
+		else res.render('skills/skillEnhancers', {character: character});
+	});
+});
+
 router.get('/skills/:characterID', function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(character.userID == req.session._id) {
@@ -294,6 +301,16 @@ router.post('/updateSkill', function(req, res) {
 			res.send(result);	
 		}
 	});
+});
+
+router.post('/updateSkillEnhancers', function(req, res) {
+	var skillEnhancers = [];
+	for(var se in req.body)
+		if(se != "characterID" && se != "skillEnhancerCost") skillEnhancers.push(se);
+	characters.updateCharacter({_id: req.body.characterID}, {skillEnhancers: skillEnhancers}, req.body.skillEnhancerCost, function(err, result) {
+		if(err) throw new Error(err);
+		else res.redirect('/characters/skills/' + req.body.characterID);
+	})
 });
 
 // Characteristics

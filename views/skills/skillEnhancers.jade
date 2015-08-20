@@ -1,0 +1,44 @@
+extends ../layout
+
+block content
+	a(href="/characters/skills/" + character._id)
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;Back to Skills
+	h1 Skill Enhancers for #{character.alias}
+	include ../_common/pointTotals
+
+	p.lead
+		| Cost: 
+		span#skillEnhancerCost 0
+	
+	form(action="/characters/updateSkillEnhancers" method="post")
+		input(type="hidden" name="skillEnhancerCost" value="0")
+		input(type="hidden" name="characterID" value=character._id)
+		.checkbox
+			label
+				input(type="checkbox", name="Jack of All Trades", value="true" checked=((character.skillEnhancers.indexOf("Jack of All Trades") != -1) ? "checked" : false))
+				| Jack of All Trades
+		.checkbox
+			label
+				input(type="checkbox", name="Linguist", value="true" checked=((character.skillEnhancers.indexOf("Linguist") != -1) ? "checked" : false))
+				| Linguist
+		.checkbox
+			label
+				input(type="checkbox", name="Scholar", value="true" checked=((character.skillEnhancers.indexOf("Scholar") != -1) ? "checked" : false))
+				| Scholar
+		.checkbox
+			label
+				input(type="checkbox", name="Scientist", value="true" checked=((character.skillEnhancers.indexOf("Scientist") != -1) ? "checked" : false))
+				| Scientist				
+		.checkbox
+			label
+				input(type="checkbox", name="Traveler", value="true" checked=((character.skillEnhancers.indexOf("Traveler") != -1) ? "checked" : false))
+				| Traveler
+		.checkbox
+			label
+				input(type="checkbox", name="Well-Connected", value="true" checked=((character.skillEnhancers.indexOf("Well-Connected") != -1) ? "checked" : false))
+				| Well-Connected
+
+		input(type="submit" value="Update").btn.btn-primary.btn-lg
+
+	script(src="/js/skills/skillEnhancer.js")
