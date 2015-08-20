@@ -12,12 +12,21 @@ block content
 					span.glyphicon.glyphicon-plus
 					|  Add Skill
 			| &nbsp;
+			a(href="/characters/skills/skillEnhancers/" + character._id).btn.btn-primary
+					span.glyphicon.glyphicon-plus
+					|  Add Skill Enhancers
+			| &nbsp;
 			a(href="/characters/martialArts/add/" + character._id).btn.btn-primary
 					span.glyphicon.glyphicon-plus
 					|  Add Martial Art
-
+	if character.skillEnhancers.length > 0
+		h2 Skill Enhancers
+		p.lead
+			for se, seIndex in character.skillEnhancers
+				| #{se}
+				if seIndex < character.skillEnhancers.length - 1
+					| , 
 	if ma.length > 0
-		-console.log(ma);
 		each art, i in ma
 			h2 Martial Art: #{art.name}
 				a(href='/characters/martialArts/edit/' + art._id).btn.btn-link
