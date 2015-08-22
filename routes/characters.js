@@ -310,7 +310,7 @@ router.post('/updateSkillEnhancers', function(req, res) {
 	characters.updateCharacter({_id: req.body.characterID}, {skillEnhancers: skillEnhancers}, req.body.skillEnhancerCost, function(err, result) {
 		if(err) throw new Error(err);
 		else res.redirect('/characters/skills/' + req.body.characterID);
-	})
+	});
 });
 
 // Characteristics

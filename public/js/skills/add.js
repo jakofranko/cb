@@ -42,13 +42,13 @@ $(document).ready(function() {
 		if(skillLevel) {
 			$('#numberOfSLs').fadeIn(function() {
 				if(skill) {
-					calculateSkillCost(skill);
+					calculateSkillCost(skill, skillEnhancers);
 				}
 			});
 		} else {
 			$('#numberOfSLs').fadeOut(function() {
 				if(skill) {
-					calculateSkillCost(skill);
+					calculateSkillCost(skill, skillEnhancers);
 				}
 			});
 		}
@@ -65,72 +65,6 @@ $(document).ready(function() {
 			$('#associatedCharacteristicOptions').fadeOut();
 		}
 
-	}
-
-	function calculateSkillCost(skill) {
-		var cost = 0;
-		var rollMod = $('#modifier').val();
-		var familiarity = $('#familiarity').prop('checked');
-		var background = ($('#characteristicBased').prop('checked') == true || $('#characteristicBased').filter(':visible').length == 0) ? false : true;
-		var literate = ($('[name=literate]').prop('checked') == false || $('[name=literate]').filter(':visible').length == 0) ? false : true;
-		var subcategories = false;
-		var numberOfSLs = $('[name=numberOfSkillLevels]:visible').val();
-		
-		if(skill.categories.length > 0) {
-			// Check to see if selected skill has any sub categories
-			for(i = 0; i < skill.categories.length; i++) {
-				if(skill.categories[i].subcategories.length > 0) {
-					subcategories = true;
-					break;
-				}
-			}
-
-			// Increment cost per category
-			$('.category').filter(':visible').filter(':checked').each(function(i) {
-				// If there are no subcategories, then only the first category is 2 points,
-				// and subsequent categories are 1 point. Otherwise, 2 points per category, 1 point per subcategory
-				if(subcategories == false && i != 0) {
-					cost += 1;
-				} else if(familiarity) {
-					cost += 1;
-				} else {
-					cost += skill.baseCost;
-				}
-			});
-
-			// Increment cost per subcategory
-			if(subcategories) {
-				$('.subcategory').filter(':visible').filter(':checked').each(function() {
-					if($(this).parents('.categories').find('.category').prop('checked') == false || $(this).parents('.categories').find('.category').length == 0) {
-						cost += 1;
-					}
-				});
-			}
-
-		} else if(familiarity) {	// If there are no categories, add the price of the skill only once
-			cost += 1;
-		} else if(background) {
-			cost += 2;
-		} else {
-			cost += skill.baseCost;
-
-			// Add one if literacy is checked
-			if(literate) {
-				cost += 1
-			}
-		}
-		
-		// If there is a base +1 to roll cost set, adds that price to the cost.
-		if(skill.basePlusOne && skill.basePlusOne != '' && skill.basePlusOne != null) {
-			cost += Number(rollMod * skill.basePlusOne);
-		}
-
-		// If the skill is a Skill level of some kind, then multiply the cost by the number of skill levels
-		if(numberOfSLs !== undefined) {
-			cost *= numberOfSLs;
-		}
-
-		$('#skillCost').text(cost);
 	}
 
 	function calculateSkillRoll(character, skill) {
@@ -307,7 +241,7 @@ $(document).ready(function() {
 
 		// Calculate Price
 		// --------------------------------------
-		calculateSkillCost(skill);
+		calculateSkillCost(skill, skillEnhancers);
 
 		// Calculate Roll (needs to be last)
 		// --------------------------------------
@@ -321,12 +255,12 @@ $(document).ready(function() {
 		} else {
 			$('#modifier').attr('disabled', false);
 		}
-		calculateSkillCost(skill);
+		calculateSkillCost(skill, skillEnhancers);
 		calculateSkillRoll(character, skill);
 	});
 
 	$('#modifier').change(function() {
-		calculateSkillCost(skill);
+		calculateSkillCost(skill, skillEnhancers);
 		calculateSkillRoll(character, skill);
 	});
 
@@ -338,17 +272,17 @@ $(document).ready(function() {
 			$('#familiarity').attr('disabled', false);
 			$('#associatedCharacteristic').attr('disabled', true);
 		}
-		calculateSkillCost(skill);
+		calculateSkillCost(skill, skillEnhancers);
 		calculateSkillRoll(character, skill);
 	});
 
 	$('#associatedCharacteristic').change(function() {
-		calculateSkillCost(skill);
+		calculateSkillCost(skill, skillEnhancers);
 		calculateSkillRoll(character, skill);
 	});
 
 	$('[name=numberOfSkillLevels]').change(function() {
-		calculateSkillCost(skill);
+		calculateSkillCost(skill, skillEnhancers);
 	});
 
 	var threeAttacks = /attack\d{1}$/;
@@ -392,18 +326,18 @@ $(document).ready(function() {
 			});
 
 		}
-		calculateSkillCost(skill);
+		calculateSkillCost(skill, skillEnhancers);
 	});
 
 	$('.subcategory').change(function() {
 			if($(this).parents('.categories').find('.category').prop('checked')) {
 			$(this).parents('.categories').find('.category').prop('checked', false);
 		}
-		calculateSkillCost(skill);
+		calculateSkillCost(skill, skillEnhancers);
 	});
 
-	$('[name=literate]').change(function() {
-		calculateSkillCost(skill);
+	$('[name=literate]').add('[name=knowledgeSkillType]').add('[name=visited]').change(function() {
+		calculateSkillCost(skill, skillEnhancers);
 	});
 
 	
