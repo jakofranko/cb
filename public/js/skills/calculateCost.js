@@ -1,5 +1,4 @@
 function calculateSkillCost(skill, skillEnhancers) {
-		console.log(skill, skillEnhancers);
 		var cost = 0;
 		var rollMod = $('#modifier').val();
 		var familiarity = $('#familiarity').prop('checked');

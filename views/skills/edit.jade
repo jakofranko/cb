@@ -1,14 +1,21 @@
 extends ../layout
 
 block content
-	=console.log(skill)
 	h1 #{title}
 		a(href='/characters/skills/' + character._id).btn.btn-link Back
+	include ../_common/pointTotals
+
+	if character.skillEnhancers.length > 0
+		.row
+			.col-sm-4
+				p
+					strong Skill Enhancers: 
+					for se, i in character.skillEnhancers
+						| #{se}
+						if i != character.skillEnhancers.length - 1
+							| , 
 	.row
 		.col-sm-4
-			if character.basePool
-				p Remaining Character Points: 
-					span#remainingPoints #{character.basePool - character.pointsSpent}
 			p.lead Skill Cost: 
 				span#skillCost #{skill.cost}
 			p.lead Roll: -
@@ -132,6 +139,10 @@ block content
 								.form-group
 									label(for='knowledgeSkillArea').control-label Area of Knowledge
 									input(name='knowledgeSkillArea', type='text', placeholder='Area of Knowledge', value=((skill.skillOptions.knowledgeSkillArea) ? skill.skillOptions.knowledgeSkillArea : null)).form-control#knowledgeSkillArea
+								.checkbox
+									label
+										input(type="checkbox" name="visited")
+										| Character has visited this place/experienced culture (if an area, city or group knowledge skill)
 
 						//- Penalty Skill Levels
 						if skill.skillType.name == 'Penalty Skill Level (1.5-point)'
@@ -358,5 +369,9 @@ block content
 						span.glyphicon.glyphicon-trash
 						|  Delete Skill
 					button(type='button', data-dismiss='modal').btn.btn-default Cancel
-												
+	script.
+		//- Though character.skillEnhancers is actually an array, jade converts it to a string
+		//- and thus it needs to be converted back into an array for use later down the line 
+		var skillEnhancers = "#{character.skillEnhancers}".split(",")
+	script(rel='text/javascript', src='/js/skills/calculateCost.js')											
 	script(rel='text/javascript', src='/js/skills/edit.js')

@@ -24,8 +24,6 @@ $(document).ready(function() {
 		}
 	});
 
-	console.log(skill);
-
 	// Functions
 	// --------------------------------------
 	function switchOptions(selectedOptionDiv, backgroundSkill) {
@@ -104,12 +102,12 @@ $(document).ready(function() {
 		} else {
 			$('#modifier').attr('disabled', false);
 		}
-		calculateSkillCost(skill);
+		calculateSkillCost(skill, skillEnhancers);
 		calculateSkillRoll(character, skill);
 	});
 
 	$('#modifier').change(function() {
-		calculateSkillCost(skill);
+		calculateSkillCost(skill, skillEnhancers);
 		calculateSkillRoll(character, skill);
 	});
 
@@ -121,12 +119,12 @@ $(document).ready(function() {
 			$('#familiarity').attr('disabled', false);
 			$('#associatedCharacteristic').attr('disabled', true);
 		}
-		calculateSkillCost(skill);
+		calculateSkillCost(skill, skillEnhancers);
 		calculateSkillRoll(character, skill);
 	});
 
 	$('#associatedCharacteristic').change(function() {
-		calculateSkillCost(skill);
+		calculateSkillCost(skill, skillEnhancers);
 		calculateSkillRoll(character, skill);
 	});
 
@@ -171,22 +169,22 @@ $(document).ready(function() {
 			});
 
 		}
-		calculateSkillCost(skill);
+		calculateSkillCost(skill, skillEnhancers);
 	});
 
 	$('.subcategory').change(function() {
 		if($(this).parents('.categories').find('.category').prop('checked')) {
 			$(this).parents('.categories').find('.category').prop('checked', false);
 		}
-		calculateSkillCost(skill);
+		calculateSkillCost(skill, skillEnhancers);
 	});
 
-	$('[name=literate]').change(function() {
-		calculateSkillCost(skill);
+	$('[name=literate]').add('[name=knowledgeSkillType]').add('[name=visited]').change(function() {
+		calculateSkillCost(skill, skillEnhancers);
 	});
 
 	$('[name=numberOfSkillLevels]').change(function() {
-		calculateSkillCost(skill);
+		calculateSkillCost(skill, skillEnhancers);
 	});
 
 	
@@ -253,7 +251,13 @@ $(document).ready(function() {
 				cost: cost
 			};
 
-			$.post('/characters/updateSkill', skillToSubmit).done(function() { $('#addAnother').modal('show'); }).fail(function(data, status, error) { console.log(data, status, error); });
+			$.post('/characters/updateSkill', skillToSubmit)
+				.done(function() { 
+					$('#addAnother').modal('show'); 
+				})
+				.fail(function(data, status, error) { 
+					console.error(data, status, error); 
+				});
 		} else {
 			alert('Please fill out all the required fields');
 		}

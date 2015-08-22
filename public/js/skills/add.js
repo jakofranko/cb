@@ -388,8 +388,6 @@ $(document).ready(function() {
 			if($('#familiarity').prop('checked')) {
 				familiarity = true;
 			}
-
-			console.log(options);
 			
 			var skillToSubmit = {
 				characterID: characterID,
