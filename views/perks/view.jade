@@ -10,8 +10,6 @@ block content
 	a(href="/characters/perks/add/" + character._id).btn.btn-primary
 		span.glyphicon.glyphicon-plus
 		| &nbsp;Add Perk
-
-	-console.log(character.Perks);
 	.row
 		.col-sm-12
 			table.table
@@ -36,6 +34,6 @@ block content
 										//- convert camelCase to regularly spaced words
 										= key.replace(/([A-Z])/g, ' $1').replace(/^./, function(str) { return str.toUpperCase(); }) 
 										//- Don't display the value of checked options
-										if perkOption !== 'true' && perkOption !== 'on' 
+										if perkOption !== 'true' && perkOption !== 'on' && perkOption !== '' 
 											| : #{perkOption}
 										br

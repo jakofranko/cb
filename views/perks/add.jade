@@ -6,6 +6,15 @@ block content
 		| &nbsp;Back to Dashboard
 	h1 Add Perk for #{character.alias}
 	include ../_common/pointTotals
+	if character.skillEnhancers.length > 0
+		.row
+			.col-sm-4
+				p
+					strong Skill Enhancers: 
+					for se, i in character.skillEnhancers
+						| #{se}
+						if i != character.skillEnhancers.length - 1
+							| , 
 	p.lead Perk Cost: 
 		span#perk-total 0
 		| &nbsp;pts.
@@ -152,5 +161,9 @@ block content
 							label
 								input(type="radio", name="perkOptions[howWellKnown]", value="14-" data-cost="+1" disabled).reputation-control
 								| 14-
-
+	script.
+		//- Though character.skillEnhancers is actually an array, jade converts it to a string
+		//- and thus it needs to be converted back into an array for use later down the line 
+		var skillEnhancers = "#{character.skillEnhancers}".split(",")
+	script(src="/js/perks/calculateCost.js")
 	script(src="/js/perks/add.js")

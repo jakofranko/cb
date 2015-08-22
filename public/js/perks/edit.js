@@ -32,52 +32,11 @@ function handleInput(optionData) {
 		$('#max-cost').text(null);
 	}
 	ticks(input[0]);
-	calculateCost();
-}
-
-function calculateCost() {
-	var totalCost = 0;
-	var perkValue = $('#perk-value:visible').val();
-	var contactBonusToRoll = $("#contactBonusToRoll input:visible").val();
-	var reputationLevels = $("#reputationLevels input:visible").val();
-	var x2Multiplier = $("#x2Multiplier input:visible").val();
-	var basePoints = $("#basePoints input:visible").val();
-
-	$('[data-cost]').filter(':visible').each(function(i, el) {
-		var costMod = $(el).attr("data-cost");
-		if($(el).prop("checked") === true) {
-			if(match = costMod.match(/([x+-])(\d)/)) {
-				switch(match[1]) {
-					case "+":
-						totalCost += Number(match[2]);
-						break;
-					case "-":
-						totalCost -= Number(match[2]);
-						break;
-					case "x":
-						totalCost *= Number(match[2]);
-						break;
-					default:
-						return false;
-				}
-			} else {
-				totalCost += Number(costMod);
-			}
-		}	
-	});
-	if(perkValue != undefined) totalCost += Number(perkValue);
-	if(contactBonusToRoll != undefined) totalCost += Number(contactBonusToRoll);
-	if(reputationLevels != undefined) totalCost += Number(reputationLevels);
-	if(x2Multiplier != undefined) totalCost += x2Multiplier * 5;
-	if(basePoints != undefined) totalCost += Math.round(basePoints / 5);
-
-	// Minimum cost of a perk is 1 pt.
-	if(totalCost <= 0) totalCost = 1;
-	$("#perk-total").text(totalCost);
-	$("[name=perk-cost]").val(totalCost);
+	calculateCost(skillEnhancers);
 }
 
 $(document).ready(function() {
+	calculateCost(skillEnhancers);
 	$("#x2Multiplier input").change(function() {
 		var multiplier = $(this).val();
 		var current = Number($("#numMultiplier").text());
@@ -91,14 +50,14 @@ $(document).ready(function() {
 			$("#numMultiplier").text(total);
 			$("#pluralType").text("s");
 		}
-		calculateCost();
+		calculateCost(skillEnhancers);
 	});
 
 	$("#basePoints input").change(function() {
-		calculateCost();
+		calculateCost(skillEnhancers);
 	});
 
 	$('#perk-value').add("#contactBonusToRoll").add("#reputationLevels").add("[data-cost]").change(function() {
-		calculateCost();
+		calculateCost(skillEnhancers);
 	});
 });

@@ -1,11 +1,21 @@
 extends ../layout
 
 block content
+	-console.log(perk);
 	a(href="/characters/perks/" + character._id)
 		span.glyphicon.glyphicon-arrow-left
 		| &nbsp;Back to Dashboard
 	h1 Editing #{perk.type} Perk for #{character.alias}
 	include ../_common/pointTotals
+	if character.skillEnhancers.length > 0
+		.row
+			.col-sm-4
+				p
+					strong Skill Enhancers: 
+					for se, i in character.skillEnhancers
+						| #{se}
+						if i != character.skillEnhancers.length - 1
+							| , 
 	p.lead Perk Cost: 
 		span#perk-total #{perk.cost}
 		| &nbsp;pts.
@@ -14,6 +24,8 @@ block content
 		input(type="hidden", value=perk._id, name="perkID")
 		input(type="hidden", value=perk.type, name="perk-type")
 		input(type="hidden", name="perk-cost" value="0")
+		if character.skillEnhancers.indexOf("Well-Connected") != -1
+			input(type="hidden", name="perkOptions[numberOfFavors]", value="2")
 		.row
 			.col-sm-6
 				.form-group
@@ -84,7 +96,7 @@ block content
 							label.control-label Contact's Resources and Skills
 							.radio
 								label
-									input(type="radio", name="perkOptions[contactUsefulness]" data-cost="0"  checked=(!perk.perkOptions.contactUsefulness || perk.perkOptions.contactUsefulness == "") ? true : false).contact-control
+									input(type="radio", name="perkOptions[contactUsefulness]" data-cost="0"  checked=(!perk.perkOptions.contactUsefulness || perk.perkOptions.contactUsefulness == "" || perk.perkOptions.contactUsefulness == "on") ? true : false).contact-control
 									| Default (Useful Skills and Resources)
 							.radio
 								label
@@ -184,4 +196,9 @@ block content
 						|  Delete Perk
 					button(type='button', data-dismiss='modal').btn.btn-default Cancel
 
+	script.
+		//- Though character.skillEnhancers is actually an array, jade converts it to a string
+		//- and thus it needs to be converted back into an array for use later down the line 
+		var skillEnhancers = "#{character.skillEnhancers}".split(",")
+	script(src="/js/perks/calculateCost.js")
 	script(src="/js/perks/edit.js")
