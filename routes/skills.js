@@ -12,7 +12,7 @@ router.get('/create', function(req, res) {
 		skillTypes.listSkillTypes(function(err, skilltypes) {
 			if(err) throw new Error(err);
 			else {
-				res.render('skillTypeAdd', { title: 'Create Skill Types', types: skilltypes });
+				res.render('skillTypes/add', { title: 'Create Skill Types', types: skilltypes });
 			}
 		});
 	}
@@ -25,7 +25,7 @@ router.get('/edit/:skillTypeID', function(req, res) {
 	if(req.session.role == 'admin') {
 		skillTypes.findSkillType({ _id: req.params.skillTypeID }, function(err, skill) {
 			console.log(skill);
-			res.render('skillTypeEdit', { title: 'Edit ' + skill.name, skill: skill })
+			res.render('skillTypes/edit', { title: 'Edit ' + skill.name, skill: skill })
 		});
 	} else {
 		res.redirect('/');
@@ -37,7 +37,7 @@ router.get('/manage', function(req, res) {
 		skillTypes.listSkillTypes(function(err, skilltypes) {
 			if(err) throw new Error(err);
 			else {
-				res.render('skillTypeManage', { title: 'Manage Skill Types', types: skilltypes, session: req.session });
+				res.render('skillTypes/manage', { title: 'Manage Skill Types', types: skilltypes, session: req.session });
 			}
 		});
 	} else {

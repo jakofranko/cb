@@ -1,4 +1,4 @@
-extends layout
+extends ../layout
 
 block content
 	a(href="/skills/manage") 
@@ -97,7 +97,7 @@ block content
 						tbody
 							each type, i in types
 								tr
-									td= type.skill
+									td= type.name
 									td= type.type
 									td= type.associatedCharacteristic
 									td= type.baseCost
