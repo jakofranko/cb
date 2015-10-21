@@ -31,9 +31,10 @@ describe('Martial Arts Test Suite', function() {
 					should.not.exist(err);
 					should.exist(mm);
 					testManeuver = mm;
+					done();
 				}
 			});
-			done();
+			
     	});
 	});
 

@@ -28,13 +28,12 @@ describe('Talents Test Suite', function() {
 				should.exist(talent);
 				talent.should.have.property('name', 'testTalent');
 				talent.should.have.property('cost', 15);
-				talent.should.have.property('bonusToRoll', true;
+				talent.should.have.property('bonusToRoll', true);
 				talent.should.have.property('adders');
 				talent['adders'].should.be.Array;
 				testTalent = talent;
+				done();
 			});
-
-			done();
     	});
 	});
 
@@ -48,6 +47,17 @@ describe('Talents Test Suite', function() {
 				testTalent = talent;
 				done();
 			});
+		});
+	});
+
+	describe('talents.listTalents()', function(done) {
+		it('should list all the talents in the whole world (on the test db)', function() {
+			talents.listTalents(function(err, results) {
+				should.not.exist(err);
+				should.exist(results);
+				results.should.be.Array;
+				(results[0]).should.be.Object;
+			})
 		});
 	});
   
