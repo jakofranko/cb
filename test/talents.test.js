@@ -57,7 +57,19 @@ describe('Talents Test Suite', function() {
 				should.exist(results);
 				results.should.be.Array;
 				(results[0]).should.be.Object;
-			})
+				done();
+			});
+		});
+	});
+
+	describe('talents.getTalent()', function(done) {
+		it('should fetch the talent that matches the given query', function() {
+			talents.getTalent({_id: testTalent._id}, function(err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				result.should.be.Object;
+				done();
+			});
 		});
 	});
   
