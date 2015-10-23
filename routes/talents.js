@@ -34,7 +34,7 @@ router.get('/edit/:talentID', function(req, res) {
 // Gets -------------------------------
 router.post('/addTalent', function(req, res) {
 	console.log(req.body);
-	var bonusToRoll = (req.body.bonusToRoll && req.body.bonusToRoll == "on") ? true : false;
+	var bonusToRoll = (req.body.bonusToRoll && req.body.bonusToRoll != "0") ? req.body.bonusToRoll : null;
 	var adders;
 	if(req.body.adders.length > 1 || (req.body.adders.length > 0 && req.body.adders[0].name !== "" && req.body.adders[0].cost !== "")) {
 		adders = req.body.adders;
@@ -49,9 +49,9 @@ router.post('/addTalent', function(req, res) {
 });
 
 router.post('/updateTalent', function(req, res) {
-	var bonusToRoll = (req.body.bonusToRoll && req.body.bonusToRoll == "on") ? true : false;
+	var bonusToRoll = (req.body.bonusToRoll && req.body.bonusToRoll != "0") ? req.body.bonusToRoll : null;
 	var adders;
-	if(req.body.adders.length > 1 || (req.body.adders.length > 0 && req.body.adders[0].name !== "" && req.body.adders[0].cost !== "")) {
+	if(req.body.adders && (req.body.adders.length > 1 || (req.body.adders.length > 0 && req.body.adders[0].name !== "" && req.body.adders[0].cost !== ""))) {
 		adders = req.body.adders;
 	} else {
 		adders = null;

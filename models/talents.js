@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var TalentSchema = mongoose.Schema({
 	name: String,
 	cost: Number,
-	bonusToRoll: Boolean,
+	bonusToRoll: Number,
 	adders: [TalentAdderSchema]
 });
 

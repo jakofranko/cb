@@ -16,10 +16,8 @@ block content
 					label.control-label(for="cost") Cost
 					input.form-control(type="number" name="cost" id="cost" placeholder="Talent cost" value=talent.cost)
 				.form-group
-					.checkbox
-						label
-							input(type="checkbox" name="bonusToRoll" id="bonusToRoll" checked=(talent.bonusToRoll ? "checked" : null)) 
-							|  Can purchase bonuses to roll?
+					label(for="bonusToRoll").control-label Bonus to Roll Cost (leave empty if N/A)
+					input(type="number" name="bonusToRoll" id="bonusToRoll" value=talent.bonusToRoll).form-control 
 
 				h2 Talent Adders
 				#adders

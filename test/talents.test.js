@@ -23,12 +23,12 @@ describe('Talents Test Suite', function() {
 				});
 			}
 
-			talents.createTalent('testTalent', 15, true, [{name: 'Out of Combat', cost: 5}, {name: 'Intuition', cost: -5}, {name: 'Functions as a Sense', cost: 2}], function(err, talent) {
+			talents.createTalent('testTalent', 15, null, [{name: 'Out of Combat', cost: 5}, {name: 'Intuition', cost: -5}, {name: 'Functions as a Sense', cost: 2}], function(err, talent) {
 				should.not.exist(err);
 				should.exist(talent);
 				talent.should.have.property('name', 'testTalent');
 				talent.should.have.property('cost', 15);
-				talent.should.have.property('bonusToRoll', true);
+				talent.should.have.property('bonusToRoll', null);
 				talent.should.have.property('adders');
 				talent['adders'].should.be.Array;
 				testTalent = talent;
