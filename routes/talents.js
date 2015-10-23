@@ -34,16 +34,37 @@ router.get('/edit/:talentID', function(req, res) {
 // Gets -------------------------------
 router.post('/addTalent', function(req, res) {
 	console.log(req.body);
-	var bonusToRoll,
-		adders;
-	// talents.createTalent(req.body.name, req.body.cost, bonusToRoll, adders, function(err, result) {
-	// 	if(err) throw new Error(err);
-	// 	else res.redirect('/talents');
-	// });
+	var bonusToRoll = (req.body.bonusToRoll && req.body.bonusToRoll == "on") ? true : false;
+	var adders;
+	if(req.body.adders.length > 1 || (req.body.adders.length > 0 && req.body.adders[0].name !== "" && req.body.adders[0].cost !== "")) {
+		adders = req.body.adders;
+	} else {
+		adders = null;
+	}
+
+	talents.createTalent(req.body.name, req.body.cost, bonusToRoll, adders, function(err, result) {
+		if(err) throw new Error(err);
+		else res.redirect('/talents');
+	});
 });
 
 router.post('/updateTalent', function(req, res) {
-	talents.updateTalent({ _id: req.body.talentID }, { name: req.body.name, minCost: Number(req.body.minCost), maxCost: Number(req.body.maxCost) }, function(err, result) {
+	var bonusToRoll = (req.body.bonusToRoll && req.body.bonusToRoll == "on") ? true : false;
+	var adders;
+	if(req.body.adders.length > 1 || (req.body.adders.length > 0 && req.body.adders[0].name !== "" && req.body.adders[0].cost !== "")) {
+		adders = req.body.adders;
+	} else {
+		adders = null;
+	}
+
+	var update = { 
+		name: req.body.name, 
+		cost: Number(req.body.cost), 
+		bonusToRoll: bonusToRoll, 
+		adders: adders 
+	};
+
+	talents.updateTalent(req.body.talentID, update, function(err, result) {
 		if(err) throw new Error(err);
 		else res.redirect('/talents');
 	});

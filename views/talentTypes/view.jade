@@ -1,0 +1,35 @@
+extends ../layout
+
+block content
+	a(href="/dashboard/" + session.username)
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;back to Dashboard
+	h1 Talents
+		a(href="/talents/add").btn.btn-link
+			span.glyphicon.glyphicon-plus
+			|  Add New
+	.row
+		.col-sm-12
+			table.table
+				thead
+					tr
+						th Talent
+						th Cost
+						th Bonus to Roll?
+						th Adders
+						th
+				tbody
+					each talent, i in talents
+						tr
+							td #{talent.name}
+							td #{talent.cost}
+							td #{talent.bonusToRoll}
+							td
+								if talent.adders && talent.adders.length > 0
+									for adder, i in talent.adders
+										| Name: #{adder.name}, Cost: #{adder.cost}
+										br
+							td
+								a(href="/talents/edit/" + talent._id).btn.btn-link
+									span.glyphicon.glyphicon-edit
+									| &nbsp;Edit

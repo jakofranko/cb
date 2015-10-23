@@ -1,0 +1,39 @@
+extends ../layout
+
+block content
+	a(href="/talents")
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;back to Talents
+	.row
+		.col-sm-4.col-sm-offset-4
+			h1 Add New Talent
+			form(action="/talents/addTalent" method="post")
+				.form-group
+					label.control-label(for="name") Talent Name
+					input.form-control(type="text" name="name" id="name" placeholder="Talent Name e.g., 'Danger Sense'" autofocus)
+				.form-group
+					label.control-label(for="cost") Cost
+					input.form-control(type="number" name="cost" id="cost" placeholder="Talent cost")
+				.form-group
+					.checkbox
+						label
+							input(type="checkbox" name="bonusToRoll" id="bonusToRoll") 
+							|  Can purchase bonuses to roll?
+
+				h2 Talent Adders
+				#adders
+					.adder
+						.form-group
+							label.control-label Adder Name
+							input(type="text" name="adders[0][name]" placeholder="Adder Name").form-control
+						.form-group
+							label.control-label Adder Cost
+							input(type="number" name="adders[0][cost]" placeholder="Adder Cost").form-control
+						hr
+				button.btn.btn-primary.btn-sm.pull-left.new-adder(type="button")
+					span.glyphicon.glyphicon-plus
+					|  New Adder
+				button.btn.btn-primary.pull-right(type="submit")
+					span.glyphicon.glyphicon-plus
+					| &nbsp;Add Talent
+	script(type="text/javascript" src="/js/talents/add-edit.js")

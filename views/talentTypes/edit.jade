@@ -1,0 +1,66 @@
+extends ../layout
+
+block content
+	a(href="/talents")
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;back to Talents
+	.row
+		.col-md-4.col-sm-6.col-md-offset-4.col-sm-offset-3
+			h1 Update #{talent.name}
+			form(action="/talents/updateTalent" method="post")
+				input(type="hidden" name="talentID" value=talent._id)
+				.form-group
+					label.control-label(for="name") Talent Name
+					input.form-control(type="text" name="name" id="name" placeholder="Talent Name e.g., 'Danger Sense'" value=talent.name autofocus)
+				.form-group
+					label.control-label(for="cost") Cost
+					input.form-control(type="number" name="cost" id="cost" placeholder="Talent cost" value=talent.cost)
+				.form-group
+					.checkbox
+						label
+							input(type="checkbox" name="bonusToRoll" id="bonusToRoll" checked=(talent.bonusToRoll ? "checked" : null)) 
+							|  Can purchase bonuses to roll?
+
+				h2 Talent Adders
+				#adders
+					if talent.adders && talent.adders.length > 0
+						for adder, i in talent.adders
+							.adder
+								button(type="button").btnbtn-sm.btn-link.pull-right.remove-adder
+									span.glyphicon.glyphicon-trash
+								.form-group
+									label.control-label Adder Name
+									input(type="text" name="adders[" + i + "][name]" placeholder="Adder Name" value=adder.name).form-control
+								.form-group
+									label.control-label Adder Cost
+									input(type="number" name="adders[" + i + "][cost]" placeholder="Adder Cost" value=adder.cost).form-control
+								hr
+								
+				button.btn.btn-primary.btn-sm.pull-left.new-adder(type="button")
+					span.glyphicon.glyphicon-plus
+					|  New Adder
+				button.btn.btn-primary.pull-right(type="submit")
+					span.glyphicon.glyphicon-edit
+					| &nbsp;Update Talent
+				br
+				br
+				button(type="button" data-target="#delete-modal" data-toggle="modal").btn.btn-link.pull-right
+					span.glyphicon.glyphicon-trash
+					|  Delete Talent
+
+	.modal.fade#delete-modal
+		.modal-dialog.modal-sm
+			.modal-content
+				.modal-header
+					button(data-dismiss="modal").close
+						&times;
+					h4 Delete #{talent.name}?
+				.modal-body Are you sure you want to delete #{talent.name}?
+				.modal-footer
+					form(action="/talents/deleteTalent" method="post")
+						input(type="hidden" name="talentID" value=talent._id)
+						button(type="button" data-dimss="modal").btn.btn-link Cancel
+						button(type="submit").btn.btn-danger
+							span.glyphicon.glyphicon-trash
+							|  Delete Talent
+	script(type="text/javascript" src="/js/talents/add-edit.js")
