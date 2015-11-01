@@ -23,6 +23,7 @@ var talentSchema = mongoose.Schema({
 	name: String,
 	type: Object,
 	cost: Number,
+	bonusToRoll: Number,
 	adders: Array
 })
 

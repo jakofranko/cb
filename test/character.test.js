@@ -163,16 +163,18 @@ describe('Character Suite:', function() {
         name: 'Spidey-Sense',
         type: { name: 'Danger Sense', cost: 3, bonusToRoll: 0, adders: [{name: 'Intuitional', cost: -5}, {name: 'Any Area', cost: 10}, {name: 'Out of Combat', cost: 5}] },
         adders: ['Out of Combat'],
+        bonusToRoll: 3,
         cost: 8
       };
 
       characters.addTalent(testCharacter._id, talent, function(err, newTalent) {
         should.not.exist(err);
         should.exist(newTalent);
-        newTalent.should.have.property('name');
+        newTalent.should.have.property('name', 'Spidey-Sense');
         newTalent.should.have.property('type');
-        newTalent.should.have.property('cost');
+        newTalent.should.have.property('cost', 8);
         newTalent.should.have.property('adders');
+        newTalent.should.have.property('bonusToRoll', 3);
         newTalent.adders.forEach(function(val, i) {
           var count = 0;
           for(var adder in newTalent.type.adders) {
@@ -196,17 +198,17 @@ describe('Character Suite:', function() {
       var update = {
         name: 'Ultimate Spidey-Sense',
         adders: ['Any Area'],
+        bonusToRoll: 5,
         cost: 13,
       };
 
       characters.updateTalent(testCharacter._id, testTalent._id, update, function(err, updatedTalent) {
         should.not.exist(err);
         should.exist(updatedTalent);
-        updatedTalent.should.have.property('name');
-        (updatedTalent.name).should.eql('Ultimate Spidey-Sense');
+        updatedTalent.should.have.property('name', 'Ultimate Spidey-Sense');
         updatedTalent.should.have.property('type');
-        updatedTalent.should.have.property('cost');
-        (updatedTalent.cost).should.eql(13);
+        updatedTalent.should.have.property('cost', 13);
+        updatedTalent.should.have.property('bonusToRoll', 5);
         updatedTalent.should.have.property('adders');
         updatedTalent.adders.forEach(function(val, i) {
           var count = 0;
