@@ -1,0 +1,36 @@
+extends ../layout
+
+block content
+	a(href="/dashboard/" + username)
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;Back to Dashboard
+	h1 #{character.alias}'s Talents
+	include ../_common/pointTotals
+	a(href="add/" + character.id).btn.btn-primary
+		span.glyphicon.glyphicon-plus
+		|  Add New
+
+	table.table
+		thead
+			tr
+				th Name
+				th Adders
+				th Cost
+				th Edit
+		tbody
+			for talent in character.Talents
+				tr
+					td 
+						if talent.name
+							| #{talent.name} (#{talent.type.name})
+						else
+							| #{talent.type.name}
+					td 
+						for adder, i in talent.adders
+							| #{adder}
+							if i < talent.adders.length - 1
+								| , 
+					td #{talent.cost}
+					td
+						a(href="edit").btn.btn-link
+							span.glyphicon.glyphicon-edit

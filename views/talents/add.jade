@@ -1,0 +1,69 @@
+extends ../layout
+
+block content
+	a(href="/characters/talents/" + character._id)
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;Back to Talents
+	h1 Add New Talent for #{character.alias}
+	include ../_common/pointTotals
+	//- - console.log(character.Talents);
+	form(action="/characters/addTalent" method="post")
+		input(type="hidden" name="characterID" value=character._id)
+		input(type="hidden" name="cost" value="0")
+		.row
+			.col-sm-4
+				p.lead
+					| Talent Cost: 
+					span#talent-cost 0
+					|  pts.
+
+				.form-group
+					label(for="talentID").control-label Select Talent
+					select(id="talentID" name="talentID").form-control
+						option(value="") Select Talent
+						- var hasTalent;
+						for talentType, i in talents
+							- hasTalent = false;
+							- console.log('Talent Type: ', talentType.name);
+							for talent in character.Talents
+								-console.log('Character Talent: ', talent.name)
+								if talentType.name == talent.type.name
+									- hasTalent = true;
+									- break;
+							if !hasTalent
+								option(value=talentType._id data-cost=talentType.cost) #{talentType.name}
+				.form-group
+					label(for="name").control-label Custom Name
+					input(type="text" name="name" placeholder="E.G., 'Spidey-Sense'").form-control
+
+				for talent, i in talents
+					if talent.bonusToRoll > 0
+						.form-group(data-talent=talent.name, style="display: none;").bonus-to-roll
+							label.control-label 
+								if talent.name == 'Lightning Reflexes (+2 for All Actions)'
+									| +2 to Roll
+								else
+									| +1 to Roll
+							input(type="number" min="0" name="bonusToRoll" value="0" data-cost=talent.bonusToRoll disabled).form-control
+
+					if talent.adders && talent.adders.length > 0
+						.form-group(data-talent=talent.name, style="display: none;").adders
+							label.control-label #{talent.name} Adders
+							
+							for adder, i in talent.adders
+								if talent.name == 'Ambidexterity' || talent.name == 'Environmental Movement'
+									.radio
+										label
+											input(type="radio" name="adders[]" value=adder.name data-cost=adder.cost)
+											|  #{adder.name} (#{adder.cost} points)
+								else
+									.checkbox
+										label
+											input(type="checkbox" name="adders[]" value=adder.name data-cost=adder.cost)
+											|  #{adder.name} (#{adder.cost} points)
+
+				button(type="submit").btn.btn-primary
+					span.glyphicon.glyphicon-plus
+					|  Add Talent
+
+	script(src="/js/talents/add-edit.js" type="text/javascript")
