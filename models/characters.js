@@ -19,6 +19,13 @@ var perkSchema = mongoose.Schema({
 	perkOptions: Object
 });
 
+var talentSchema = mongoose.Schema({
+	name: String,
+	type: Object,
+	cost: Number,
+	adders: Array
+})
+
 // Notes
 //---------------------------
 // The normal value of the base characteristics should almost always only be 10. Users will only edit the modifiers.
@@ -75,6 +82,7 @@ var	characterSchema = mongoose.Schema({
 	Skills: [skillSchema],
 	skillEnhancers: Array,
 	Perks: [perkSchema],
+	Talents: [talentSchema],
 	basePool: Number,
 	pointsSpent: Number
 });
@@ -122,11 +130,30 @@ module.exports = {
 						module.exports.updateSpentPoints(characterID, -(perk.cost), function(errThree) {
 							if(errThree) callback(errThree);
 							else callback(errThree, character.Perks[i]);
-						})
+						});
 					}
-				})
+				});
 			}
 		});
+	},
+
+	addTalent: function(characterID, talent, callback) {
+		Character.findById(characterID, function(err, character) {
+			if(err) callback(err);
+			else {
+				var newLength = character.Talents.push(talent);
+				var i = newLength - 1;
+				character.save(function(errTwo) {
+					if(errTwo) callback(errTwo);
+					else {
+						module.exports.updateSpentPoints(characterID, -(talent.cost), function(errThree) {
+							if(errThree) callback(errThree);
+							else callback(errThree, character.Talents[i]);
+						});
+					}
+				});
+			}
+		})
 	},
 	
 	// This will just supply the base values of the base characteristics, and will take name, alias, description and associated userID as arguments.
@@ -214,6 +241,16 @@ module.exports = {
 		})
 	},
 
+	findTalent: function(charID, talentID, callback) {
+		Character.findById(charID, function(err, character) {
+			if(err) callback(err);
+			else {
+				var talent = character.Talents.id(talentID);
+				callback(err, talent);
+			}
+		})
+	},
+
 	findSkill: function(charID, skillID, callback) {
 		module.exports.findCharacterById(charID, function(err, character) {
 			if(err) callback(err);
@@ -245,11 +282,30 @@ module.exports = {
 						module.exports.updateSpentPoints(characterID, perk.cost, function(errThree, success) {
 							if(errThree) callback(errThree);
 							else callback(errThree, success);
-						})
+						});
 					} 
-				})
+				});
 			}
-		})
+		});
+	},
+
+	removeTalent: function(characterID, talentID, callback) {
+		Character.findById(characterID, function(err, character) {
+			if(err) callback(err);
+			else {
+				var talent = character.Talents.id(talentID);
+				talent.remove();
+				character.save(function(errTwo) {
+					if(errTwo) callback(errTwo);
+					else {
+						module.exports.updateSpentPoints(characterID, talent.cost, function(errThree, success) {
+							if(errThree) callback(errThree);
+							else callback(errThree, success);
+						});
+					} 
+				});
+			}
+		});
 	},
 
 	removeSkill: function(charID, skillID, callback) {
@@ -319,6 +375,32 @@ module.exports = {
 		});
 	},
 
+	updateTalent: function(characterID, talentID, updates, callback) {
+		Character.findById(characterID, function(err, character) {
+			if(err) callback(err)
+			else {
+				var talent = character.Talents.id(talentID);
+				var oldCost = talent.cost;
+				for(var key in updates)
+					talent[key] = updates[key];
+
+				var newCost = 0
+				if(updates.cost)
+					newCost = updates.cost - oldCost;
+
+				character.save(function(errTwo) {
+					if(errTwo) callback(errTwo);
+					else {
+						module.exports.updateSpentPoints(characterID, -newCost, function(errThree, updatedCharacter) {
+							if(errThree) callback(errThree);
+							else callback(err, talent);
+						});
+					}
+				});
+			}
+		});
+	},
+
 	updateSkill: function(charID, skillID, updates, callback) {
 		module.exports.findCharacterById(charID, function(err, character) {
 			if(err) callback(err);
@@ -345,7 +427,7 @@ module.exports = {
 	updateSpentPoints: function(characterID, points, callback) {
 		// The a positive number of points represents points sold back. Negative number represents points purchased.
 		// TODO: invert this?
-		Character.findOne({ _id: characterID}, function(err, result) {
+		Character.findById(characterID, function(err, result) {
 			if(err) callback(err);
 			else if(result.pointsSpent) {
 			// If there is already a pointsSpent field, then it subtracts the number from this field (if more points are spent, then it will increase. if something is sold back, it will decrease)

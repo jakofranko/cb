@@ -176,16 +176,15 @@ describe('Character Suite:', function() {
         newTalent.adders.forEach(function(val, i) {
           var count = 0;
           for(var adder in newTalent.type.adders) {
-            console.log(val, adder);
-            if(adder.name == val) count++;
+            if(newTalent.adders[adder] == val) count++;
           }
           count.should.eql(1);
         });
         (newTalent.cost).should.eql(8);
         testTalent = newTalent;
         characters.findCharacterById(testCharacter._id, function(error, newCharacter) {
-          (testCharacter.pointsSpent).should.eql(8);
           testCharacter = newCharacter;
+          (testCharacter.pointsSpent).should.eql(8);
           done();
         });
       });
@@ -200,8 +199,6 @@ describe('Character Suite:', function() {
         cost: 13,
       };
 
-      (testCharacter.pointsSpent).should.eql(3);
-
       characters.updateTalent(testCharacter._id, testTalent._id, update, function(err, updatedTalent) {
         should.not.exist(err);
         should.exist(updatedTalent);
@@ -214,8 +211,7 @@ describe('Character Suite:', function() {
         updatedTalent.adders.forEach(function(val, i) {
           var count = 0;
           for(var adder in updatedTalent.type.adders) {
-            console.log(val, adder);
-            if(adder.name == val) count++;
+            if(updatedTalent.adders[adder] == val) count++;
           }
           count.should.eql(1);
         });
@@ -228,30 +224,20 @@ describe('Character Suite:', function() {
     });
   });
 
-  describe('characters.listTalents', function() {
-    it('should list all the talents that a character has purchased', function(done) {
-      characters.listTalents(testCharacter._id, function(err, talents) {
+  describe('characters.findTalent', function() {
+    it('should fetch one single talent the character ID and the talent ID', function(done) {
+      characters.findTalent(testCharacter._id, testTalent._id, function(err, talent) {
         should.not.exist(err);
-        should.exist(talents);
-        talents.length.should.eql(1);
+        should.exist(talent);
+        talent.should.have.property('name', 'Ultimate Spidey-Sense');
+        done();
       });
     });
   });
 
-  describe('characters.getTalent', function() {
-    it('should fetch one single talent that fits the given query', function(done) {
-      characters.getTalent(testCharacter._id, {name: 'Ultimate Spidey-Sense'}, function(err, talent) {
-        should.not.exist(err);
-        should.exist(talent);
-        (talent.name).should.be('Ultimate Spidey-Sense');
-        (talent._id).should.eql(testTalent._id);
-      })
-    })
-  })
-
   describe('characters.removeTalent', function() {
     it('should remove the specified talent from the specified character', function(done) {
-      (testCharacter.pointsSpent).should.eql(5);
+      (testCharacter.pointsSpent).should.eql(13);
       characters.removeTalent(testCharacter._id, testTalent._id, function(err, success) {
         should.not.exist(err);
         should.exist(success);
