@@ -5,7 +5,8 @@ var characters = require('../models/characters');
 var skillTypes = require('../models/skillType');
 var martialArts = require('../models/martialArts');
 var martialManeuvers = require('../models/martialManeuvers');
-var perks = require('../models/perks')
+var perks = require('../models/perks');
+var talents = require('../models/talents');
 
 var canEdit = function(req, res, next) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
@@ -136,6 +137,26 @@ router.get('/perks/:characterID', function(req, res) {
 		else {
 			res.render('perks/view', { title: 'Perks', character: character, username: req.session.username });
 		}
+	});
+});
+
+// Talents
+router.get('/talents/add/:characterID', canEdit, function(req, res) {
+	characters.findCharacterById(req.params.characterID, function(err, character) {
+		if(err) throw new Error(err);
+		else {
+			talents.listTalents(function(errTwo, talents) {
+				if(errTwo) callback(errTwo);
+				else res.render('talents/add', { title: 'Add Talents', character: character, talents: talents, username: req.session.username });
+			});
+		}
+	});
+});
+
+router.get('/talents/:characterID', canEdit, function(req, res) {
+	characters.findCharacterById(req.params.characterID, function(err, character) {
+		if(err) throw new Error(err);
+		else res.render('talents/view', { title: 'Talents', character: character, username: req.session.username });
 	});
 });
 
@@ -439,6 +460,26 @@ router.post('/updatePerk', function(req, res) {
 		if(err) throw new Error(err);
 		else res.redirect('/characters/perks/' + req.body.characterID);
 	})
+});
+
+// Talents
+router.post('/addTalent', function(req, res) {
+	talents.getTalent({_id: req.body.talentID}, function(err, talent) {
+		if(err) throw new Error(err);
+		else var talentType = talent;
+
+		var talent = {
+			name: (req.body.name != '') ? req.body.name : null,
+			type: talentType,
+			cost: req.body.cost,
+			adders: req.body.adders
+		};
+		characters.addTalent(req.body.characterID, talent, function(err, newTalent) {
+			if(err) callback(err);
+			else res.redirect('/characters/talents/' + req.body.characterID);
+		});
+	});
+	console.log(req.body);
 });
 
 module.exports = router;
