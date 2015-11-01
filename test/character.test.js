@@ -228,6 +228,27 @@ describe('Character Suite:', function() {
     });
   });
 
+  describe('characters.listTalents', function() {
+    it('should list all the talents that a character has purchased', function(done) {
+      characters.listTalents(testCharacter._id, function(err, talents) {
+        should.not.exist(err);
+        should.exist(talents);
+        talents.length.should.eql(1);
+      });
+    });
+  });
+
+  describe('characters.getTalent', function() {
+    it('should fetch one single talent that fits the given query', function(done) {
+      characters.getTalent(testCharacter._id, {name: 'Ultimate Spidey-Sense'}, function(err, talent) {
+        should.not.exist(err);
+        should.exist(talent);
+        (talent.name).should.be('Ultimate Spidey-Sense');
+        (talent._id).should.eql(testTalent._id);
+      })
+    })
+  })
+
   describe('characters.removeTalent', function() {
     it('should remove the specified talent from the specified character', function(done) {
       (testCharacter.pointsSpent).should.eql(5);
