@@ -9,6 +9,7 @@ var assert = require('assert'),
 var testUser;
 var testCharacter;
 var testPerk;
+var testTalent;
 
 mongoose.connect('mongodb://localhost/cb-test');
 
@@ -151,9 +152,96 @@ describe('Character Suite:', function() {
           (testCharacter.pointsSpent).should.eql(0);
           done();
         });
-      })
-    })
-  })
+      });
+    });
+  });
+
+  // Talents
+  describe('characters.addTalent', function() {
+    it('should add a talent to the character', function(done) {
+      var talent = {
+        name: 'Spidey-Sense',
+        type: { name: 'Danger Sense', cost: 3, bonusToRoll: 0, adders: [{name: 'Intuitional', cost: -5}, {name: 'Any Area', cost: 10}, {name: 'Out of Combat', cost: 5}] },
+        adders: ['Out of Combat'],
+        cost: 8
+      };
+
+      characters.addTalent(testCharacter._id, talent, function(err, newTalent) {
+        should.not.exist(err);
+        should.exist(newTalent);
+        newTalent.should.have.property('name');
+        newTalent.should.have.property('type');
+        newTalent.should.have.property('cost');
+        newTalent.should.have.property('adders');
+        newTalent.adders.forEach(function(val, i) {
+          var count = 0;
+          for(var adder in newTalent.type.adders) {
+            console.log(val, adder);
+            if(adder.name == val) count++;
+          }
+          count.should.eql(1);
+        });
+        (newTalent.cost).should.eql(8);
+        testTalent = newTalent;
+        characters.findCharacterById(testCharacter._id, function(error, newCharacter) {
+          (testCharacter.pointsSpent).should.eql(8);
+          testCharacter = newCharacter;
+          done();
+        });
+      });
+    });
+  });
+
+  describe('characters.updateTalent', function() {
+    it('should update a talent to the character', function(done) {
+      var update = {
+        name: 'Ultimate Spidey-Sense',
+        adders: ['Any Area'],
+        cost: 13,
+      };
+
+      (testCharacter.pointsSpent).should.eql(3);
+
+      characters.updateTalent(testCharacter._id, testTalent._id, update, function(err, updatedTalent) {
+        should.not.exist(err);
+        should.exist(updatedTalent);
+        updatedTalent.should.have.property('name');
+        (updatedTalent.name).should.eql('Ultimate Spidey-Sense');
+        updatedTalent.should.have.property('type');
+        updatedTalent.should.have.property('cost');
+        (updatedTalent.cost).should.eql(13);
+        updatedTalent.should.have.property('adders');
+        updatedTalent.adders.forEach(function(val, i) {
+          var count = 0;
+          for(var adder in updatedTalent.type.adders) {
+            console.log(val, adder);
+            if(adder.name == val) count++;
+          }
+          count.should.eql(1);
+        });
+        characters.findCharacterById(testCharacter._id, function(error, newCharacter) {
+          testCharacter = newCharacter;
+          (testCharacter.pointsSpent).should.eql(13);
+          done();
+        });
+      });
+    });
+  });
+
+  describe('characters.removeTalent', function() {
+    it('should remove the specified talent from the specified character', function(done) {
+      (testCharacter.pointsSpent).should.eql(5);
+      characters.removeTalent(testCharacter._id, testTalent._id, function(err, success) {
+        should.not.exist(err);
+        should.exist(success);
+        characters.findCharacterById(testCharacter._id, function(error, newCharacter) {
+          testCharacter = newCharacter;
+          (testCharacter.pointsSpent).should.eql(0);
+          done();
+        });
+      });
+    });
+  });
 
   // Update points
   describe('characters.updateSpentPoints', function() {
