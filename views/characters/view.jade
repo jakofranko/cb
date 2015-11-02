@@ -197,44 +197,50 @@ block content
 			- }
 			- character.Skills.sort(sortAlphabetically);
 			each skill, i in character.Skills
-				//- = console.log(skill)
-				if skill.skillType.name == 'Transport Familiarity'
-					if skill.subcategories && skill.subcategories.length > 0
-						each subcategory, i in skill.subcategories
-							.row
-								.col-xs-6
+				.row
+					.col-xs-6
+						if skill.skillType.name == 'Transport Familiarity'
+							if skill.subcategories && skill.subcategories.length > 0
+								each subcategory, i in skill.subcategories
 									p TF: #{subcategory}
-								if skill.roll != 0 && skill.roll != null && skill.roll != undefined
-									.col-xs-6
-										p -#{skill.roll}
-					if skill.categories && skill.categories.length > 0
-						each category, i in skill.categories
-							.row
-								.col-xs-6
+										
+							if skill.categories && skill.categories.length > 0
+								each category, i in skill.categories
 									p TF: #{category.name}
-								if skill.roll != 0 && skill.roll != null && skill.roll != undefined
-									.col-xs-6
-										p -#{skill.roll}
 
-				else if skill.categories && skill.categories.length > 0
-					if skill.skillType.name =='Animal Handler'
-						.row
-								.col-xs-6
-									p #{skill.skillType.name}: 
-										each category, i in skill.categories
+						else if skill.categories && skill.categories.length > 0
+							if skill.skillType.name == 'Animal Handler'
+								p #{skill.skillType.name}: 
+									each category, i in skill.categories
+										| #{category.name}
+										if i != skill.categories.length - 1
+											| , 
+							if skill.skillType.name == 'Forgery'
+								p Forgery: 
+									each category, i in skill.categories
+										if category.subcategories && category.subcategories.length > 0
+											each subcategory, j in category.subcategories
+												| #{subcategory}
+												if j != category.subcategories.length - 1
+													| , 
+										else
 											| #{category.name}
 											if i != skill.categories.length - 1
 												| , 
-								if skill.roll != 0 && skill.roll != null && skill.roll != undefined
-									.col-xs-6
-										p -#{skill.roll}
+							if skill.skillType.name == 'Gambling'
+								p Gambling: 
+									each category, i in skill.categories
+										| #{category.name}
+										if i != skill.categories.length - 1 || skill.subcategories.length > 0
+											| , 
+									each subcategory, j in skill.subcategories
+										| #{subcategory}
+										if j != skill.subcategories.length - 1
+											| , 
 
-				else if skill.skillType.name.match(slRegex) && skill.skillOptions
-					- var slOptions = ""
-					- var skillName = skill.skillType.name
-					//- - console.log(skill)
-					.row
-						.col-xs-6
+						else if skill.skillType.name.match(slRegex) && skill.skillOptions
+							- var slOptions = ""
+							- var skillName = skill.skillType.name
 							p
 								if skillName.match(/^Combat Skill Level \(8\-point\)$/)
 									| +#{skill.skillOptions.numberOfSkillLevels} Overall CSL
@@ -253,37 +259,27 @@ block content
 										= slOptions.replace(/,\s?$/, '', function(str){ return str; })
 									else
 										= console.log(skill)
-				else
-					- var skillName = skill.skillType.name
-					//- console.log(skill)
-					if skillName.match(/Professional Skill/)
-						.row
-							.col-xs-6
+						else
+							- var skillName = skill.skillType.name
+							if skillName.match(/Professional Skill/)
 								p PS: #{skill.skillOptions.professionalSkillArea}
-							.col-xs-6
-								p -#{skill.roll}
-					else if skillName.match(/Knowledge Skill/)
-						.row
-							.col-xs-6
+									
+							else if skillName.match(/Knowledge Skill/)
 								p #{skill.skillOptions.knowledgeSkillType} Knowledge: #{skill.skillOptions.knowledgeSkillArea}
-							.col-xs-6
-								p -#{skill.roll}
-					else if skillName.match(/Science Skill/)
-						.row
-							.col-xs-6
+
+							else if skillName.match(/Science Skill/)
 								p SS: #{skill.skillOptions.scienceSkillArea}
-							.col-xs-6
-								p -#{skill.roll}
-					else
-						.row
-							.col-xs-6
-								if skill.skillType.name == 'Language (Basic Conversation)' || skill.skillType.name == 'Language (Fluent Conversation)' || skill.skillType.name == 'Language (Completely Fluent, with Accent)' || skill.skillType.name == 'Language (Idiomatic, native accent)' || skill.skillType.name == 'Language (Imitate Dialects)'
-									p #{skill.skillType.name}: #{skill.skillOptions.language}
-								else
-									p #{skill.skillType.name}
-							if skill.roll != 0 && skill.roll != null && skill.roll != undefined
-								.col-xs-6
-									p -#{skill.roll}
+									
+							else if skill.skillType.name == 'Language (Basic Conversation)' || skill.skillType.name == 'Language (Fluent Conversation)' || skill.skillType.name == 'Language (Completely Fluent, with Accent)' || skill.skillType.name == 'Language (Idiomatic, native accent)' || skill.skillType.name == 'Language (Imitate Dialects)'
+								p #{skill.skillType.name}: #{skill.skillOptions.language}
+
+							else
+								p #{skill.skillType.name}
+									
+					if skill.roll != 0 && skill.roll != null && skill.roll != undefined
+						.col-xs-6
+							p -#{skill.roll}
+		.col-sm-4
 
 
 	h2 Description
