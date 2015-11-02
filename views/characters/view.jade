@@ -178,12 +178,12 @@ block content
 	
 
 	.row
-		.col-sm-6#skills
+		.col-sm-4#skills
 			h2 Skills
 			.row
-				.col-xs-6
+				.col-xs-10
 					strong Skill
-				.col-xs-6
+				.col-xs-2
 					strong Roll
 
 			//- Can be used to sort any part of the skill. Right now, sorting by skill type
@@ -198,7 +198,7 @@ block content
 			- character.Skills.sort(sortAlphabetically);
 			each skill, i in character.Skills
 				.row
-					.col-xs-6
+					.col-xs-10
 						if skill.skillType.name == 'Transport Familiarity'
 							if skill.subcategories && skill.subcategories.length > 0
 								each subcategory, i in skill.subcategories
@@ -277,9 +277,38 @@ block content
 								p #{skill.skillType.name}
 									
 					if skill.roll != 0 && skill.roll != null && skill.roll != undefined
-						.col-xs-6
+						.col-xs-2
 							p -#{skill.roll}
-		.col-sm-4
+		.col-sm-4#perks
+			h2 Perks
+			table.table
+				tbody
+					each perk, i in character.Perks
+						- var contactRoll = 0;
+						- var contactBaseRollMath = false;
+						- var contactBonusRollMath = false;
+						tr
+							td #{perk.type}
+							td #{perk.name}
+							td
+								if perk.perkOptions
+									each perkOption, key in perk.perkOptions
+										if perk.type == 'Contact' 
+											if key == 'contactBase'
+												- contactRoll += Number(perkOption.match(/(\d+)-/)[1]);
+												- contactBaseRollMath = true;
+											if key == 'contactBonusToRoll'
+												- contactRoll += Number(perkOption);
+												- contactBonusRollMath = true;
+											if contactBaseRollMath == true && contactBonusRollMath == true
+												| #{contactRoll}-
+												- contactBaseRollMath = false; contactBonusRollMath = false;
+
+										else if perkOption !== 'true' && perkOption !== 'on' && perkOption !== '' 
+											//- convert camelCase to regularly spaced words
+											= key.replace(/([A-Z])/g, ' $1').replace(/^./, function(str) { return str.toUpperCase(); }) 
+											| : #{perkOption}
+											br
 
 
 	h2 Description
