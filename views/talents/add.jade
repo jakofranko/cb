@@ -6,7 +6,7 @@ block content
 		| &nbsp;Back to Talents
 	h1 Add New Talent for #{character.alias}
 	include ../_common/pointTotals
-	//- - console.log(character.Talents);
+
 	form(action="/characters/addTalent" method="post")
 		input(type="hidden" name="characterID" value=character._id)
 		input(type="hidden" name="cost" value="0")

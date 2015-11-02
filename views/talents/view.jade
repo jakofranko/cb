@@ -6,7 +6,7 @@ block content
 		| &nbsp;Back to Dashboard
 	h1 #{character.alias}'s Talents
 	include ../_common/pointTotals
-	a(href="add/" + character.id).btn.btn-primary
+	a(href="add/" + character._id).btn.btn-primary
 		span.glyphicon.glyphicon-plus
 		|  Add New
 
@@ -15,8 +15,9 @@ block content
 			tr
 				th Name
 				th Adders
-				th Cost
-				th Edit
+				th.text-center Bonus To Roll
+				th.text-center Cost
+				th.text-center Edit
 		tbody
 			for talent in character.Talents
 				tr
@@ -30,7 +31,10 @@ block content
 							| #{adder}
 							if i < talent.adders.length - 1
 								| , 
-					td #{talent.cost}
-					td
-						a(href="edit").btn.btn-link
+					td.text-center 
+						if talent.bonusToRoll
+							| +#{talent.bonusToRoll}
+					td.text-center #{talent.cost}
+					td.text-center
+						a(href="edit/" + character._id + "," + talent._id).btn.btn-link
 							span.glyphicon.glyphicon-edit

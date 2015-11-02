@@ -8,6 +8,11 @@ function calculateCost() {
 	if(bonusToRoll.length !== 0)
 		cost += (bonusToRoll.val() * bonusToRoll.data().cost);
 
+	// If editing a talent, look for the baseCost value
+	var baseCost = $('[name=baseCost]');
+	if(baseCost.length !== 0)
+		cost += Number(baseCost.val());
+
 	$('#talent-cost').text(cost);
 	$('[name=cost]').val(cost);
 }

@@ -9,7 +9,8 @@ var perks = require('../models/perks');
 var talents = require('../models/talents');
 
 var canEdit = function(req, res, next) {
-	characters.findCharacterById(req.params.characterID, function(err, character) {
+	var characterID = req.params.characterID || req.body.characterID;
+	characters.findCharacterById(characterID, function(err, character) {
 		if(character.userID == req.session._id) {
 			next();
 		} else {
@@ -149,6 +150,16 @@ router.get('/talents/add/:characterID', canEdit, function(req, res) {
 				if(errTwo) callback(errTwo);
 				else res.render('talents/add', { title: 'Add Talents', character: character, talents: talents, username: req.session.username });
 			});
+		}
+	});
+});
+
+router.get('/talents/edit/:characterID,:talentID', canEdit, function(req, res) {
+	characters.findCharacterById(req.params.characterID, function(err, character) {
+		if(err) throw new Error(err);
+		else {
+			var talent = character.Talents.id(req.params.talentID);
+			res.render('talents/edit', { title: 'Edit Talent', character: character, talent: talent, username: req.session.username });
 		}
 	});
 });
@@ -463,7 +474,7 @@ router.post('/updatePerk', function(req, res) {
 });
 
 // Talents
-router.post('/addTalent', function(req, res) {
+router.post('/addTalent', canEdit, function(req, res) {
 	talents.getTalent({_id: req.body.talentID}, function(err, talent) {
 		if(err) throw new Error(err);
 		else var talentType = talent;
@@ -472,6 +483,7 @@ router.post('/addTalent', function(req, res) {
 			name: (req.body.name != '') ? req.body.name : null,
 			type: talentType,
 			cost: req.body.cost,
+			bonusToRoll: (req.body.bonusToRoll != '') ? req.body.bonusToRoll : null,
 			adders: req.body.adders
 		};
 		characters.addTalent(req.body.characterID, talent, function(err, newTalent) {
@@ -479,7 +491,27 @@ router.post('/addTalent', function(req, res) {
 			else res.redirect('/characters/talents/' + req.body.characterID);
 		});
 	});
+});
+
+router.post('/updateTalent', canEdit, function(req, res) {
+	var updatedTalent = {
+		name: (req.body.name != '') ? req.body.name : null,
+		cost: Number(req.body.cost),
+		bonusToRoll: (req.body.bonusToRoll != '') ? Number(req.body.bonusToRoll) : null,
+		adders: req.body.adders
+	};
+	characters.updateTalent(req.body.characterID, req.body.talentID, updatedTalent, function(err, _) {
+		if(err) throw new Error(err);
+		else res.redirect('/characters/talents/' + req.body.characterID);
+	});
+});
+
+router.post('/deleteTalent', canEdit, function(req, res) {
 	console.log(req.body);
+	characters.removeTalent(req.body.characterID, req.body.talentID, function(err, _) {
+		if(err) throw new Error(err);
+		else res.redirect('/characters/talents/' + req.body.characterID);
+	});
 });
 
 module.exports = router;

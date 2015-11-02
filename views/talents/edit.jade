@@ -1,0 +1,80 @@
+extends ../layout
+
+block content
+	a(href="/characters/talents/" + character._id)
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;Back to Talents
+	h1 Editing 
+		if talent.name
+			| #{talent.name}
+		else
+			| #{talent.type.name}
+	include ../_common/pointTotals
+
+	form(action="/characters/updateTalent" method="post")
+		input(type="hidden" name="characterID" value=character._id)
+		input(type="hidden" name="talentID" value=talent._id)
+		input(type="hidden" name="cost" value=talent.cost)
+		input(type="hidden" name="baseCost" value=talent.type.cost)
+		.row
+			.col-sm-4.col-sm-offset-4
+				h2 #{talent.type.name}
+				p.lead
+					| Talent Cost: 
+					span#talent-cost #{talent.cost}
+					|  pts.
+
+				.form-group
+					label(for="name").control-label Custom Name
+					input(type="text" name="name" placeholder="E.G., 'Spidey-Sense'" value=talent.name).form-control
+
+			
+				if talent.type.bonusToRoll > 0
+					.form-group(data-talent=talent.name).bonus-to-roll
+						label.control-label
+							if talent.name == 'Lightning Reflexes (+2 for All Actions)'
+								| +2 to Roll
+							else
+								| +1 to Roll
+						input(type="number" min="0" name="bonusToRoll" value=talent.bonusToRoll data-cost=talent.type.bonusToRoll).form-control
+
+				if talent.type.adders && talent.adders.length > 0
+					.form-group(data-talent=talent.name).adders
+						label.control-label #{talent.name} Adders
+						for adder, i in talent.type.adders
+							if talent.type.name == 'Ambidexterity' || talent.type.name == 'Environmental Movement'
+								.radio
+									label
+										input(type="radio" name="adders[]" value=adder.name data-cost=adder.cost checked=((talent.adders.indexOf(adder.name) != -1) ? "checked" : null))
+										|  #{adder.name} (#{adder.cost} points)
+							else
+								.checkbox
+									label
+										input(type="checkbox" name="adders[]" value=adder.name data-cost=adder.cost checked=((talent.adders.indexOf(adder.name) != -1) ? "checked" : null))
+										|  #{adder.name} (#{adder.cost} points)
+
+				button(type="submit").btn.btn-primary
+					span.glyphicon.glyphicon-edit
+					|  Update Talent
+				button(type="button" data-toggle="modal" data-target="#delete-modal").btn.btn-danger.pull-right
+					span.glyphicon.glyphicon-trash
+					|  Delete Talent
+
+	.modal.fade#delete-modal
+		.modal-dialog.modal-sm
+			.modal-content
+				.modal-header
+					button(type="button" data-dismiss="modal").close &times;
+					h4 Delete #{talent.type.name}?
+				.modal-body
+					| Are you sure you want to delete #{talent.type.name}?
+				.modal-footer
+					form(action="/characters/deleteTalent" method="post")
+						input(type="hidden" name="characterID" value=character._id)
+						input(type="hidden" name="talentID" value=talent._id)
+						button(type="button" data-dismiss="modal").btn.btn-link Cancel
+						button(type="submit").btn.btn-danger
+							span.glyphicon.glyphicon-trash
+							|  Delete Talent
+
+	script(src="/js/talents/add-edit.js" type="text/javascript")
