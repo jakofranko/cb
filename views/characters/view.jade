@@ -310,6 +310,26 @@ block content
 											| : #{perkOption}
 											br
 
+		.col-sm-4#talents
+			h2 Talents
+			table.table
+				tbody
+					each talent in character.Talents
+						tr
+							td 
+								if talent.name
+									| #{talent.name} (#{talent.type.name})
+								else
+									| #{talent.type.name}
+							td 
+								for adder, i in talent.adders
+									| #{adder}
+									if i < talent.adders.length - 1
+										| , 
+							td.text-center 
+								if talent.bonusToRoll
+									| +#{talent.bonusToRoll}
+
 
 	h2 Description
 	p #{character.description}
