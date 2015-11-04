@@ -10,7 +10,15 @@ var testPower;
 describe('Powers Test Suite', function() {
 	describe('powers.createPower', function() {
 		it('should add a new power with the parameteres given', function(done) {
-			powers.createPower('Energy Blast', {points: 5, per: '1d6 of Energy Blast'}, 'Instant', 'Target\'s DCV', 'Standard Range', function(err, power) {
+			var newPower = {
+				name: 'Energy Blast', 
+				cost: {points: 5, per: '1d6 of Energy Blast'}, 
+				duration: 'Instant', 
+				target: 'Target\'s DCV', 
+				range: 'Standard Range', 
+				endurance: false
+			};
+			powers.createPower(newPower, function(err, power) {
 				should.not.exist(err);
 				should.exist(power);
 				power.should.have.property('name', 'Energy Blast');
@@ -21,6 +29,7 @@ describe('Powers Test Suite', function() {
 				power.should.have.property('duration', 'Instant');
 				power.should.have.property('target', 'Target\'s DCV');
 				power.should.have.property('range', 'Standard Range');
+				power.should.have.property('endurance', false);
 
 				testPower = power;
 				done();
@@ -35,7 +44,8 @@ describe('Powers Test Suite', function() {
 				cost: {points: 7, per: '1d6 of Awesome Blash'},
 				duration: 'Constant',
 				target: 'Target\'s EDCV',
-				range: 'Self Only'
+				range: 'Self Only',
+				endurance: true
 			};
 			powers.updatePower(testPower._id, updates, function(err, updatedPower) {
 				should.not.exist(err);
@@ -48,6 +58,7 @@ describe('Powers Test Suite', function() {
 				updatedPower.should.have.property('duration', 'Constant');
 				updatedPower.should.have.property('target', 'Target\'s EDCV');
 				updatedPower.should.have.property('range', 'Self Only');
+				updatedPower.should.have.property('endurance', true);
 
 				testPower = updatedPower;
 				done();
@@ -80,6 +91,7 @@ describe('Powers Test Suite', function() {
 				power.should.have.property('duration', 'Constant');
 				power.should.have.property('target', 'Target\'s EDCV');
 				power.should.have.property('range', 'Self Only');
+				power.should.have.property('endurance', true);
 				done();
 			});
 		});
@@ -87,15 +99,21 @@ describe('Powers Test Suite', function() {
 
 	describe('powers.removePower', function() {
 		it('should delete a power', function(done) {
-			powers.removePower(testPower._id, function(err, success) {
-				should.not.exist(err);
-				should.exist(success);
-			});
+			powers.listPowers(function(err, testPowers) {
+				testPowers.forEach(function(power, i) {
+					powers.removePower(power._id, function(err, success) {
+						should.not.exist(err);
+						should.exist(success);
+					});
 
-			powers.getPower({_id: testPower._id}, function(err, power) {
-				should.not.exist(err);
-				should.not.exist(power);
-				done();
+					if(i == testPowers.length - 1) {
+						powers.getPower({_id: testPower._id}, function(err, power) {
+							should.not.exist(err);
+							should.not.exist(power);
+							done();
+						});
+					}
+				});
 			});
 		});
 	});

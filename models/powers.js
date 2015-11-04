@@ -8,20 +8,15 @@ var powerSchema = mongoose.Schema({
 	},
 	duration: String,
 	target: String,
-	range: String
+	range: String,
+	endurance: {type: Boolean, default: false}
 });
 
 var Power = mongoose.model('Power', powerSchema);
 
 module.exports = {
-	createPower: function(name, cost, duration, target, range, callback) {
-		var power = new Power({
-			name: name,
-			cost: cost,
-			duration: duration,
-			target: target,
-			range: range
-		});
+	createPower: function(power, callback) {
+		var power = new Power(power);
 
 		power.save(function(err, result) {
 			if(err) callback(err);
