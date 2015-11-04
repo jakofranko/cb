@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var helpers = require('../middleware/helpers');
 var users = require('../models/users');
 var characters = require('../models/characters');
 var skillTypes = require('../models/skillType');
@@ -8,44 +9,27 @@ var martialManeuvers = require('../models/martialManeuvers');
 var perks = require('../models/perks');
 var talents = require('../models/talents');
 
-var canEdit = function(req, res, next) {
-	var characterID = req.params.characterID || req.body.characterID;
-	characters.findCharacterById(characterID, function(err, character) {
-		if(character.userID == req.session._id) {
-			next();
-		} else {
-			res.redirect('/');
-		}
-	});
-}
-
 // CHARACTERS
 // ------------------------------------
 
 // Gets -------------------------------
 // Characteristics
-router.get('/characteristics/edit/:characterID', function(req, res) {
+router.get('/characteristics/edit/:characterID', helpers.canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
-		if(character.userID == req.session._id) {
-			res.render('characteristics/edit', { title: character.alias + ' Characteristics', character: character, username: req.session.username });
-		} else {
-			res.redirect('/');
-		}
+		if(err) throw new Error(err);
+		else res.render('characteristics/edit', { title: character.alias + ' Characteristics', character: character, username: req.session.username });
 	});
 });
 
-router.get('/characteristics/:characterID', function(req, res) {
+router.get('/characteristics/:characterID', helpers.canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
-		if(character.userID == req.session._id) {
-			res.render('characteristics/view', { title: character.alias + ' Characteristics', character: character, username: req.session.username });
-		} else {
-			res.redirect('/');
-		}
+		if(err) throw new Error(err);
+		else res.render('characteristics/view', { title: character.alias + ' Characteristics', character: character, username: req.session.username });
 	});
 });
 
 // Martial Arts
-router.get('/martialArts/add/:characterID', function(req, res) {
+router.get('/martialArts/add/:characterID', helpers.canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(character.userID == req.session._id) {
 			martialManeuvers.listMartialManeuvers(function(err, mm) {
@@ -57,7 +41,7 @@ router.get('/martialArts/add/:characterID', function(req, res) {
 	});
 });
 
-router.get('/martialArts/edit/:maID', function(req, res) {
+router.get('/martialArts/edit/:maID', helpers.canEdit, function(req, res) {
 	martialArts.getMartialArt(req.params.maID, function(err, ma) {
 		if(ma) {
 			characters.findCharacterById(ma.characterID, function(err, character) {
@@ -73,7 +57,7 @@ router.get('/martialArts/edit/:maID', function(req, res) {
 	});
 });
 
-router.get('/martialArts/deleteMartialArt/:charID,:maID', function(req, res) {
+router.get('/martialArts/deleteMartialArt/:charID,:maID', helpers.canEdit, function(req, res) {
 	martialArts.removeMartialArt(req.params.maID, function(err, result) {
 		if(err) throw new Error(err);
 		else {
@@ -82,7 +66,7 @@ router.get('/martialArts/deleteMartialArt/:charID,:maID', function(req, res) {
 	})
 });
 
-router.get('/martialArts/:characterID', function(req, res) {
+router.get('/martialArts/:characterID', helpers.canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(character.userID == req.session._id) {
 			martialArts.listMartialArts(character._id, function(err, ma) {
@@ -95,7 +79,7 @@ router.get('/martialArts/:characterID', function(req, res) {
 });
 
 // Perks
-router.get('/perks/add/:characterID', canEdit, function(req, res) {
+router.get('/perks/add/:characterID', helpers.canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(err) throw new Error(err);
 		else {
@@ -106,7 +90,7 @@ router.get('/perks/add/:characterID', canEdit, function(req, res) {
 	});
 });
 
-router.get('/perks/edit/:characterID,:perkID', canEdit, function(req, res) {
+router.get('/perks/edit/:characterID,:perkID', helpers.canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(err) throw new Error(err);
 		else {
@@ -125,14 +109,14 @@ router.get('/perks/edit/:characterID,:perkID', canEdit, function(req, res) {
 	});
 });
 
-router.get('/perks/delete/:characterID,:perkID', function(req, res) {
+router.get('/perks/delete/:characterID,:perkID', helpers.canEdit, function(req, res) {
 	characters.removePerk(req.params.characterID, req.params.perkID, function(err, success) {
 		if(err) throw new Error(err);
 		else res.redirect('/characters/perks/' + req.params.characterID);
 	});
 });
 
-router.get('/perks/:characterID', function(req, res) {
+router.get('/perks/:characterID', helpers.canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(err) throw new Error(err);
 		else {
@@ -142,7 +126,7 @@ router.get('/perks/:characterID', function(req, res) {
 });
 
 // Talents
-router.get('/talents/add/:characterID', canEdit, function(req, res) {
+router.get('/talents/add/:characterID', helpers.canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(err) throw new Error(err);
 		else {
@@ -154,7 +138,7 @@ router.get('/talents/add/:characterID', canEdit, function(req, res) {
 	});
 });
 
-router.get('/talents/edit/:characterID,:talentID', canEdit, function(req, res) {
+router.get('/talents/edit/:characterID,:talentID', helpers.canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(err) throw new Error(err);
 		else {
@@ -164,7 +148,7 @@ router.get('/talents/edit/:characterID,:talentID', canEdit, function(req, res) {
 	});
 });
 
-router.get('/talents/:characterID', canEdit, function(req, res) {
+router.get('/talents/:characterID', helpers.canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(err) throw new Error(err);
 		else res.render('talents/view', { title: 'Talents', character: character, username: req.session.username });
@@ -172,7 +156,7 @@ router.get('/talents/:characterID', canEdit, function(req, res) {
 });
 
 // Skills
-router.get('/skills/add/:characterID', function(req, res) {
+router.get('/skills/add/:characterID', helpers.canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(character.userID == req.session._id) {
 			var skilltypes;
@@ -186,7 +170,7 @@ router.get('/skills/add/:characterID', function(req, res) {
 	});	
 });
 
-router.get('/skills/edit/:characterID,:skillID', function(req, res) {
+router.get('/skills/edit/:characterID,:skillID', helpers.canEdit, function(req, res) {
 	var character;
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(character.userID == req.session._id) {
@@ -200,21 +184,21 @@ router.get('/skills/edit/:characterID,:skillID', function(req, res) {
 	});
 });
 
-router.get('/skills/deleteSkill/:charID,:skillID', function(req, res) {
+router.get('/skills/deleteSkill/:charID,:skillID', helpers.canEdit, function(req, res) {
 	characters.removeSkill(req.params.charID, req.params.skillID, function(err, character, numAffected) {
 		if(err) throw new Error(err);
 		else res.redirect('/characters/skills/' + character._id)
 	});
 });
 
-router.get('/skills/skillEnhancers/:characterID', canEdit, function(req, res) {
+router.get('/skills/skillEnhancers/:characterID', helpers.canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(err) throw new Error(err);
 		else res.render('skills/skillEnhancers', {character: character});
 	});
 });
 
-router.get('/skills/:characterID', function(req, res) {
+router.get('/skills/:characterID', helpers.canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(character.userID == req.session._id) {
 			martialArts.listMartialArts(req.params.characterID, function(err, ma) {
@@ -232,7 +216,7 @@ router.get('/add', function(req, res) {
 });
 
 // TODO: Need to add authentication, so that only users that own the character can edit or remove those characters
-router.get('/edit/:characterID', function(req, res) {
+router.get('/edit/:characterID', helpers.canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(character != null)
 			res.render('characters/edit', { title: 'Edit ' + character.alias, character: character, baseCharicteristic: 10 });
@@ -241,7 +225,7 @@ router.get('/edit/:characterID', function(req, res) {
 	});
 });
 
-router.get('/remove/:characterID', function(req, res) {
+router.get('/remove/:characterID', helpers.canEdit, function(req, res) {
 	characters.removeCharacter({ _id: req.params.characterID }, function(err, character) {
 		res.redirect('/dashboard/' + req.session.username);
 	});
@@ -275,7 +259,7 @@ router.post('/addCharacter', function(req, res) {
 	});
 });
 
-router.post('/updateCharacter', function(req, res) {
+router.post('/updateCharacter', helpers.canEdit, function(req, res) {
 	characters.updateCharacter({_id: req.body._id },
 	{ 
 		alias: req.body.alias,
@@ -288,7 +272,7 @@ router.post('/updateCharacter', function(req, res) {
 });
 
 // Skills
-router.post('/addSkill', function(req, res) {
+router.post('/addSkill', helpers.canEdit, function(req, res) {
 	var skill = req.body.skill,
 		categories = req.body.categories || [],
 		subcategories = req.body.subcategories || [],
@@ -303,7 +287,7 @@ router.post('/addSkill', function(req, res) {
 	});
 });
 
-router.post('/updateSkill', function(req, res) {
+router.post('/updateSkill', helpers.canEdit, function(req, res) {
 	var skillID 			= req.body.skillID,
 		categories 			= (req.body.categories) ? req.body.categories : null,
 		subcategories 		= (req.body.subcategories) ? req.body.subcategories : null,
@@ -335,7 +319,7 @@ router.post('/updateSkill', function(req, res) {
 	});
 });
 
-router.post('/updateSkillEnhancers', function(req, res) {
+router.post('/updateSkillEnhancers', helpers.canEdit, function(req, res) {
 	var skillEnhancers = [];
 	for(var se in req.body)
 		if(se != "characterID" && se != "skillEnhancerCost") skillEnhancers.push(se);
@@ -346,7 +330,7 @@ router.post('/updateSkillEnhancers', function(req, res) {
 });
 
 // Characteristics
-router.post('/updateCharacteristics', function(req, res) {
+router.post('/updateCharacteristics', helpers.canEdit, function(req, res) {
 	// All of the mods need to have the base subtracted from them in order to get the actual difference. Otherwise, these stats will inflate every time they're updated.
 	characters.updateCharacter({_id: req.body.characterID },
 	{ 
@@ -383,7 +367,7 @@ router.post('/updateCharacteristics', function(req, res) {
 });
 
 // Martial Arts
-router.post('/addMartialArt', function(req, res) {
+router.post('/addMartialArt', helpers.canEdit, function(req, res) {
 	// Fetch maneuvers, store them in array for manipulation
 	var maneuvers = req.body.mm;
 	for(var key in maneuvers) {
@@ -415,7 +399,7 @@ router.post('/addMartialArt', function(req, res) {
 	}
 });
 
-router.post('/updateMartialArt', function(req, res) {
+router.post('/updateMartialArt', helpers.canEdit, function(req, res) {
 	var maneuvers = req.body.mm;
 	for(var key in maneuvers) {
 		// Anonymous function solves scope issue
@@ -447,7 +431,7 @@ router.post('/updateMartialArt', function(req, res) {
 });
 
 // Perks
-router.post('/addPerk', function(req, res) {
+router.post('/addPerk', helpers.canEdit, function(req, res) {
 	var perk = {
 		name: req.body['perk-name'],
 		type: req.body['perk-type'],
@@ -460,7 +444,7 @@ router.post('/addPerk', function(req, res) {
 	})
 });
 
-router.post('/updatePerk', function(req, res) {
+router.post('/updatePerk', helpers.canEdit, function(req, res) {
 	var perk = {
 		name: req.body['perk-name'],
 		type: req.body['perk-type'],
@@ -474,7 +458,7 @@ router.post('/updatePerk', function(req, res) {
 });
 
 // Talents
-router.post('/addTalent', canEdit, function(req, res) {
+router.post('/addTalent', helpers.canEdit, function(req, res) {
 	talents.getTalent({_id: req.body.talentID}, function(err, talent) {
 		if(err) throw new Error(err);
 		else var talentType = talent;
@@ -493,7 +477,7 @@ router.post('/addTalent', canEdit, function(req, res) {
 	});
 });
 
-router.post('/updateTalent', canEdit, function(req, res) {
+router.post('/updateTalent', helpers.canEdit, function(req, res) {
 	var updatedTalent = {
 		name: (req.body.name != '') ? req.body.name : null,
 		cost: Number(req.body.cost),
@@ -506,7 +490,7 @@ router.post('/updateTalent', canEdit, function(req, res) {
 	});
 });
 
-router.post('/deleteTalent', canEdit, function(req, res) {
+router.post('/deleteTalent', helpers.canEdit, function(req, res) {
 	console.log(req.body);
 	characters.removeTalent(req.body.characterID, req.body.talentID, function(err, _) {
 		if(err) throw new Error(err);

@@ -1,67 +1,52 @@
 var express = require('express');
 var router = express.Router();
+var helpers = require('../middleware/helpers');
 var users = require('../models/users');
 var characters = require('../models/characters');
 var skillTypes = require('../models/skillType');
 
+
+
 // Skills
 // ------------------------------------
 
-router.get('/create', function(req, res) {
-	if(req.session.role == 'admin')	{
-		skillTypes.listSkillTypes(function(err, skilltypes) {
-			if(err) throw new Error(err);
-			else {
-				res.render('skillTypes/add', { title: 'Create Skill Types', types: skilltypes });
-			}
-		});
-	}
-	else {
-		res.redirect('/dashboard/' + req.session._id);
-	}
+router.get('/create', helpers.isAdmin, function(req, res) {
+	skillTypes.listSkillTypes(function(err, skilltypes) {
+		if(err) throw new Error(err);
+		else {
+			res.render('skillTypes/add', { title: 'Create Skill Types', types: skilltypes });
+		}
+	});
 });
 
 router.get('/edit/:skillTypeID', function(req, res) {
-	if(req.session.role == 'admin') {
-		skillTypes.findSkillType({ _id: req.params.skillTypeID }, function(err, skill) {
-			console.log(skill);
-			res.render('skillTypes/edit', { title: 'Edit ' + skill.name, skill: skill })
-		});
-	} else {
-		res.redirect('/');
-	}
+	skillTypes.findSkillType({ _id: req.params.skillTypeID }, function(err, skill) {
+		res.render('skillTypes/edit', { title: 'Edit ' + skill.name, skill: skill })
+	});
 });
 
 router.get('/manage', function(req, res) {
-	if(req.session.role == 'admin') {
-		skillTypes.listSkillTypes(function(err, skilltypes) {
-			if(err) throw new Error(err);
-			else {
-				res.render('skillTypes/manage', { title: 'Manage Skill Types', types: skilltypes, session: req.session });
-			}
-		});
-	} else {
-		res.redirect('/dashboard/' + req.session._id);
-	}
+	skillTypes.listSkillTypes(function(err, skilltypes) {
+		if(err) throw new Error(err);
+		else {
+			res.render('skillTypes/manage', { title: 'Manage Skill Types', types: skilltypes, session: req.session });
+		}
+	});
 });
 
 router.get('/removeSkill/:skillID', function(req, res) {
-	if(req.session.role == 'admin') {
-		skillTypes.removeSkillType({ _id: req.params.skillID }, function(err, success) {
-			if(err) throw new Error(err);
-			else if(success === 'success') {
-				res.redirect('/skills/manage');
-			}
-		});
-	} else {
-		res.redirect('/');
-	}
+	skillTypes.removeSkillType({ _id: req.params.skillID }, function(err, success) {
+		if(err) throw new Error(err);
+		else if(success === 'success') {
+			res.redirect('/skills/manage');
+		}
+	});
 });
 
 
 
 // Posts -----------------------
-router.post('/addType', function(req, res) {
+router.post('/addType', helpers.isAdmin, function(req, res) {
 
 	var categories = [];
 	if(req.body.category1) {
@@ -127,8 +112,7 @@ router.post('/addType', function(req, res) {
 	});
 });
 
-router.post('/updateSkillType', function(req, res) {
-	console.log('Req.body: ', req.body);
+router.post('/updateSkillType', helpers.isAdmin, function(req, res) {
 	var categories = [];
 
 	var categoryList = [];
@@ -188,7 +172,7 @@ router.post('/updateSkillType', function(req, res) {
 		}
 
 	});
-	console.log('Categories: ', categories);
+
 	skillTypes.updateSkillType({ _id: req.body.skillID }, 
 		{ 	
 			name: req.body.skill,
@@ -205,6 +189,5 @@ router.post('/updateSkillType', function(req, res) {
 			}
 	});
 });
-
 
 module.exports = router;
