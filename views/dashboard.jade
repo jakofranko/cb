@@ -83,13 +83,10 @@ block content
 				h2 Admin Panel
 				.row
 					.col-sm-12
-						ul
-							li
-								a(href="/skills/manage") Manage Skills
-							li
-								a(href="/martialManeuvers") Manage Martial Maneuvers
-							li
-								a(href="/perks") Manage Perks
-							li
-								a(href="/talents") Manage Talents
+						.list-group
+							a(href="/skills/manage").list-group-item Manage Skills
+							a(href="/martialManeuvers").list-group-item Manage Martial Maneuvers
+							a(href="/perks").list-group-item Manage Perks
+							a(href="/talents").list-group-item Manage Talents
+							a(href="/powers").list-group-item Manage Powers
 	script(rel='text/javascript', src='/js/dashboard.js')

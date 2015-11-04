@@ -1,0 +1,30 @@
+extends ../layout
+
+block content
+	a(href="/dashboard/" + username)
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;back to Dashboard
+	h1 Powers
+		a(href="add").btn.btn-link
+			span.glyphicon.glyphicon-plus
+			|  Add New
+	table.table
+		thead
+			tr
+				th Name
+				th Cost
+				th Duration
+				th Target
+				th Range
+				th Edit
+		tbody
+			each power in powers
+				tr
+					td #{power.name}
+					td #{power.cost.points} #{power.cost.per}
+					td #{power.duration}
+					td #{power.target}
+					td #{power.range}
+					td
+						a(href="edit/" + power._id)
+							span.glyphicon.glyphicon-edit
