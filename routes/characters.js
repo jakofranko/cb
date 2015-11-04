@@ -31,13 +31,9 @@ router.get('/characteristics/:characterID', helpers.canEdit, function(req, res) 
 // Martial Arts
 router.get('/martialArts/add/:characterID', helpers.canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
-		if(character.userID == req.session._id) {
-			martialManeuvers.listMartialManeuvers(function(err, mm) {
-				res.render('martialArts/add', { character: character, mm: mm, username: req.session.username });
-			});
-		} else {
-			res.redirect('/');
-		}
+		martialManeuvers.listMartialManeuvers(function(err, mm) {
+			res.render('martialArts/add', { character: character, mm: mm, username: req.session.username });
+		});
 	});
 });
 
@@ -45,13 +41,9 @@ router.get('/martialArts/edit/:maID', helpers.canEdit, function(req, res) {
 	martialArts.getMartialArt(req.params.maID, function(err, ma) {
 		if(ma) {
 			characters.findCharacterById(ma.characterID, function(err, character) {
-				if(character.userID == req.session._id) {
-					martialManeuvers.listMartialManeuvers(function(err, mms) {
-						res.render('martialArts/edit', { character: character, ma: ma, mms: mms, username: req.session.username });	
-					});
-				} else {
-					res.redirect('/');		
-				}
+				martialManeuvers.listMartialManeuvers(function(err, mms) {
+					res.render('martialArts/edit', { character: character, ma: ma, mms: mms, username: req.session.username });	
+				});
 			});
 		}
 	});
@@ -60,21 +52,15 @@ router.get('/martialArts/edit/:maID', helpers.canEdit, function(req, res) {
 router.get('/martialArts/deleteMartialArt/:charID,:maID', helpers.canEdit, function(req, res) {
 	martialArts.removeMartialArt(req.params.maID, function(err, result) {
 		if(err) throw new Error(err);
-		else {
-			res.redirect('/characters/skills/' + req.params.charID)
-		}
-	})
+		else res.redirect('/characters/skills/' + req.params.charID);
+	});
 });
 
 router.get('/martialArts/:characterID', helpers.canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
-		if(character.userID == req.session._id) {
-			martialArts.listMartialArts(character._id, function(err, ma) {
-				res.render('martialArts/list', { character: character, martialArts: ma });
-			});
-		} else {
-			res.redirect('/');
-		}
+		martialArts.listMartialArts(character._id, function(err, ma) {
+			res.render('martialArts/list', { character: character, martialArts: ma });
+		});
 	});
 });
 
@@ -119,9 +105,7 @@ router.get('/perks/delete/:characterID,:perkID', helpers.canEdit, function(req, 
 router.get('/perks/:characterID', helpers.canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
 		if(err) throw new Error(err);
-		else {
-			res.render('perks/view', { title: 'Perks', character: character, username: req.session.username });
-		}
+		else res.render('perks/view', { title: 'Perks', character: character, username: req.session.username });
 	});
 });
 
@@ -158,29 +142,21 @@ router.get('/talents/:characterID', helpers.canEdit, function(req, res) {
 // Skills
 router.get('/skills/add/:characterID', helpers.canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
-		if(character.userID == req.session._id) {
-			var skilltypes;
-			skillTypes.listSkillTypes(function(err, results) {
-				skilltypes = results;
-				res.render('skills/add', { title: 'Add skills for ' + character.alias, character: character, username: req.session.username, skilltypes: skilltypes });
-			});
-		} else { 
-			res.redirect('/');
-		}
+		var skilltypes;
+		skillTypes.listSkillTypes(function(err, results) {
+			skilltypes = results;
+			res.render('skills/add', { title: 'Add skills for ' + character.alias, character: character, username: req.session.username, skilltypes: skilltypes });
+		});
 	});	
 });
 
 router.get('/skills/edit/:characterID,:skillID', helpers.canEdit, function(req, res) {
 	var character;
 	characters.findCharacterById(req.params.characterID, function(err, character) {
-		if(character.userID == req.session._id) {
-			character = character;
-			characters.findSkill(req.params.characterID, req.params.skillID, function(err, skill) {
-				res.render('skills/edit', { title: 'Editing ' + skill.skillType.name, character: character, username: req.session.username, skill: skill });
-			});
-		} else { 
-			res.redirect('/');
-		}
+		character = character;
+		characters.findSkill(req.params.characterID, req.params.skillID, function(err, skill) {
+			res.render('skills/edit', { title: 'Editing ' + skill.skillType.name, character: character, username: req.session.username, skill: skill });
+		});
 	});
 });
 
@@ -200,13 +176,9 @@ router.get('/skills/skillEnhancers/:characterID', helpers.canEdit, function(req,
 
 router.get('/skills/:characterID', helpers.canEdit, function(req, res) {
 	characters.findCharacterById(req.params.characterID, function(err, character) {
-		if(character.userID == req.session._id) {
-			martialArts.listMartialArts(req.params.characterID, function(err, ma) {
-				res.render('skills/view', { title: character.alias + ' skills', character: character, ma: ma, username: req.session.username });	
-			})
-		} else {
-			res.redirect('/');
-		}
+		martialArts.listMartialArts(req.params.characterID, function(err, ma) {
+			res.render('skills/view', { title: character.alias + ' skills', character: character, ma: ma, username: req.session.username });	
+		});
 	});
 });
 
