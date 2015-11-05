@@ -16,8 +16,21 @@ describe('Powers Test Suite', function() {
 				duration: 'Instant', 
 				target: 'Target\'s DCV', 
 				range: 'Standard Range', 
-				endurance: false
+				endurance: false,
+				category: 'Attack Power'
 			};
+
+			var newVarientOne = {
+				name: 'PD'
+			};
+			var newVarientTwo = {
+				name: 'ED',
+				description: 'Versus Energy Defense',
+				cost: 100
+			};
+
+			newPower['varients'] = [newVarientOne, newVarientTwo];
+
 			powers.createPower(newPower, function(err, power) {
 				should.not.exist(err);
 				should.exist(power);
@@ -30,6 +43,13 @@ describe('Powers Test Suite', function() {
 				power.should.have.property('target', 'Target\'s DCV');
 				power.should.have.property('range', 'Standard Range');
 				power.should.have.property('endurance', false);
+				power.should.have.property('category', 'Attack Power');
+				power.should.have.property('varients');
+				(power.varients.length).should.eql(2);
+				(power.varients[1]).should.have.property('name', 'ED');
+				(power.varients[1]).should.have.property('description', 'Versus Energy Defense');
+				(power.varients[1]).should.have.property('cost', 100);
+
 
 				testPower = power;
 				done();

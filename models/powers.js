@@ -6,11 +6,19 @@ var powerSchema = mongoose.Schema({
 		points: Number,
 		per: String
 	},
+	category: String,
 	duration: String,
 	target: String,
 	range: String,
-	endurance: {type: Boolean, default: false}
+	endurance: Boolean,
+	varients: [powerVarientSchema]
 });
+
+var powerVarientSchema = mongoose.Schema({
+	name: String,
+	description: String,
+	cost: Number
+})
 
 var Power = mongoose.model('Power', powerSchema);
 
