@@ -1,3 +1,112 @@
-button(type="button" data-toggle="modal" data-target="#delete-modal").btn.btn-danger
-	span.glyphicon.glyphicon-trash
-	|  Delete Power
+extends ../layout
+
+block content
+	a(href="/powers")
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;back to Powers
+	h1 Editing #{power.name}
+
+	.row
+		.col-sm-4.col-sm-offset-4
+			form(action="/powers/updatePower" method="post")
+				input(type="hidden" name="powerID" value=power._id)
+				.form-group
+					label(for="name").control-label Power Name
+					input(type="text" name="name" placeholder="E.G., 'Energy Blast'" id="name" value=power.name).form-control
+				.form-group
+					label(for="category").control-label Select Power's Category
+					select(name="category" id="category").form-control
+						option(value="") Select Category
+						option(value="Adjustment" selected=((power.category == "Adjustment") ? "selected" : null)) Adjustment
+						option(value="Attack" selected=((power.category == "Attack") ? "selected" : null)) Attack
+						option(value="Body-Affecting" selected=((power.category == "Body-Affecting") ? "selected" : null)) Body-Affecting
+						option(value="Defense" selected=((power.category == "Defense") ? "selected" : null)) Defense
+						option(value="Mental" selected=((power.category == "Mental") ? "selected" : null)) Mental
+						option(value="Movement" selected=((power.category == "Movement") ? "selected" : null)) Movement
+						option(value="Sense-Affecting" selected=((power.category == "Sense-Affecting") ? "selected" : null)) Sense-Affecting
+						option(value="Sensory" selected=((power.category == "Sensory") ? "selected" : null)) Sensory
+						option(value="Size" selected=((power.category == "Size") ? "selected" : null)) Size
+						option(value="Special" selected=((power.category == "Special") ? "selected" : null)) Special
+						option(value="Standard" selected=((power.category == "Standard") ? "selected" : null)) Standard
+				.form-group
+					label(for="cost[points]").control-label Point Cost
+					input(type="number" name="cost[points]" value=power.cost.points id="cost[points]").form-control
+				.form-group
+					label(for="cost[per]").control-label Points Per...
+					input(type="text" name="cost[per]" placeholder="E.G., '1d6 of Energy Blast'" value=power.cost.per id="cost[per]").form-control
+					small Leave empty for single cost powers
+				.form-group
+					lable.control-label Costs END?
+					-console.log(power)
+					.radio
+						label
+							input(type="radio" name="endurance" value="true" checked=((power.endurance == true) ? "checked" : null)) 
+							| Yes
+					.radio
+						label
+							input(type="radio" name="endurance" value="false" checked=((power.endurance == false) ? "checked" : null)) 
+							| No
+				.form-group
+					label(for="duration").control-label Select Power's Duration
+					select(name="duration" id="duration").form-control
+						option(value="") Select Duration
+						option(value="Instant" selected=((power.duration == "Instant") ? "selected" : null)) Instant
+						option(value="Constant" selected=((power.duration == "Constant") ? "selected" : null)) Constant
+						option(value="Persistant" selected=((power.duration == "Persistant") ? "selected" : null)) Persistant
+						option(value="Inherent" selected=((power.duration == "Inherent") ? "selected" : null)) Inherent
+				.form-group
+					label(for="target").control-label Select Target Type for Power
+					select(name="target" id="target").form-control
+						option(value="") Select Target Type
+						option(value="Self Only" selected=((power.target == "Self Only") ? "selected" : null)) Self Only
+						option(value="Target's DCV" selected=((power.target == "Target's DCV") ? "selected" : null)) Target's DCV
+						option(value="Target's DECV" selected=((power.target == "Target's DECV") ? "selected" : null)) Target's DECV
+						option(value="Hex" selected=((power.target == "Hex") ? "selected" : null)) Hex
+				.form-group
+					label(for="range").control-label Select Power's Range
+					select(name="range" id="range").form-control
+						option(value="") Select Range
+						option(value="Self" selected=((power.range == "Self") ? "selected" : null)) Self
+						option(value="No Range" selected=((power.range == "No Range") ? "selected" : null)) No Range
+						option(value="Standard Range" selected=((power.range == "Standard Range") ? "selected" : null)) Standard Range
+						option(value="Line of Sight" selected=((power.range == "Line of Sight") ? "selected" : null)) Line of Sight
+
+				#varients
+					each varient, i in power.varients
+						.varient
+							.form-group
+								label(for="varient["+i+"][name]").control-label Varient Name
+								input(type="text" name="varient["+i+"][name]" id="varient["+i+"][name]" value=varient.name).form-control
+							.form-group
+								label(for="varient["+i+"][cost]").control-label Varient Cost (optional)
+								input(type="text" name="varient["+i+"][cost]" id="varient["+i+"][cost]" value=varient.cost).form-control
+							.form-group
+								label(for="varient["+i+"][description]").control-label Varient Description (optional)
+								input(type="text" name="varient["+i+"][description]" id="varient["+i+"][description]" value=varient.description).form-control
+
+				button(type="button").btn.btn-primary.btn-sm.pull-left.add-varient
+					span.glyphcion.glyphicon-plus
+					|  Add Power Varient
+				br
+				br
+				button(type="submit").btn.btn-primary.pull-left
+					span.glyphicon.glyphicon-edit
+					|  Update Power
+				button(type="button" data-toggle="modal" data-target="#delete-modal").btn.btn-danger.pull-right
+					span.glyphicon.glyphicon-trash
+					|  Delete Power
+	.modal.fade#delete-modal
+		.modal-dialog.modal-sm
+			.modal-content
+				.modal-header
+					button(data-dismiss="modal").close &times;
+					h4 Delete #{power.name}?
+				.modal-body Are you sure you want to delete #{power.name}?
+				.modal-footer
+					form(action="/powers/deletePower" method="post")
+						input(type="hidden" name="powerID" value=power._id)
+						button(type="button" data-dismiss="modal").btn.btn-link Cancel
+						button(type="submit").btn.btn-danger
+							span.glyphicon.glyphicon-trash
+							|  Delete Power
+	script(src="/js/powers/powerType.js" type="text/javascript")

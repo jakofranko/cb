@@ -12,6 +12,8 @@ block content
 		thead
 			tr
 				th Name
+				th Category
+				th Varients
 				th Cost
 				th Duration
 				th Target
@@ -21,10 +23,20 @@ block content
 			each power in powers
 				tr
 					td #{power.name}
+					td #{power.category}
+					td
+						if power.varients && power.varients.length > 0
+							each varient, i in power.varients
+								| #{varient.name}
+								if varient.cost && varient.cost > 0
+									|  (#{varient.cost} pts.)
+								if i != power.varients.length - 1
+									| , 
+									br
 					td #{power.cost.points} #{power.cost.per}
 					td #{power.duration}
 					td #{power.target}
 					td #{power.range}
 					td
-						a(href="/edit/" + power._id)
+						a(href="/powers/edit/" + power._id)
 							span.glyphicon.glyphicon-edit

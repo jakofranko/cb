@@ -2,7 +2,6 @@ $(document).ready(function() {
 	var varients = $('#varients');
 	$('.add-varient').click(function() {
 		var varientCount = $('.varient').length;
-		console.log(varientCount);
 		var name = "varient[" + Number(varientCount) + "][name]";
 		var cost = "varient[" + Number(varientCount) + "][cost]";
 		var description = "varient[" + Number(varientCount) + "][description]";
