@@ -62,7 +62,7 @@ describe('Powers Test Suite', function() {
 			var updates = {
 				name: 'Awesome Blash',
 				cost: {points: 7, per: '1d6 of Awesome Blash'},
-				duration: 'Constant',
+				duration: null,
 				target: 'Target\'s EDCV',
 				range: 'Self Only',
 				endurance: true
@@ -75,7 +75,7 @@ describe('Powers Test Suite', function() {
 				(updatedPower.cost).should.be.Object;
 				(updatedPower.cost).should.have.property('points', 7);
 				(updatedPower.cost).should.have.property('per', '1d6 of Awesome Blash');
-				updatedPower.should.have.property('duration', 'Constant');
+				updatedPower.should.have.property('duration', null);
 				updatedPower.should.have.property('target', 'Target\'s EDCV');
 				updatedPower.should.have.property('range', 'Self Only');
 				updatedPower.should.have.property('endurance', true);
@@ -108,7 +108,7 @@ describe('Powers Test Suite', function() {
 				(power.cost).should.be.Object;
 				(power.cost).should.have.property('points', 7);
 				(power.cost).should.have.property('per', '1d6 of Awesome Blash');
-				power.should.have.property('duration', 'Constant');
+				power.should.have.property('duration', null);
 				power.should.have.property('target', 'Target\'s EDCV');
 				power.should.have.property('range', 'Self Only');
 				power.should.have.property('endurance', true);
