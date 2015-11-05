@@ -5,7 +5,7 @@ block content
 		span.glyphicon.glyphicon-arrow-left
 		| &nbsp;back to Dashboard
 	h1 Powers
-		a(href="add").btn.btn-link
+		a(href="/powers/add").btn.btn-link
 			span.glyphicon.glyphicon-plus
 			|  Add New
 	table.table
@@ -26,5 +26,5 @@ block content
 					td #{power.target}
 					td #{power.range}
 					td
-						a(href="edit/" + power._id)
+						a(href="/edit/" + power._id)
 							span.glyphicon.glyphicon-edit

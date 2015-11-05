@@ -1,0 +1,80 @@
+extends ../layout
+
+block content
+	a(href="/powers")
+		span.glyphicon.glyphicon-arrow-left
+		| &nbsp;back to Powers
+	h1 Add Power
+
+	.row
+		.col-sm-4.col-sm-offset-4
+			form(action="/powers/addPower" method="post")
+				.form-group
+					label(for="name").control-label Power Name
+					input(type="text" name="name" placeholder="E.G., 'Energy Blast'" id="name" autofocus).form-control
+				.form-group
+					label(for="category").control-label Select Power's Category
+					select(name="category" id="category").form-control
+						option(value="") Select Category
+						option(value="Adjustment") Adjustment
+						option(value="Attack") Attack
+						option(value="Body-Affecting") Body-Affecting
+						option(value="Defense") Defense
+						option(value="Mental") Mental
+						option(value="Movement") Movement
+						option(value="Sense-Affecting") Sense-Affecting
+						option(value="Sensory") Sensory
+						option(value="Size") Size
+						option(value="Special") Special
+						option(value="Standard") Standard
+				.form-group
+					label(for="cost[points]").control-label Point Cost
+					input(type="number" name="cost[points]" value="0" id="cost[points]").form-control
+				.form-group
+					label(for="cost[per]").control-label Points Per...
+					input(type="text" name="cost[per]" placeholder="E.G., '1d6 of Energy Blast'" id="cost[per]").form-control
+					small Leave empty for single cost powers
+				.form-group
+					lable.control-label Costs END?
+					.radio
+						label
+							input(type="radio" name="endurance" value="true") 
+							| Yes
+					.radio
+						label
+							input(type="radio" name="endurance" value="false") 
+							| No
+				.form-group
+					label(for="duration").control-label Select Power's Duration
+					select(name="duration" id="duration").form-control
+						option(value="") Select Duration
+						option(value="Instant") Instant
+						option(value="Constant") Constant
+						option(value="Persistant") Persistant
+						option(value="Inherent") Inherent
+				.form-group
+					label(for="target").control-label Select Target Type for Power
+					select(name="target" id="target").form-control
+						option(value="") Select Target Type
+						option(value="Self Only") Self Only
+						option(value="Target's DCV") Target's DCV
+						option(value="Target's DECV") Target's DECV
+						option(value="Hex") Hex
+				.form-group
+					label(for="range").control-label Select Power's Range
+					select(name="range" id="range").form-control
+						option(value="") Select Range
+						option(value="Self") Self
+						option(value="No Range") No Range
+						option(value="Standard Range") Standard Range
+						option(value="Line of Sight") Line of Sight
+
+				#varients
+
+				button(type="button").btn.btn-primary.btn-sm.pull-left.add-varient
+					span.glyphcion.glyphicon-plus
+					|  Add Power Varient
+				button(type="submit").btn.btn-primary.pull-right
+					span.glyphicon.glyphicon-plus
+					|  Add Power
+	script(src="/js/powers/powerType.js" type="text/javascript")
