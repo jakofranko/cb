@@ -13,7 +13,7 @@ block content
 			tr
 				th Name
 				th Category
-				th Varients
+				th Variants
 				th Cost
 				th Duration
 				th Target
@@ -25,12 +25,12 @@ block content
 					td #{power.name}
 					td #{power.category}
 					td
-						if power.varients && power.varients.length > 0
-							each varient, i in power.varients
-								| #{varient.name}
-								if varient.cost && varient.cost > 0
-									|  (#{varient.cost} pts.)
-								if i != power.varients.length - 1
+						if power.variants && power.variants.length > 0
+							each variant, i in power.variants
+								| #{variant.name}
+								if variant.cost && variant.cost > 0
+									|  (#{variant.cost} pts.)
+								if i != power.variants.length - 1
 									| , 
 									br
 					td #{power.cost.points} #{power.cost.per}

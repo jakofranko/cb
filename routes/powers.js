@@ -37,7 +37,8 @@ router.post('/addPower', function(req, res) {
 		endurance: (req.body.endurance && req.body.endurance == "true") ? true : false,
 		cost: req.body.cost,
 		category: req.body.category,
-		varients: req.body.varient
+		exclusiveVariants: (req.body.exclusiveVariants && req.body.exclusiveVariants == "true") ? true : false,
+		variants: req.body.variant
 	};
 
 	powers.createPower(power, function(err, success) {
@@ -56,7 +57,7 @@ router.post('/updatePower', function(req, res) {
 		endurance: (req.body.endurance && req.body.endurance == "true") ? true : false,
 		cost: (req.body.cost.points != null) ? req.body.cost : null,
 		category: req.body.category || null,
-		varients: req.body.varient || null
+		variants: req.body.variant || null
 	};
 
 	powers.updatePower(req.body.powerID, updates, function(err, success) {

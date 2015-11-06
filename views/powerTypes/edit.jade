@@ -37,7 +37,6 @@ block content
 					small Leave empty for single cost powers
 				.form-group
 					lable.control-label Costs END?
-					-console.log(power)
 					.radio
 						label
 							input(type="radio" name="endurance" value="true" checked=((power.endurance == true) ? "checked" : null)) 
@@ -71,22 +70,45 @@ block content
 						option(value="Standard Range" selected=((power.range == "Standard Range") ? "selected" : null)) Standard Range
 						option(value="Line of Sight" selected=((power.range == "Line of Sight") ? "selected" : null)) Line of Sight
 
-				#varients
-					each varient, i in power.varients
-						.varient
+				#variants
+					if power.variants.length == 0
+						.form-group
+							label.control-label Are Variants Exclusive?
+							.radio
+								label
+									input(type="radio" name="exclusiveVariants" value="true")
+									| Yes
+							.radio
+								label
+									input(type="radio" name="exclusiveVariants" value="false")
+									| No
+					each variant, i in power.variants
+						.variant
 							.form-group
-								label(for="varient["+i+"][name]").control-label Varient Name
-								input(type="text" name="varient["+i+"][name]" id="varient["+i+"][name]" value=varient.name).form-control
+								label(for="variant["+i+"][name]").control-label Variant Name
+								input(type="text" name="variant["+i+"][name]" id="variant["+i+"][name]" value=variant.name).form-control
 							.form-group
-								label(for="varient["+i+"][cost]").control-label Varient Cost (optional)
-								input(type="text" name="varient["+i+"][cost]" id="varient["+i+"][cost]" value=varient.cost).form-control
+								label(for="variant["+i+"][cost]").control-label Variant Cost (optional)
+								input(type="text" name="variant["+i+"][cost]" id="variant["+i+"][cost]" value=variant.cost).form-control
 							.form-group
-								label(for="varient["+i+"][description]").control-label Varient Description (optional)
-								input(type="text" name="varient["+i+"][description]" id="varient["+i+"][description]" value=varient.description).form-control
+								label(for="variant["+i+"][description]").control-label Variant Description (optional)
+								input(type="text" name="variant["+i+"][description]" id="variant["+i+"][description]" value=variant.description).form-control
+							hr
+							if variant.variantOptions && variant.variantOptions.length > 0
+								- console.log(variant.variantOptions);
+								each vp, j in variant.variantOptions
+									.variant-options
+										.form-group
+											label(for="variant["+i+"][variantOptions]["+j+"][name]").control-label Variant Option Name
+											input(type="text" name="variant["+i+"][variantOptions]["+j+"][name]" id="variant["+i+"][variantOptions]["+j+"][name]" value=vp.name).form-control.input-sm
+										.form-group
+											label(for="variant["+i+"][variantOptions]["+j+"][cost]").control-label Variant Cost Option (optional)
+											input(type="text" name="variant["+i+"][variantOptions]["+j+"][cost]" id="variant["+i+"][variantOptions]["+j+"][cost]" value=vp.cost).form-control.input-sm
 
-				button(type="button").btn.btn-primary.btn-sm.pull-left.add-varient
+
+				button(type="button").btn.btn-primary.btn-sm.pull-left.add-variant
 					span.glyphcion.glyphicon-plus
-					|  Add Power Varient
+					|  Add Power Variant
 				br
 				br
 				button(type="submit").btn.btn-primary.pull-left
