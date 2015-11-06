@@ -11,14 +11,24 @@ var powerSchema = mongoose.Schema({
 	target: String,
 	range: String,
 	endurance: Boolean,
-	varients: [powerVarientSchema]
+	exclusiveVariants: Boolean,
+	variants: [powerVariantSchema]
 });
 
-var powerVarientSchema = mongoose.Schema({
+var powerVariantSchema = mongoose.Schema({
 	name: String,
 	description: String,
-	cost: Number
-})
+	cost: Number,
+	incremental: Boolean,
+	exclusiveOptions: Boolean,
+	variantOptions: [variantOptionSchema]
+});
+
+var variantOptionSchema = mongoose.Schema({
+	name: String,
+	cost: Number,
+	incremental: Boolean
+});
 
 var Power = mongoose.model('Power', powerSchema);
 

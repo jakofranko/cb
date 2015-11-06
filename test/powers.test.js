@@ -17,19 +17,29 @@ describe('Powers Test Suite', function() {
 				target: 'Target\'s DCV', 
 				range: 'Standard Range', 
 				endurance: false,
+				exclusiveVariants: false,
 				category: 'Attack Power'
 			};
 
-			var newVarientOne = {
-				name: 'PD'
+			var variantOption = {
+				name: 'Targeting Sense',
+				cost: 3,
+				incremental: true
 			};
-			var newVarientTwo = {
+			var newVariantOne = {
+				name: 'PD',
+				exclusiveOptions: true,
+				variantOptions: [variantOption, variantOption]
+			};
+			var newVariantTwo = {
 				name: 'ED',
 				description: 'Versus Energy Defense',
-				cost: 100
+				cost: 100,
+				incremental: false
 			};
+			
 
-			newPower['varients'] = [newVarientOne, newVarientTwo];
+			newPower['variants'] = [newVariantOne, newVariantTwo];
 
 			powers.createPower(newPower, function(err, power) {
 				should.not.exist(err);
@@ -44,11 +54,22 @@ describe('Powers Test Suite', function() {
 				power.should.have.property('range', 'Standard Range');
 				power.should.have.property('endurance', false);
 				power.should.have.property('category', 'Attack Power');
-				power.should.have.property('varients');
-				(power.varients.length).should.eql(2);
-				(power.varients[1]).should.have.property('name', 'ED');
-				(power.varients[1]).should.have.property('description', 'Versus Energy Defense');
-				(power.varients[1]).should.have.property('cost', 100);
+				power.should.have.property('exclusiveVariants', false);
+
+				power.should.have.property('variants');
+				(power.variants.length).should.eql(2);
+
+				(power.variants[0]).should.have.property('variantOptions');
+				(power.variants[0]).should.have.property('name', 'PD');
+				(power.variants[0]).should.have.property('exclusiveOptions', true);
+				(power.variants[0].variantOptions.length).should.eql(2);
+				(power.variants[0].variantOptions[0]).should.have.property('name', 'Targeting Sense');
+				(power.variants[0].variantOptions[0]).should.have.property('cost', 3);
+				(power.variants[0].variantOptions[0]).should.have.property('incremental', true);
+
+				(power.variants[1]).should.have.property('name', 'ED');
+				(power.variants[1]).should.have.property('description', 'Versus Energy Defense');
+				(power.variants[1]).should.have.property('cost', 100);
 
 
 				testPower = power;
