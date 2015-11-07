@@ -57,6 +57,7 @@ router.post('/updatePower', function(req, res) {
 		endurance: (req.body.endurance && req.body.endurance == "true") ? true : false,
 		cost: (req.body.cost.points != null) ? req.body.cost : null,
 		category: req.body.category || null,
+		exclusiveVariants: (req.body.exclusiveVariants && req.body.exclusiveVariants == "true") ? true : false,
 		variants: req.body.variant || null
 	};
 

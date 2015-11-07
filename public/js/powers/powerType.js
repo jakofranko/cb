@@ -8,12 +8,12 @@ $(document).ready(function() {
 
 		var variant = $('<div class="variant"></div>');
 		var formGroup = $('<div class="form-group"></div>');
+		var radioDiv = $('<div class="radio"></div>');
 		var label = $('<label class="control-label"></label>');
 		var input = $('<input/>');
 
 		if(variantCount == 0) {
 			var exclusiveGroup = formGroup.clone();
-			var radioDiv = $('<div class="radio"></div>');
 			var exclusiveLabel = label.clone().attr('class', null);
 			var radio = input.clone().attr('type', 'radio').attr('name', 'exclusiveVariants');
 			var exclusiveYes = radio.clone().attr('value', 'true');
@@ -43,6 +43,20 @@ $(document).ready(function() {
 		var descriptionInput = input.clone().attr('name', description).attr('id', description).attr('type', 'text').attr('placeholder', 'E.G., Versus Energy Defenses').addClass('form-control').appendTo(descriptionGroup);
 		descriptionGroup.appendTo(variant);
 
+		var incrementalGroup = formGroup.clone();
+		var incrementalLabel = label.clone().attr('class', null);
+		var incrementalRadio = input.clone().attr('type', 'radio').attr('name', 'variant[' + Number(variantCount) + '][incremental]');
+		var incrementalYes = incrementalRadio.clone().attr('value', 'true');
+		var incrementalNo = incrementalRadio.clone().attr('value', 'false');
+		var incrementalRadioYes = radioDiv.clone().append(incrementalLabel.clone().append(incrementalYes).append(' Yes'));
+		var incrementalRadioNo = radioDiv.clone().append(incrementalLabel.clone().append(incrementalNo).append(' No'));
+
+		incrementalRadioYes.appendTo(incrementalGroup);
+		incrementalRadioNo.appendTo(incrementalGroup);
+		incrementalGroup.prepend('<label class="control-label">Are Points Incremental?</label>');
+		incrementalGroup.append('<hr/>');
+		incrementalGroup.appendTo(variant);
+
 		variant.append('<div class="options"></div>');
 		variant.append('<button type="button" class="btn btn-primary btn-sm add-option"><span class="glyphcion glyphicon-plus"></span> Add Variant Option</button>');
 		variant.append('<hr/>');
@@ -57,8 +71,6 @@ $(document).ready(function() {
 		var optionCount = parent.find('.variant-option').length;
 		var options = parent.find(".options");
 
-		console.log(parentCount, optionCount);
-
 		var name = "variant[" + Number(parentCount) + "][variantOptions][" + Number(optionCount) + "][name]";
 		var cost = "variant[" + Number(parentCount) + "][variantOptions][" + Number(optionCount) + "][cost]";
 
@@ -66,10 +78,10 @@ $(document).ready(function() {
 		var formGroup = $('<div class="form-group"></div>');
 		var label = $('<label class="control-label"></label>');
 		var input = $('<input/>');
+		var radioDiv = $('<div class="radio"></div>');
 
 		if(optionCount == 0) {
 			var exclusiveGroup = formGroup.clone();
-			var radioDiv = $('<div class="radio"></div>');
 			var exclusiveLabel = label.clone().attr('class', null);
 			var radio = input.clone().attr('type', 'radio').attr('name', 'variant[' + Number(parentCount) + '][exclusiveOptions]');
 			var exclusiveYes = radio.clone().attr('value', 'true');
@@ -93,6 +105,19 @@ $(document).ready(function() {
 		var costLabel = label.clone().attr('for', cost).addClass('control-label').text('Varient Option Cost (optional)').appendTo(costGroup);
 		var costInput = input.clone().attr('name', cost).attr('id', cost).attr('type', 'number').attr('placeholder', 'E.G., 5').addClass('form-control input-sm').appendTo(costGroup);
 		costGroup.appendTo(option);
+
+		var incrementalGroup = formGroup.clone();
+		var incrementalLabel = label.clone().attr('class', null);
+		var incrementalRadio = input.clone().attr('type', 'radio').attr('name', 'variant[' + Number(parentCount) + '][variantOptions][' + Number(optionCount) + '][incremental]');
+		var incrementalYes = incrementalRadio.clone().attr('value', 'true');
+		var incrementalNo = incrementalRadio.clone().attr('value', 'false');
+		var incrementalRadioYes = radioDiv.clone().append(incrementalLabel.clone().append(incrementalYes).append(' Yes'));
+		var incrementalRadioNo = radioDiv.clone().append(incrementalLabel.clone().append(incrementalNo).append(' No'));
+
+		incrementalRadioYes.appendTo(incrementalGroup);
+		incrementalRadioNo.appendTo(incrementalGroup);
+		incrementalGroup.prepend('<label class="control-label">Are Points Incremental?</label>');
+		incrementalGroup.appendTo(option);
 
 		option.append('<hr/>');
 		option.appendTo(options);

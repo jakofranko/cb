@@ -71,17 +71,17 @@ block content
 						option(value="Line of Sight" selected=((power.range == "Line of Sight") ? "selected" : null)) Line of Sight
 
 				#variants
-					if power.variants.length == 0
-						.form-group
-							label.control-label Are Variants Exclusive?
-							.radio
-								label
-									input(type="radio" name="exclusiveVariants" value="true")
-									| Yes
-							.radio
-								label
-									input(type="radio" name="exclusiveVariants" value="false")
-									| No
+					-console.log(power.exclusiveVariants)
+					.form-group
+						label.control-label Are Variants Exclusive?
+						.radio
+							label
+								input(type="radio" name="exclusiveVariants" value="true" checked=((power.exclusiveVariants == true) ? "checked" : null))
+								| Yes
+						.radio
+							label
+								input(type="radio" name="exclusiveVariants" value="false" checked=((power.exclusiveVariants == false) ? "checked" : null))
+								| No
 					each variant, i in power.variants
 						.variant
 							.form-group
@@ -93,9 +93,18 @@ block content
 							.form-group
 								label(for="variant["+i+"][description]").control-label Variant Description (optional)
 								input(type="text" name="variant["+i+"][description]" id="variant["+i+"][description]" value=variant.description).form-control
+							.form-group
+								label.control-label Are Points Incremental?
+								.radio
+									label
+										input(type="radio" name="variant["+i+"][incremental]" value="true" checked=((variant.incremental == "true") ? "checked" : null))
+										| Yes
+								.radio
+									label
+										input(type="radio" name="variant["+i+"][incremental]" value="false" checked=((variant.incremental == "false") ? "checked" : null))
+										| No
 							hr
 							if variant.variantOptions && variant.variantOptions.length > 0
-								- console.log(variant.variantOptions);
 								each vp, j in variant.variantOptions
 									.variant-options
 										.form-group
@@ -104,6 +113,16 @@ block content
 										.form-group
 											label(for="variant["+i+"][variantOptions]["+j+"][cost]").control-label Variant Cost Option (optional)
 											input(type="text" name="variant["+i+"][variantOptions]["+j+"][cost]" id="variant["+i+"][variantOptions]["+j+"][cost]" value=vp.cost).form-control.input-sm
+										.form-group
+											label.control-label Are Points Incremental?
+											.radio
+												label
+													input(type="radio" name="variant["+i+"][variantOptions]["+j+"][incremental]" value="true" checked=((vp.incremental == "true") ? "checked" : null))
+													| Yes
+											.radio
+												label
+													input(type="radio" name="variant["+i+"][variantOptions]["+j+"][incremental]" value="false" checked=((vp.incremental == "false") ? "checked" : null))
+													| No
 
 
 				button(type="button").btn.btn-primary.btn-sm.pull-left.add-variant
