@@ -13,8 +13,8 @@ block content
 					label(for="name").control-label Power Name
 					input(type="text" name="name" placeholder="E.G., 'Energy Blast'" id="name" autofocus).form-control
 				.form-group
-					label(for="category").control-label Select Power's Category
-					select(name="category" id="category").form-control
+					label(for="category[]").control-label Select Power's Category
+					select(name="category[]" id="category[]" multiple).form-control
 						option(value="") Select Category
 						option(value="Adjustment") Adjustment
 						option(value="Attack") Attack
