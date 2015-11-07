@@ -18,7 +18,7 @@ describe('Powers Test Suite', function() {
 				range: 'Standard Range', 
 				endurance: false,
 				exclusiveVariants: false,
-				category: 'Attack Power'
+				category: ['Attack Power', 'Standard Power']
 			};
 
 			var variantOption = {
@@ -53,7 +53,10 @@ describe('Powers Test Suite', function() {
 				power.should.have.property('target', 'Target\'s DCV');
 				power.should.have.property('range', 'Standard Range');
 				power.should.have.property('endurance', false);
-				power.should.have.property('category', 'Attack Power');
+				power.should.have.property('category');
+				(power.category).should.be.Array;
+				(power.category.indexOf('Standard Power')).should.not.eql(-1);
+				(power.category.indexOf('Attack Power')).should.not.eql(-1);
 				power.should.have.property('exclusiveVariants', false);
 
 				power.should.have.property('variants');

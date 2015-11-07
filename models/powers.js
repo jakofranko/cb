@@ -6,7 +6,7 @@ var powerSchema = mongoose.Schema({
 		points: Number,
 		per: String
 	},
-	category: String,
+	category: Array,
 	duration: String,
 	target: String,
 	range: String,
