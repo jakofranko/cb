@@ -6,10 +6,10 @@ block content
 		| &nbsp;back to Powers
 	h1 Editing #{power.name}
 
-	.row
-		.col-sm-4.col-sm-offset-4
-			form(action="/powers/updatePower" method="post")
-				input(type="hidden" name="powerID" value=power._id)
+	form(action="/powers/updatePower" method="post")
+		input(type="hidden" name="powerID" value=power._id)
+		.row
+			.col-sm-4
 				.form-group
 					label(for="name").control-label Power Name
 					input(type="text" name="name" placeholder="E.G., 'Energy Blast'" id="name" value=power.name).form-control
@@ -17,17 +17,17 @@ block content
 					label(for="category[]").control-label Select Power's Category
 					select(name="category[]" id="category[]" multiple).form-control
 						option(value="") Select Category
-						option(value="Adjustment" selected=((power.category == "Adjustment") ? "selected" : null)) Adjustment
-						option(value="Attack" selected=((power.category == "Attack") ? "selected" : null)) Attack
+						option(value="Adjustment" selected=((power.category.indexOf("Adjustment") != -1) ? "selected" : null)) Adjustment
+						option(value="Attack" selected=((power.category.indexOf("Attack") != -1) ? "selected" : null)) Attack
 						option(value="Body-Affecting" selected=((power.category == "Body-Affecting") ? "selected" : null)) Body-Affecting
-						option(value="Defense" selected=((power.category == "Defense") ? "selected" : null)) Defense
-						option(value="Mental" selected=((power.category == "Mental") ? "selected" : null)) Mental
-						option(value="Movement" selected=((power.category == "Movement") ? "selected" : null)) Movement
-						option(value="Sense-Affecting" selected=((power.category == "Sense-Affecting") ? "selected" : null)) Sense-Affecting
-						option(value="Sensory" selected=((power.category == "Sensory") ? "selected" : null)) Sensory
-						option(value="Size" selected=((power.category == "Size") ? "selected" : null)) Size
-						option(value="Special" selected=((power.category == "Special") ? "selected" : null)) Special
-						option(value="Standard" selected=((power.category == "Standard") ? "selected" : null)) Standard
+						option(value="Defense" selected=((power.category.indexOf("Defense") != -1) ? "selected" : null)) Defense
+						option(value="Mental" selected=((power.category.indexOf("Mental") != -1) ? "selected" : null)) Mental
+						option(value="Movement" selected=((power.category.indexOf("Movement") != -1) ? "selected" : null)) Movement
+						option(value="Sense-Affecting" selected=((power.category.indexOf("Sense-Affecting") != -1) ? "selected" : null)) Sense-Affecting
+						option(value="Sensory" selected=((power.category.indexOf("Sensory") != -1) ? "selected" : null)) Sensory
+						option(value="Size" selected=((power.category.indexOf("Size") != -1) ? "selected" : null)) Size
+						option(value="Special" selected=((power.category.indexOf("Special") != -1) ? "selected" : null)) Special
+						option(value="Standard" selected=((power.category.indexOf("Standard") != -1) ? "selected" : null)) Standard
 				.form-group
 					label(for="cost[points]").control-label Point Cost
 					input(type="number" name="cost[points]" value=power.cost.points id="cost[points]").form-control
@@ -70,8 +70,8 @@ block content
 						option(value="Standard Range" selected=((power.range == "Standard Range") ? "selected" : null)) Standard Range
 						option(value="Line of Sight" selected=((power.range == "Line of Sight") ? "selected" : null)) Line of Sight
 
+			.col-sm-4
 				#variants
-					-console.log(power.exclusiveVariants)
 					.form-group
 						label.control-label Are Variants Exclusive?
 						.radio
@@ -82,60 +82,65 @@ block content
 							label
 								input(type="radio" name="exclusiveVariants" value="false" checked=((power.exclusiveVariants == false) ? "checked" : null))
 								| No
-					each variant, i in power.variants
-						.variant
-							.form-group
-								label(for="variant["+i+"][name]").control-label Variant Name
-								input(type="text" name="variant["+i+"][name]" id="variant["+i+"][name]" value=variant.name).form-control
-							.form-group
-								label(for="variant["+i+"][cost]").control-label Variant Cost (optional)
-								input(type="text" name="variant["+i+"][cost]" id="variant["+i+"][cost]" value=variant.cost).form-control
-							.form-group
-								label(for="variant["+i+"][description]").control-label Variant Description (optional)
-								input(type="text" name="variant["+i+"][description]" id="variant["+i+"][description]" value=variant.description).form-control
-							.form-group
-								label.control-label Are Points Incremental?
-								.radio
-									label
-										input(type="radio" name="variant["+i+"][incremental]" value="true" checked=((variant.incremental == "true") ? "checked" : null))
-										| Yes
-								.radio
-									label
-										input(type="radio" name="variant["+i+"][incremental]" value="false" checked=((variant.incremental == "false") ? "checked" : null))
-										| No
-							hr
-							if variant.variantOptions && variant.variantOptions.length > 0
-								each vp, j in variant.variantOptions
-									.variant-options
-										.form-group
-											label(for="variant["+i+"][variantOptions]["+j+"][name]").control-label Variant Option Name
-											input(type="text" name="variant["+i+"][variantOptions]["+j+"][name]" id="variant["+i+"][variantOptions]["+j+"][name]" value=vp.name).form-control.input-sm
-										.form-group
-											label(for="variant["+i+"][variantOptions]["+j+"][cost]").control-label Variant Cost Option (optional)
-											input(type="text" name="variant["+i+"][variantOptions]["+j+"][cost]" id="variant["+i+"][variantOptions]["+j+"][cost]" value=vp.cost).form-control.input-sm
-										.form-group
-											label.control-label Are Points Incremental?
-											.radio
-												label
-													input(type="radio" name="variant["+i+"][variantOptions]["+j+"][incremental]" value="true" checked=((vp.incremental == "true") ? "checked" : null))
-													| Yes
-											.radio
-												label
-													input(type="radio" name="variant["+i+"][variantOptions]["+j+"][incremental]" value="false" checked=((vp.incremental == "false") ? "checked" : null))
-													| No
-
+					if power.variants
+						each variant, i in power.variants
+							.variant
+								.form-group
+									label(for="variant["+i+"][name]").control-label Variant Name
+									input(type="text" name="variant["+i+"][name]" id="variant["+i+"][name]" value=variant.name).form-control
+								.form-group
+									label(for="variant["+i+"][cost]").control-label Variant Cost (optional)
+									input(type="text" name="variant["+i+"][cost]" id="variant["+i+"][cost]" value=variant.cost).form-control
+								.form-group
+									label(for="variant["+i+"][description]").control-label Variant Description (optional)
+									input(type="text" name="variant["+i+"][description]" id="variant["+i+"][description]" value=variant.description).form-control
+								.form-group
+									label.control-label Are Points Incremental?
+									.radio
+										label
+											input(type="radio" name="variant["+i+"][incremental]" value="true" checked=((variant.incremental == "true") ? "checked" : null))
+											| Yes
+									.radio
+										label
+											input(type="radio" name="variant["+i+"][incremental]" value="false" checked=((variant.incremental == "false") ? "checked" : null))
+											| No
+								hr
+								.options
+									if variant.variantOptions && variant.variantOptions.length > 0
+										each vp, j in variant.variantOptions
+											.variant-option
+												.form-group
+													label(for="variant["+i+"][variantOptions]["+j+"][name]").control-label Variant Option Name
+													input(type="text" name="variant["+i+"][variantOptions]["+j+"][name]" id="variant["+i+"][variantOptions]["+j+"][name]" value=vp.name).form-control.input-sm
+												.form-group
+													label(for="variant["+i+"][variantOptions]["+j+"][cost]").control-label Variant Cost Option (optional)
+													input(type="text" name="variant["+i+"][variantOptions]["+j+"][cost]" id="variant["+i+"][variantOptions]["+j+"][cost]" value=vp.cost).form-control.input-sm
+												.form-group
+													label.control-label Are Points Incremental?
+													.radio
+														label
+															input(type="radio" name="variant["+i+"][variantOptions]["+j+"][incremental]" value="true" checked=((vp.incremental == "true") ? "checked" : null))
+															| Yes
+													.radio
+														label
+															input(type="radio" name="variant["+i+"][variantOptions]["+j+"][incremental]" value="false" checked=((vp.incremental == "false") ? "checked" : null))
+															| No
+								button(type="button").btn.btn-primary.btn-sm.add-option
+									span.glyphcion.glyphicon-plus
+									|  Add Variant Option
+								hr
 
 				button(type="button").btn.btn-primary.btn-sm.pull-left.add-variant
 					span.glyphcion.glyphicon-plus
 					|  Add Power Variant
 				br
 				br
-				button(type="submit").btn.btn-primary.pull-left
-					span.glyphicon.glyphicon-edit
-					|  Update Power
-				button(type="button" data-toggle="modal" data-target="#delete-modal").btn.btn-danger.pull-right
-					span.glyphicon.glyphicon-trash
-					|  Delete Power
+		button(type="submit").btn.btn-primary.pull-left
+			span.glyphicon.glyphicon-edit
+			|  Update Power
+		button(type="button" data-toggle="modal" data-target="#delete-modal").btn.btn-danger.pull-right
+			span.glyphicon.glyphicon-trash
+			|  Delete Power
 	.modal.fade#delete-modal
 		.modal-dialog.modal-sm
 			.modal-content
